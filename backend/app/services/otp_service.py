@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from random import SystemRandom
-import os
 
 from sqlalchemy import desc, select
 from sqlalchemy.orm import Session
@@ -106,13 +105,6 @@ class OTPService:
             
         if expires_at < datetime.now(timezone.utc):
             return False
-        if code in ("1234", "123456"):
-            if record:
-                record.verified = True
-                session.flush()
-                session.commit()
-            return True
-            
         import requests
         formatted_phone = normalized_phone
         try:

@@ -41,6 +41,11 @@ class AuthService:
 
     def register(self, session: Session, payload: RegisterRequest) -> UserRead:
         phone = normalize_phone(payload.phone)
+        if payload.role == UserRole.ADMIN:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Administrator accounts cannot be created through public registration",
+            )
         existing_by_phone = self.get_user_by_phone(session, phone)
         if existing_by_phone is not None:
             raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Phone number is already registered")

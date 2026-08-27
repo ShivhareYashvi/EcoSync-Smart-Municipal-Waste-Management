@@ -2,9 +2,18 @@ from datetime import datetime, timedelta, timezone
 from typing import Any
 
 import bcrypt
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
+from jose.exceptions import JWTError
+from sqlalchemy import select
+from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
+from app.db import get_db
+from app.models.user import User
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
 
 
 def hash_password(password: str) -> str:
@@ -27,3 +36,25 @@ def create_access_token(subject: str, claims: dict[str, Any] | None = None, expi
     if claims:
         payload.update(claims)
     return jwt.encode(payload, settings.jwt_secret_key, algorithm=settings.jwt_algorithm)
+
+
+def get_current_user(token: str = Depends(oauth2_scheme), session: Session = Depends(get_db)) -> User:
+    """Resolve the authenticated user from the signed access token."""
+
+    settings = get_settings()
+    credentials_error = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate authentication credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm])
+        subject = payload.get("sub")
+        user_id = int(subject)
+    except (JWTError, TypeError, ValueError):
+        raise credentials_error
+
+    user = session.scalar(select(User).where(User.id == user_id))
+    if user is None:
+        raise credentials_error
+    return user
