@@ -52,7 +52,7 @@ class DriverAvailability(StrEnum):
     SUSPENDED = "suspended"
 
 
-# ── Phase 1: Collection loop & rewards ───────────────────────────────────────
+# ── Phase 1: Collection loop & rewards ─────────
 
 
 class WasteCategory(StrEnum):

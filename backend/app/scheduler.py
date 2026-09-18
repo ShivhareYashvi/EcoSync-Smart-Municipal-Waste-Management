@@ -40,7 +40,7 @@ scheduler.add_job(
 )
 
 
-# ── Phase 2 jobs ──────────────────────────────────────────────────────────────
+# ── Phase 2 jobs ──
 
 def _run_hotspot_detection() -> None:
     """Group complaints by zone over 30-day window; flag/resolve hotspots."""

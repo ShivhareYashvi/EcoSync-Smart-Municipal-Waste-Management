@@ -15,7 +15,7 @@ from app.models.pickup_request import PickupRequest
 from app.services.points_engine import UserHistory, calculate_points
 
 
-# ── Helpers ───────────────────────────────────────────────────────────────────
+# ── Helpers ───────
 
 def _make_pickup(
     *,
@@ -42,7 +42,7 @@ def _streak() -> UserHistory:
     return UserHistory(consecutive_clean_weeks=4)
 
 
-# ── Pure function tests ───────────────────────────────────────────────────────
+# ── Pure function tests ─────────────────────────
 
 class TestCalculatePoints:
     """Test the pure calculate_points function in isolation."""
@@ -103,7 +103,7 @@ class TestCalculatePoints:
         assert result == round((50 + 37.5) * 1.0)
 
 
-# ── Weekly cap tests (service layer) ─────────────────────────────────────────
+# ── Weekly cap tests (service layer) ───────────
 
 class TestWeeklyCap:
     """Verify the weekly weight-bonus cap enforcement in _apply_weekly_cap."""
@@ -151,7 +151,7 @@ class TestWeeklyCap:
         assert result == 100
 
 
-# ── Dispute reversal tests ────────────────────────────────────────────────────
+# ── Dispute reversal tests ──────────────────────
 
 class TestDisputeReversal:
     """Verify that disputing a pickup flags the transaction and reverses balance."""

@@ -1,4 +1,4 @@
-export type UserRole = 'citizen' | 'driver' | 'admin';
+export type UserRole = 'citizen' | 'driver' | 'admin' | 'recycler';
 export type PickupStatus = 'pending' | 'assigned' | 'in_progress' | 'completed' | 'cancelled';
 export type WasteType = 'wet' | 'dry' | 'e-waste' | 'bulky';
 export type WasteCategory = 'wet' | 'dry' | 'hazardous' | 'e_waste' | 'mixed';
@@ -26,6 +26,11 @@ export interface User {
   electricity_bill_path: string | null;
   driver_id: number | null;
   vehicle_number: string | null;
+  recycler_id?: number | null;
+  business_name?: string | null;
+  verification_status?: RecyclerVerificationStatus | null;
+  materials_accepted?: MaterialType[] | null;
+  service_zone_ids?: number[] | null;
   created_at: string;
   updated_at: string;
 }
@@ -127,7 +132,7 @@ export interface UploadResponse {
   public_url: string;
 }
 
-// ── Phase 1 types ─────────────────────────────────────────────────────────────
+// ── Phase 1 types ─
 
 export interface PointsTransaction {
   id: number;
@@ -175,7 +180,7 @@ export interface Redemption {
   updated_at: string;
 }
 
-// ── Phase 2 types ─────────────────────────────────────────────────────────────
+// ── Phase 2 types ─
 
 export interface Zone {
   id: number;
@@ -271,5 +276,105 @@ export interface ZoneAnalytics {
 export interface CityWideAnalytics {
   zones: ZoneAnalytics[];
   city: string;
+}
+
+// ── Phase 3 Marketplace Types ──────────────────────────────────────────────
+
+export type MaterialType = 'plastic' | 'paper' | 'metal' | 'e_waste' | 'glass';
+export type RecyclerVerificationStatus = 'pending' | 'verified' | 'rejected';
+export type RecyclingTransactionStatus = 'requested' | 'logged' | 'confirmed' | 'disputed';
+export type EPRCreditStatus = 'available' | 'claimed';
+export type CompostBatchStatus = 'collected' | 'composting' | 'completed';
+
+export interface RateCard {
+  id: number;
+  recycler_id: number;
+  material: MaterialType;
+  rate_per_kg: string | number;
+  effective_from: string;
+  active: boolean;
+}
+
+export interface PublicRate {
+  id: number;
+  recycler_id: number;
+  recycler_business_name: string;
+  service_zone_ids: number[];
+  material: MaterialType;
+  rate_per_kg: string | number;
+  effective_from: string;
+}
+
+export interface Recycler {
+  id: number;
+  user_id: number;
+  business_name: string;
+  materials_accepted: MaterialType[];
+  service_zone_ids: number[];
+  verification_status: RecyclerVerificationStatus;
+  verification_doc_url: string | null;
+  rate_cards?: RateCard[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface RecyclingReceipt {
+  id: number;
+  transaction_id: number;
+  receipt_number: string;
+  material: MaterialType;
+  weight_kg: string | number;
+  amount_credited: string | number;
+  issued_at: string;
+}
+
+export interface RecyclingTransaction {
+  id: number;
+  citizen_id: number;
+  citizen_name?: string | null;
+  citizen_phone?: string | null;
+  recycler_id: number;
+  recycler_business_name?: string | null;
+  material: MaterialType;
+  estimated_weight_kg?: string | number | null;
+  weight_kg?: string | number | null;
+  rate_applied?: string | number | null;
+  amount_credited?: string | number | null;
+  photo_url?: string | null;
+  status: RecyclingTransactionStatus;
+  created_at: string;
+  receipt?: RecyclingReceipt | null;
+}
+
+export interface BrandAccount {
+  id: number;
+  org_name: string;
+  contact_email: string;
+  created_at: string;
+}
+
+export interface EPRCredit {
+  id: number;
+  receipt_id: number;
+  receipt_number?: string | null;
+  material?: MaterialType | null;
+  credit_amount: string | number;
+  status: EPRCreditStatus;
+  brand_id?: number | null;
+  brand_name?: string | null;
+  created_at: string;
+  claimed_at?: string | null;
+}
+
+export interface CompostBatch {
+  id: number;
+  zone_id: number;
+  zone_name?: string | null;
+  period_start: string;
+  period_end: string;
+  total_weight_kg: string | number;
+  status: CompostBatchStatus;
+  buyer_note?: string | null;
+  created_at: string;
 }
 

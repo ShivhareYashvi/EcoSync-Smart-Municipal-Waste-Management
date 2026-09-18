@@ -15,6 +15,8 @@ type RegisterForm = {
   role: UserRole;
   vehicle_number: string;
   zone_id: string;
+  business_name: string;
+  materials_accepted: string[];
 };
 
 const initialForm: RegisterForm = {
@@ -25,7 +27,9 @@ const initialForm: RegisterForm = {
   address: '',
   role: 'citizen',
   vehicle_number: '',
-  zone_id: ''
+  zone_id: '',
+  business_name: '',
+  materials_accepted: ['plastic', 'paper']
 };
 
 export function RegisterPage() {
@@ -34,6 +38,8 @@ export function RegisterPage() {
   const [form, setForm] = useState<RegisterForm>(initialForm);
   const [billFile, setBillFile] = useState<File | null>(null);
   const [billPath, setBillPath] = useState<string | null>(null);
+  const [docFile, setDocFile] = useState<File | null>(null);
+  const [docPath, setDocPath] = useState<string | null>(null);
   const [otpCode, setOtpCode] = useState('');
   const [otpResponse, setOtpResponse] = useState<OTPResponse | null>(null);
   const [otpVerified, setOtpVerified] = useState(false);
@@ -71,6 +77,19 @@ export function RegisterPage() {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
     setBillPath(response.data.public_url);
+    return response.data.public_url;
+  }
+
+  async function uploadDocIfNeeded(): Promise<string | null> {
+    if (!docFile || docPath) {
+      return docPath;
+    }
+    const data = new FormData();
+    data.append('file', docFile);
+    const response = await api.post<UploadResponse>('/uploads/verification-docs', data, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+    setDocPath(response.data.public_url);
     return response.data.public_url;
   }
 
@@ -117,11 +136,16 @@ export function RegisterPage() {
     setStatusMessage(null);
     setIsBusy(true);
     try {
-      const electricity_bill_path = await uploadBillIfNeeded();
+      const electricity_bill_path = form.role === 'citizen' ? await uploadBillIfNeeded() : null;
+      const verification_doc_url = form.role === 'recycler' ? await uploadDocIfNeeded() : null;
       await api.post('/auth/register', {
         ...form,
         email: form.email || null,
         vehicle_number: form.role === 'driver' ? form.vehicle_number : null,
+        business_name: form.role === 'recycler' ? form.business_name : null,
+        materials_accepted: form.role === 'recycler' ? form.materials_accepted : null,
+        service_zone_ids: form.role === 'recycler' && form.zone_id ? [parseInt(form.zone_id)] : [],
+        verification_doc_url,
         zone_id: form.zone_id ? parseInt(form.zone_id) : null,
         electricity_bill_path
       });
@@ -172,6 +196,7 @@ export function RegisterPage() {
           <select className="rounded-2xl border border-slate-200 px-4 py-3" value={form.role} onChange={(event) => updateField('role', event.target.value as UserRole)}>
             <option value="citizen">Citizen</option>
             <option value="driver">Driver</option>
+            <option value="recycler">Recycler</option>
             <option value="admin">Admin</option>
           </select>
           {/* Zone selector */}
@@ -192,17 +217,66 @@ export function RegisterPage() {
               Zone selection not available (zones not yet seeded).
             </div>
           )}
-          {form.role === 'driver' ? (
+          {form.role === 'driver' && (
             <input className="rounded-2xl border border-slate-200 px-4 py-3" placeholder="Vehicle number" value={form.vehicle_number} onChange={(event) => updateField('vehicle_number', event.target.value)} />
-          ) : (
-            <div className="rounded-2xl border border-dashed border-slate-200 px-4 py-3 text-sm text-slate-400">Driver registration requires a vehicle number.</div>
           )}
-          <textarea className="rounded-2xl border border-slate-200 px-4 py-3 sm:col-span-2" placeholder="Household address" rows={4} value={form.address} onChange={(event) => updateField('address', event.target.value)} />
-          <label className="rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 sm:col-span-2">
-            Electricity bill upload
-            <input className="mt-2 block w-full text-sm font-normal" type="file" accept=".pdf,image/*" onChange={handleFileChange} />
-            <span className="mt-2 block text-xs font-normal text-slate-500">{billFile ? billFile.name : billPath ? `Uploaded: ${billPath}` : 'PDF or image proof accepted.'}</span>
-          </label>
+          {form.role === 'recycler' && (
+            <div className="sm:col-span-2 space-y-3 p-4 bg-slate-50 border border-slate-200 rounded-2xl">
+              <input
+                className="w-full rounded-xl border border-slate-300 p-2.5 text-sm"
+                placeholder="Registered Business / Scrap Facility Name *"
+                required
+                value={form.business_name}
+                onChange={(e) => updateField('business_name', e.target.value)}
+              />
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+                  Accepted Recyclable Materials:
+                </label>
+                <div className="flex flex-wrap gap-3">
+                  {['plastic', 'paper', 'metal', 'e_waste', 'glass'].map((mat) => (
+                    <label key={mat} className="flex items-center gap-1.5 text-xs font-semibold text-slate-700">
+                      <input
+                        type="checkbox"
+                        checked={form.materials_accepted.includes(mat)}
+                        onChange={(e) => {
+                          const next = e.target.checked
+                            ? [...form.materials_accepted, mat]
+                            : form.materials_accepted.filter((m) => m !== mat);
+                          updateField('materials_accepted', next);
+                        }}
+                        className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                      />
+                      <span className="capitalize">{mat.replace('_', '-')}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+                  Municipal Trade License / Registration Doc (PDF or Image)
+                </label>
+                <input
+                  type="file"
+                  accept=".pdf,image/*"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0] ?? null;
+                    setDocFile(f);
+                    setDocPath(null);
+                  }}
+                  className="text-xs"
+                />
+              </div>
+            </div>
+          )}
+          <textarea className="rounded-2xl border border-slate-200 px-4 py-3 sm:col-span-2" placeholder="Facility / Household address" rows={3} value={form.address} onChange={(event) => updateField('address', event.target.value)} />
+          {form.role === 'citizen' && (
+            <label className="rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 sm:col-span-2">
+              Electricity bill upload
+              <input className="mt-2 block w-full text-sm font-normal" type="file" accept=".pdf,image/*" onChange={handleFileChange} />
+              <span className="mt-2 block text-xs font-normal text-slate-500">{billFile ? billFile.name : billPath ? `Uploaded: ${billPath}` : 'PDF or image proof accepted.'}</span>
+            </label>
+          )}
           <div className="sm:col-span-2">
             <div className="grid gap-3 md:grid-cols-[1fr_auto_auto]">
               <input className="rounded-2xl border border-slate-200 px-4 py-3" placeholder="Enter OTP" value={otpCode} onChange={(event) => setOtpCode(event.target.value)} />

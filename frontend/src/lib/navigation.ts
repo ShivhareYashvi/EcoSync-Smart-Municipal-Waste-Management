@@ -6,6 +6,8 @@ export function dashboardPathForRole(role: UserRole): string {
       return '/dashboard/driver';
     case 'admin':
       return '/dashboard/admin';
+    case 'recycler':
+      return '/dashboard/recycler';
     default:
       return '/dashboard/user';
   }

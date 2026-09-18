@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { EmptyState } from '../../components/EmptyState';
 import { StatCard } from '../../components/StatCard';
 import { TrackingMap } from '../../components/TrackingMap';
+import { CitizenRecyclingMarketplace } from '../../components/user/CitizenRecyclingMarketplace';
 import { api, buildTrackingSocketUrl } from '../../lib/api';
 import type {
   CatalogItem, ComplianceScore, Complaint, DriverLocation, Pickup,
@@ -26,7 +27,7 @@ const initialSchedule = {
   notes: ''
 };
 
-// ── Tier colour helper ────────────────────────────────────────────────────────
+// ── Tier colour helper ──────────────────────────
 
 function tierColour(tier: string) {
   if (tier === 'gold') return 'text-yellow-600 bg-yellow-50';
@@ -112,7 +113,7 @@ function PickupConfirmDispute({ pickup, onDone }: PickupActionsProps) {
   );
 }
 
-// ── Phase 1: Points & Tier card ───────────────────────────────────────────────
+// ── Phase 1: Points & Tier card ─────────────────
 
 function PointsTierCard({ userId }: { userId: number }) {
   const { data, isLoading } = useQuery({
@@ -175,7 +176,7 @@ function PointsTierCard({ userId }: { userId: number }) {
   );
 }
 
-// ── Phase 1: Compliance Score card ────────────────────────────────────────────
+// ── Phase 1: Compliance Score card ──────────────
 
 function ComplianceCard({ userId }: { userId: number }) {
   const { data, isLoading } = useQuery({
@@ -221,7 +222,7 @@ function ComplianceCard({ userId }: { userId: number }) {
   );
 }
 
-// ── Phase 1: Redeem Rewards card ──────────────────────────────────────────────
+// ── Phase 1: Redeem Rewards card ────────────────
 
 function RedeemCard({ userId }: { userId: number }) {
   const queryClient = useQueryClient();
@@ -290,7 +291,7 @@ function RedeemCard({ userId }: { userId: number }) {
   );
 }
 
-// ── Main user dashboard ───────────────────────────────────────────────────────
+// ── Main user dashboard ─────────────────────────
 
 export function UserDashboard() {
   const queryClient = useQueryClient();
@@ -611,6 +612,9 @@ export function UserDashboard() {
         <ComplianceCard userId={user.id} />
       </div>
       <RedeemCard userId={user.id} />
+
+      {/* Phase 3: Marketplace (Sell Recyclables, Sales, Receipts) */}
+      <CitizenRecyclingMarketplace userId={user.id} />
 
       <article className="glass-card rounded-[2rem] p-6">
         <div className="flex items-center gap-3">

@@ -40,7 +40,7 @@ class PickupRequest(TimestampMixin, Base):
     segregation_verified: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     photo_url: Mapped[str | None] = mapped_column(String(512), nullable=True)
 
-    # ── Phase 2 columns ───────────────────────────────────────────────────────
+    # ── Phase 2 columns ─────────────────────────
     zone_id: Mapped[int | None] = mapped_column(ForeignKey("zones.id", ondelete="SET NULL"), nullable=True, index=True)
     route_id: Mapped[int | None] = mapped_column(ForeignKey("routes.id", ondelete="SET NULL"), nullable=True, index=True)
     bulk_generator_id: Mapped[int | None] = mapped_column(ForeignKey("bulk_generators.id", ondelete="SET NULL"), nullable=True, index=True)
@@ -51,7 +51,7 @@ class PickupRequest(TimestampMixin, Base):
     location_updates = relationship("DriverLocation", back_populates="pickup", cascade="all, delete-orphan")
     points_transactions = relationship("PointsTransaction", back_populates="pickup")
 
-    # ── Phase 2 back-references ───────────────────────────────────────────────
+    # ── Phase 2 back-references ─────────────────
     zone = relationship("Zone", back_populates="pickup_requests", foreign_keys=[zone_id])
     route = relationship("Route", back_populates="pickup_requests", foreign_keys=[route_id])
     bulk_generator = relationship("BulkGenerator", back_populates="pickup_requests", foreign_keys=[bulk_generator_id])

@@ -28,7 +28,7 @@ depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
-    # ── 1. Create recyclers table ──────────────────────────────────────────────
+    # ── 1. Create recyclers table ────────────────
     op.create_table(
         "recyclers",
         sa.Column("id", sa.Integer(), nullable=False),
@@ -52,7 +52,7 @@ def upgrade() -> None:
     op.create_index(op.f("ix_recyclers_id"), "recyclers", ["id"], unique=False)
     op.create_index(op.f("ix_recyclers_user_id"), "recyclers", ["user_id"], unique=True)
 
-    # ── 2. Create recycler_rate_cards table ────────────────────────────────────
+    # ── 2. Create recycler_rate_cards table ──────
     op.create_table(
         "recycler_rate_cards",
         sa.Column("id", sa.Integer(), nullable=False),
@@ -71,7 +71,7 @@ def upgrade() -> None:
     op.create_index(op.f("ix_recycler_rate_cards_id"), "recycler_rate_cards", ["id"], unique=False)
     op.create_index(op.f("ix_recycler_rate_cards_recycler_id"), "recycler_rate_cards", ["recycler_id"], unique=False)
 
-    # ── 3. Create recycling_transactions table ─────────────────────────────────
+    # ── 3. Create recycling_transactions table ───
     op.create_table(
         "recycling_transactions",
         sa.Column("id", sa.Integer(), nullable=False),
@@ -102,7 +102,7 @@ def upgrade() -> None:
     op.create_index(op.f("ix_recycling_transactions_citizen_id"), "recycling_transactions", ["citizen_id"], unique=False)
     op.create_index(op.f("ix_recycling_transactions_recycler_id"), "recycling_transactions", ["recycler_id"], unique=False)
 
-    # ── 4. Create recycling_receipts table ────────────────────────────────────
+    # ── 4. Create recycling_receipts table ──────
     op.create_table(
         "recycling_receipts",
         sa.Column("id", sa.Integer(), nullable=False),
@@ -125,7 +125,7 @@ def upgrade() -> None:
     op.create_index(op.f("ix_recycling_receipts_receipt_number"), "recycling_receipts", ["receipt_number"], unique=True)
     op.create_index(op.f("ix_recycling_receipts_transaction_id"), "recycling_receipts", ["transaction_id"], unique=True)
 
-    # ── 5. Create brand_accounts table ─────────────────────────────────────────
+    # ── 5. Create brand_accounts table ───────────
     op.create_table(
         "brand_accounts",
         sa.Column("id", sa.Integer(), nullable=False),
@@ -136,7 +136,7 @@ def upgrade() -> None:
     )
     op.create_index(op.f("ix_brand_accounts_id"), "brand_accounts", ["id"], unique=False)
 
-    # ── 6. Create epr_credits table ───────────────────────────────────────────
+    # ── 6. Create epr_credits table ─────────────
     op.create_table(
         "epr_credits",
         sa.Column("id", sa.Integer(), nullable=False),
@@ -160,7 +160,7 @@ def upgrade() -> None:
     op.create_index(op.f("ix_epr_credits_receipt_id"), "epr_credits", ["receipt_id"], unique=True)
     op.create_index(op.f("ix_epr_credits_brand_id"), "epr_credits", ["brand_id"], unique=False)
 
-    # ── 7. Create compost_batches table ───────────────────────────────────────
+    # ── 7. Create compost_batches table ─────────
     op.create_table(
         "compost_batches",
         sa.Column("id", sa.Integer(), nullable=False),

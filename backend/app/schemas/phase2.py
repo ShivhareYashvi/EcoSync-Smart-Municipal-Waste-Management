@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 from app.models.enums import BillingStatus, BulkGeneratorCategory
 
 
-# ── Zone schemas ──────────────────────────────────────────────────────────────
+# ── Zone schemas ──
 
 class ZoneRead(BaseModel):
     id: int
@@ -21,7 +21,7 @@ class ZoneUserAssign(BaseModel):
     zone_id: int
 
 
-# ── Vehicle schemas ───────────────────────────────────────────────────────────
+# ── Vehicle schemas ─────────────────────────────
 
 class VehicleCreate(BaseModel):
     registration_number: str = Field(min_length=3, max_length=40)
@@ -63,7 +63,7 @@ class VehicleMaintenanceRead(BaseModel):
     model_config = {"from_attributes": True}
 
 
-# ── Bulk generator schemas ─────────────────────────────────────────────────────
+# ── Bulk generator schemas ───────────────────────
 
 class BulkGeneratorCreate(BaseModel):
     org_name: str = Field(min_length=2, max_length=255)
@@ -92,7 +92,7 @@ class BulkGeneratorStatusUpdate(BaseModel):
     billing_status: BillingStatus
 
 
-# ── Route schemas ─────────────────────────────────────────────────────────────
+# ── Route schemas ─
 
 class RouteGenerateRequest(BaseModel):
     driver_id: int
@@ -129,7 +129,7 @@ class RouteStopStatusUpdate(BaseModel):
     status: str  # arrived | skipped
 
 
-# ── Complaint heatmap / hotspot schemas ───────────────────────────────────────
+# ── Complaint heatmap / hotspot schemas ─────────
 
 class HeatmapPoint(BaseModel):
     latitude: float
@@ -163,7 +163,7 @@ class ZoneSLARead(BaseModel):
     overdue_complaints: int  # open > 7 days
 
 
-# ── Zone analytics schemas ────────────────────────────────────────────────────
+# ── Zone analytics schemas ──────────────────────
 
 class ZoneAnalytics(BaseModel):
     zone_id: int

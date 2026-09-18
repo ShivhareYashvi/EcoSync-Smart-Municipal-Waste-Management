@@ -16,7 +16,7 @@ import { api } from '../../lib/api';
 import type { CityWideAnalytics, ComplaintHotspot } from '../../lib/types';
 import { AlertTriangle, CheckCircle2, Clock, TrendingUp, Zap } from 'lucide-react';
 
-// ── tiny helpers ──────────────────────────────────────────────────────────────
+// ── tiny helpers ──
 
 interface ZoneSLARead {
   zone_id: number;

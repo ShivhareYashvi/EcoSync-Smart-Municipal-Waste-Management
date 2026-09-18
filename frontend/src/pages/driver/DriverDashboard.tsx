@@ -8,7 +8,7 @@ import { api } from '../../lib/api';
 import type { DriverLocation, Pickup, PickupStatus, Route, WasteCategory } from '../../lib/types';
 import { useSessionStore } from '../../store/session';
 
-// ── Phase 1: Log Pickup Details sub-form ─────────────────────────────────────
+// ── Phase 1: Log Pickup Details sub-form ───────
 
 interface LogFormProps {
   pickup: Pickup;
@@ -152,7 +152,7 @@ function LogPickupForm({ pickup, onSuccess }: LogFormProps) {
   );
 }
 
-// ── Phase 2: Today's Route stops panel ───────────────────────────────────────
+// ── Phase 2: Today's Route stops panel ─────────
 
 function TodaysRoute({ driverUserId }: { driverUserId: number }) {
   const queryClient = useQueryClient();
@@ -282,7 +282,7 @@ function TodaysRoute({ driverUserId }: { driverUserId: number }) {
 }
 
 
-// ── Main driver dashboard ─────────────────────────────────────────────────────
+// ── Main driver dashboard ───────────────────────
 
 export function DriverDashboard() {
   const queryClient = useQueryClient();

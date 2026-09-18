@@ -35,7 +35,7 @@ def client(setup_db):
     app.dependency_overrides.clear()
 
 
-# ── Seed helpers ──────────────────────────────────────────────────────────────
+# ── Seed helpers ──
 
 def _seed_db(session) -> None:
     from app.core.security import hash_password
@@ -107,7 +107,7 @@ def _auth(client: TestClient, phone: str = "+911234567890") -> dict:
     return {"Authorization": f"Bearer {_get_token(client, phone)}"}
 
 
-# ── POST /pickups/{id}/log ────────────────────────────────────────────────────
+# ── POST /pickups/{id}/log ──────────────────────
 
 class TestLogPickup:
     def test_happy_path_with_photo(self, client: TestClient) -> None:
@@ -171,7 +171,7 @@ class TestLogPickup:
         assert resp.status_code == 404
 
 
-# ── POST /pickups/{id}/confirm ────────────────────────────────────────────────
+# ── POST /pickups/{id}/confirm ──────────────────
 
 class TestConfirmPickup:
     def _log(self, client):
@@ -191,7 +191,7 @@ class TestConfirmPickup:
         assert resp.status_code == 404
 
 
-# ── POST /pickups/{id}/dispute ────────────────────────────────────────────────
+# ── POST /pickups/{id}/dispute ──────────────────
 
 class TestDisputePickup:
     def _log(self, client):
@@ -227,7 +227,7 @@ class TestDisputePickup:
         assert resp.status_code == 404
 
 
-# ── GET /users/{id}/compliance ────────────────────────────────────────────────
+# ── GET /users/{id}/compliance ──────────────────
 
 class TestComplianceScore:
     def test_no_record_returns_404(self, client: TestClient) -> None:
@@ -247,7 +247,7 @@ class TestComplianceScore:
         assert data["user_id"] == 1
 
 
-# ── GET /redemptions/catalog ──────────────────────────────────────────────────
+# ── GET /redemptions/catalog ────────────────────
 
 class TestRedemptionCatalog:
     def test_returns_active_items(self, client: TestClient) -> None:
@@ -258,7 +258,7 @@ class TestRedemptionCatalog:
         assert any(i["item_name"] == "Test Voucher" for i in items)
 
 
-# ── POST /redemptions ─────────────────────────────────────────────────────────
+# ── POST /redemptions ───────────────────────────
 
 class TestRedeem:
     def _give_points(self, points: int = 100) -> None:

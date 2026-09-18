@@ -3,6 +3,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { BarChart3, CircleAlert, Download, Truck, UsersRound } from 'lucide-react';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { StatCard } from '../../components/StatCard';
+import { CompostBatchPanel } from '../../components/admin/CompostBatchPanel';
+import { EPRCreditLedgerPanel } from '../../components/admin/EPRCreditLedgerPanel';
+import { RecyclerVerificationQueue } from '../../components/admin/RecyclerVerificationQueue';
 import { API_BASE_URL, api } from '../../lib/api';
 import type { AnalyticsSummary, Driver, Pickup } from '../../lib/types';
 
@@ -121,6 +124,15 @@ export function AdminDashboard() {
           </div>
         </article>
       </div>
+
+      {/* Phase 3: Recycler Verification Queue */}
+      <RecyclerVerificationQueue />
+
+      {/* Phase 3: EPR Credit Ledger & Brand Claim Simulation */}
+      <EPRCreditLedgerPanel />
+
+      {/* Phase 3: Compost Batch Tracking */}
+      <CompostBatchPanel />
     </section>
   );
 }
