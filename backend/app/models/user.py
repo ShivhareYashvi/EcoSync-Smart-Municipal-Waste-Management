@@ -44,3 +44,7 @@ class User(TimestampMixin, Base):
     bulk_generators = relationship("BulkGenerator", back_populates="contact_user")
     routes = relationship("Route", back_populates="driver")
 
+    # ── Phase 3 back-references ───────────────────────────────────────────────
+    recycler_profile = relationship("Recycler", back_populates="user", uselist=False)
+    recycling_transactions = relationship("RecyclingTransaction", back_populates="citizen")
+

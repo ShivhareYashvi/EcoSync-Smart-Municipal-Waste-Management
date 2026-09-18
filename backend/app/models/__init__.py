@@ -1,7 +1,9 @@
+from app.models.brand_account import BrandAccount
 from app.models.bulk_generator import BulkGenerator
 from app.models.complaint import Complaint
 from app.models.complaint_hotspot import ComplaintHotspot
 from app.models.compliance_score import ComplianceScore
+from app.models.compost_batch import CompostBatch
 from app.models.driver import Driver
 from app.models.driver_location import DriverLocation
 from app.models.enums import (
@@ -10,11 +12,16 @@ from app.models.enums import (
     CatalogCategory,
     ComplaintCategory,
     ComplaintStatus,
+    CompostBatchStatus,
     DriverAvailability,
+    EPRCreditStatus,
     FuelType,
     HotspotStatus,
+    MaterialType,
     PickupStatus,
     PointsTransactionStatus,
+    RecyclerVerificationStatus,
+    RecyclingTransactionStatus,
     RedemptionStatus,
     RewardSource,
     RouteStatus,
@@ -24,10 +31,15 @@ from app.models.enums import (
     WasteCategory,
     WasteType,
 )
+from app.models.epr_credit import EPRCredit
 from app.models.notification import Notification
 from app.models.otp_challenge import OTPChallenge
 from app.models.pickup_request import PickupRequest
 from app.models.points_transaction import PointsTransaction
+from app.models.recycler import Recycler
+from app.models.recycler_rate_card import RecyclerRateCard
+from app.models.recycling_receipt import RecyclingReceipt
+from app.models.recycling_transaction import RecyclingTransaction
 from app.models.redemption import Redemption
 from app.models.redemption_catalog import RedemptionCatalog
 from app.models.reward import Reward
@@ -78,5 +90,17 @@ __all__ = [
     "RouteStopStatus",
     "Vehicle",
     "Zone",
+    # Phase 3
+    "BrandAccount",
+    "CompostBatch",
+    "CompostBatchStatus",
+    "EPRCredit",
+    "EPRCreditStatus",
+    "MaterialType",
+    "Recycler",
+    "RecyclerRateCard",
+    "RecyclerVerificationStatus",
+    "RecyclingReceipt",
+    "RecyclingTransaction",
+    "RecyclingTransactionStatus",
 ]
-

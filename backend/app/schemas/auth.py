@@ -1,6 +1,6 @@
 from pydantic import BaseModel, EmailStr, Field
 
-from app.models.enums import UserRole
+from app.models.enums import MaterialType, UserRole
 from app.schemas.user import UserRead
 
 
@@ -13,6 +13,10 @@ class RegisterRequest(BaseModel):
     role: UserRole = UserRole.CITIZEN
     vehicle_number: str | None = Field(default=None, max_length=40)
     electricity_bill_path: str | None = Field(default=None, max_length=512)
+    business_name: str | None = Field(default=None, max_length=255)
+    materials_accepted: list[MaterialType] | None = None
+    service_zone_ids: list[int] | None = None
+    verification_doc_url: str | None = Field(default=None, max_length=512)
 
 
 class LoginRequest(BaseModel):

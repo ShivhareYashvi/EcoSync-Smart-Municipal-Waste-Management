@@ -1,8 +1,6 @@
 from datetime import datetime
-
 from pydantic import BaseModel, EmailStr, Field
-
-from app.models.enums import UserRole
+from app.models.enums import MaterialType, RecyclerVerificationStatus, UserRole
 
 
 class UserBase(BaseModel):
@@ -17,6 +15,10 @@ class UserCreate(UserBase):
     password: str = Field(min_length=8, max_length=128)
     electricity_bill_path: str | None = None
     vehicle_number: str | None = None
+    business_name: str | None = None
+    materials_accepted: list[MaterialType] | None = None
+    service_zone_ids: list[int] | None = None
+    verification_doc_url: str | None = None
 
 
 class UserUpdate(BaseModel):
@@ -35,6 +37,11 @@ class UserRead(UserBase):
     electricity_bill_path: str | None
     driver_id: int | None = None
     vehicle_number: str | None = None
+    recycler_id: int | None = None
+    business_name: str | None = None
+    verification_status: RecyclerVerificationStatus | None = None
+    materials_accepted: list[MaterialType] | None = None
+    service_zone_ids: list[int] | None = None
     created_at: datetime
     updated_at: datetime
 

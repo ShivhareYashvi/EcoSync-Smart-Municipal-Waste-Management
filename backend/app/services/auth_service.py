@@ -10,7 +10,8 @@ from app.core.config import get_settings
 from app.core.phone import normalize_phone
 from app.core.security import create_access_token, hash_password, verify_password
 from app.models.driver import Driver
-from app.models.enums import DriverAvailability, UserRole
+from app.models.enums import DriverAvailability, RecyclerVerificationStatus, UserRole
+from app.models.recycler import Recycler
 from app.models.user import User
 from app.schemas.auth import LoginRequest, RegisterRequest, TokenResponse
 from app.schemas.user import UserRead
@@ -60,6 +61,8 @@ class AuthService:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Phone number must be OTP verified before registration")
         if payload.role == UserRole.DRIVER and not payload.vehicle_number:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Driver registrations require a vehicle number")
+        if payload.role == UserRole.RECYCLER and not payload.business_name:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Recycler registrations require a business name")
 
         now = datetime.now(timezone.utc)
         user = User(
@@ -86,12 +89,31 @@ class AuthService:
                         availability=DriverAvailability.AVAILABLE,
                     )
                 )
+            elif payload.role == UserRole.RECYCLER:
+                accepted_materials = [
+                    m.value if hasattr(m, "value") else str(m)
+                    for m in (payload.materials_accepted or [])
+                ]
+                session.add(
+                    Recycler(
+                        user_id=user.id,
+                        business_name=payload.business_name or payload.name,
+                        materials_accepted=accepted_materials,
+                        service_zone_ids=payload.service_zone_ids or [],
+                        verification_status=RecyclerVerificationStatus.PENDING,
+                        verification_doc_url=payload.verification_doc_url,
+                    )
+                )
             session.commit()
         except IntegrityError as exc:
             session.rollback()
             raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Registration conflicts with an existing record") from exc
 
-        persisted = session.scalar(select(User).options(selectinload(User.driver_profile)).where(User.id == user.id))
+        persisted = session.scalar(
+            select(User)
+            .options(selectinload(User.driver_profile), selectinload(User.recycler_profile))
+            .where(User.id == user.id)
+        )
         if persisted is None:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Unable to load registered user")
         return self._to_read_model(persisted)
@@ -100,9 +122,11 @@ class AuthService:
         user = self.get_user_by_phone(session, payload.phone)
         if user is None or not verify_password(payload.password, str(user.password_hash)):
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid phone or password")
-        # Ensure user is loaded with driver_profile
+        # Ensure user is loaded with driver_profile and recycler_profile
         user = session.scalar(
-            select(User).options(selectinload(User.driver_profile)).where(User.id == user.id)
+            select(User)
+            .options(selectinload(User.driver_profile), selectinload(User.recycler_profile))
+            .where(User.id == user.id)
         )
         read_model = self._to_read_model(user)
         token = create_access_token(subject=str(read_model.id), claims={"role": read_model.role.value, "phone": read_model.phone})
@@ -123,9 +147,11 @@ class AuthService:
         user = self.get_user_by_phone(session, normalized_phone)
         if user is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
-        # Ensure user is loaded with driver_profile
+        # Ensure user is loaded with driver_profile and recycler_profile
         user = session.scalar(
-            select(User).options(selectinload(User.driver_profile)).where(User.id == user.id)
+            select(User)
+            .options(selectinload(User.driver_profile), selectinload(User.recycler_profile))
+            .where(User.id == user.id)
         )
         user.password_hash = hash_password(new_password)
         user.updated_at = datetime.now(timezone.utc)
@@ -135,6 +161,8 @@ class AuthService:
         return TokenResponse(access_token=token, user=read_model)
 
     def _to_read_model(self, user: User) -> UserRead:
+        recycler = user.recycler_profile
+        driver = user.driver_profile
         return UserRead(
             id=user.id,
             name=user.name,
@@ -145,8 +173,13 @@ class AuthService:
             verified=user.verified,
             household_id=user.household_id,
             electricity_bill_path=user.electricity_bill_path,
-            driver_id=user.driver_profile.id if user.driver_profile else None,
-            vehicle_number=user.driver_profile.vehicle_number if user.driver_profile else None,
+            driver_id=driver.id if driver else None,
+            vehicle_number=driver.vehicle_number if driver else None,
+            recycler_id=recycler.id if recycler else None,
+            business_name=recycler.business_name if recycler else None,
+            verification_status=recycler.verification_status if recycler else None,
+            materials_accepted=recycler.materials_accepted if recycler else None,
+            service_zone_ids=recycler.service_zone_ids if recycler else None,
             created_at=user.created_at,
             updated_at=user.updated_at,
         )
