@@ -1,4 +1,6 @@
+from contextlib import asynccontextmanager
 from pathlib import Path
+from typing import AsyncGenerator
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -15,6 +17,18 @@ import app.models  # noqa: F401
 settings = get_settings()
 Path(settings.upload_dir).mkdir(parents=True, exist_ok=True)
 
+
+@asynccontextmanager
+async def lifespan(application: FastAPI) -> AsyncGenerator[None, None]:
+    """Start the background scheduler on startup; stop it on shutdown."""
+    from app.scheduler import scheduler
+    scheduler.start()
+    try:
+        yield
+    finally:
+        scheduler.shutdown(wait=False)
+
+
 # Auto-create tables (works for SQLite dev; use Alembic for production)
 Base.metadata.create_all(bind=engine)
 
@@ -22,6 +36,7 @@ app = FastAPI(
     title=settings.app_name,
     description="Smart municipal waste management platform API for EcoSync.",
     version="0.1.0",
+    lifespan=lifespan,
 )
 
 app.add_middleware(

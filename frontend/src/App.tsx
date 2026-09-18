@@ -2,6 +2,10 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { DashboardLayout } from './layouts/DashboardLayout';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
+import { BulkGeneratorsPage } from './pages/admin/BulkGeneratorsPage';
+import { FleetManagementPage } from './pages/admin/FleetManagementPage';
+import { RouteDispatchPage } from './pages/admin/RouteDispatchPage';
+import { ZoneAnalyticsDashboard } from './pages/admin/ZoneAnalyticsDashboard';
 import { DriverDashboard } from './pages/driver/DriverDashboard';
 import { FeatureModulesPage } from './pages/FeatureModulesPage';
 import { LandingPage } from './pages/LandingPage';
@@ -28,6 +32,10 @@ export default function App() {
         </Route>
         <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
           <Route path="admin" element={<AdminDashboard />} />
+          <Route path="admin/zones" element={<ZoneAnalyticsDashboard />} />
+          <Route path="admin/fleet" element={<FleetManagementPage />} />
+          <Route path="admin/bulk-generators" element={<BulkGeneratorsPage />} />
+          <Route path="admin/routes" element={<RouteDispatchPage />} />
         </Route>
       </Route>
       <Route path="/features" element={<DashboardLayout />}>
@@ -36,3 +44,4 @@ export default function App() {
     </Routes>
   );
 }
+

@@ -1,12 +1,18 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Gift, LocateFixed, MapPinned, MessageSquareWarning, Recycle, Truck } from 'lucide-react';
+import {
+  AlertTriangle, Award, CheckCircle2, Gift, LocateFixed, MapPinned,
+  MessageSquareWarning, Recycle, ShoppingBag, Truck, TrendingUp, XCircle
+} from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { EmptyState } from '../../components/EmptyState';
 import { StatCard } from '../../components/StatCard';
 import { TrackingMap } from '../../components/TrackingMap';
 import { api, buildTrackingSocketUrl } from '../../lib/api';
-import type { Complaint, DriverLocation, Pickup, PickupStatus, Reward, WasteType } from '../../lib/types';
+import type {
+  CatalogItem, ComplianceScore, Complaint, DriverLocation, Pickup,
+  PickupStatus, Redemption, Reward, UserTierInfo, WasteType
+} from '../../lib/types';
 import { useSessionStore } from '../../store/session';
 
 const activePickupStatuses: PickupStatus[] = ['assigned', 'in_progress'];
@@ -19,6 +25,272 @@ const initialSchedule = {
   longitude: '',
   notes: ''
 };
+
+// ── Tier colour helper ────────────────────────────────────────────────────────
+
+function tierColour(tier: string) {
+  if (tier === 'gold') return 'text-yellow-600 bg-yellow-50';
+  if (tier === 'silver') return 'text-slate-500 bg-slate-100';
+  return 'text-amber-700 bg-amber-50';
+}
+
+// ── Phase 1: Confirm / Dispute pickup row controls ────────────────────────────
+
+interface PickupActionsProps {
+  pickup: Pickup;
+  onDone: () => void;
+}
+
+function PickupConfirmDispute({ pickup, onDone }: PickupActionsProps) {
+  const [disputeOpen, setDisputeOpen] = useState(false);
+  const [reason, setReason] = useState('');
+  const [msg, setMsg] = useState<string | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+
+  const confirm = useMutation({
+    mutationFn: () => api.post<Pickup>(`/pickups/${pickup.id}/confirm`),
+    onSuccess: () => { setMsg('Pickup confirmed! Points approved.'); onDone(); },
+    onError: () => setErr('Confirmation failed. Please try again.'),
+  });
+
+  const dispute = useMutation({
+    mutationFn: () => api.post<Pickup>(`/pickups/${pickup.id}/dispute`, { reason }),
+    onSuccess: () => { setMsg('Dispute submitted.'); setDisputeOpen(false); onDone(); },
+    onError: () => setErr('Dispute failed. Please try again.'),
+  });
+
+  // Only show actions for logged pickups not yet confirmed/disputed
+  if (!pickup.segregation_verified) return null;
+
+  return (
+    <div className="mt-2 rounded-xl bg-blue-50/70 border border-blue-100 p-3 grid gap-2">
+      <p className="text-xs font-semibold text-blue-800">
+        Driver logged: <strong>{pickup.weight_kg} kg · {pickup.waste_category}</strong>
+        {pickup.photo_url && ' · 📷 Photo attached'}
+      </p>
+      {!msg && (
+        <div className="flex gap-2 flex-wrap">
+          <button
+            type="button"
+            disabled={confirm.isPending}
+            onClick={() => void confirm.mutateAsync()}
+            className="flex items-center gap-1 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white disabled:opacity-60"
+          >
+            <CheckCircle2 className="h-3.5 w-3.5" /> Confirm
+          </button>
+          <button
+            type="button"
+            onClick={() => setDisputeOpen((o) => !o)}
+            className="flex items-center gap-1 rounded-lg bg-rose-100 px-3 py-1.5 text-xs font-bold text-rose-700"
+          >
+            <XCircle className="h-3.5 w-3.5" /> Dispute
+          </button>
+        </div>
+      )}
+      {disputeOpen && !msg && (
+        <div className="grid gap-2">
+          <textarea
+            className="rounded-lg border border-slate-200 px-3 py-2 text-xs"
+            rows={2}
+            placeholder="Briefly describe what's incorrect..."
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+          />
+          <button
+            type="button"
+            disabled={dispute.isPending || reason.trim().length < 5}
+            onClick={() => void dispute.mutateAsync()}
+            className="self-start rounded-lg bg-rose-600 px-4 py-1.5 text-xs font-bold text-white disabled:opacity-60"
+          >
+            {dispute.isPending ? 'Submitting...' : 'Submit dispute'}
+          </button>
+        </div>
+      )}
+      {msg && <p className="text-xs text-emerald-700">{msg}</p>}
+      {err && <p className="text-xs text-rose-700">{err}</p>}
+    </div>
+  );
+}
+
+// ── Phase 1: Points & Tier card ───────────────────────────────────────────────
+
+function PointsTierCard({ userId }: { userId: number }) {
+  const { data, isLoading } = useQuery({
+    queryKey: ['user-points', userId],
+    queryFn: async () => {
+      const resp = await api.get<UserTierInfo>(`/users/${userId}/points`);
+      return resp.data;
+    },
+    retry: false,
+  });
+
+  if (isLoading) return <div className="glass-card rounded-[2rem] p-6 animate-pulse h-40" />;
+  if (!data) return null;
+
+  return (
+    <article className="glass-card rounded-[2rem] p-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-black text-slate-950">Points & Tier</h2>
+          <p className="text-slate-600">Your closed-loop EcoSync reward balance.</p>
+        </div>
+        <Award className="h-10 w-10 text-emerald-600" />
+      </div>
+      <div className="mt-5 flex flex-wrap gap-4">
+        <div className="flex-1 rounded-2xl bg-white/80 p-4 text-center min-w-[100px]">
+          <p className="text-3xl font-black text-emerald-700">{data.points_balance}</p>
+          <p className="text-xs text-slate-500 mt-1">Balance</p>
+        </div>
+        <div className="flex-1 rounded-2xl bg-white/80 p-4 text-center min-w-[100px]">
+          <p className="text-3xl font-black text-slate-700">{data.points_lifetime}</p>
+          <p className="text-xs text-slate-500 mt-1">Lifetime</p>
+        </div>
+        <div className={`flex-1 rounded-2xl p-4 text-center min-w-[100px] font-black capitalize text-lg ${tierColour(data.current_tier)}`}>
+          {data.current_tier}
+          <p className="text-xs font-normal mt-1">Tier</p>
+        </div>
+        {data.flags_count > 0 && (
+          <div className="flex-1 rounded-2xl bg-rose-50 p-4 text-center min-w-[100px]">
+            <p className="text-2xl font-black text-rose-600">{data.flags_count}</p>
+            <p className="text-xs text-rose-500 mt-1">Disputes</p>
+          </div>
+        )}
+      </div>
+      {data.recent_transactions.length > 0 && (
+        <div className="mt-4">
+          <p className="mb-2 text-xs font-semibold text-slate-500 uppercase tracking-wide">Recent transactions</p>
+          <div className="grid gap-2 max-h-48 overflow-y-auto">
+            {data.recent_transactions.map((tx) => (
+              <div key={tx.id} className="flex items-center justify-between rounded-xl bg-white/70 px-3 py-2 text-sm">
+                <span className="text-slate-700 truncate flex-1 mr-2">{tx.reason}</span>
+                <span className={`font-bold shrink-0 ${tx.status === 'flagged' ? 'text-rose-600' : tx.status === 'pending' ? 'text-amber-600' : 'text-emerald-700'}`}>
+                  +{tx.points} {tx.status !== 'approved' ? `(${tx.status})` : ''}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </article>
+  );
+}
+
+// ── Phase 1: Compliance Score card ────────────────────────────────────────────
+
+function ComplianceCard({ userId }: { userId: number }) {
+  const { data, isLoading } = useQuery({
+    queryKey: ['compliance', userId],
+    queryFn: async () => {
+      const resp = await api.get<ComplianceScore>(`/users/${userId}/compliance`);
+      return resp.data;
+    },
+    retry: false,
+  });
+
+  if (isLoading) return <div className="glass-card rounded-[2rem] p-6 animate-pulse h-40" />;
+  if (!data) return null;
+
+  const score = data.rolling_score;
+  const colour = score >= 80 ? 'text-emerald-600' : score >= 50 ? 'text-amber-600' : 'text-rose-600';
+  const bg = score >= 80 ? 'bg-emerald-50' : score >= 50 ? 'bg-amber-50' : 'bg-rose-50';
+
+  return (
+    <article className="glass-card rounded-[2rem] p-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-black text-slate-950">Compliance Score</h2>
+          <p className="text-slate-600">90-day rolling segregation performance.</p>
+        </div>
+        <TrendingUp className="h-10 w-10 text-emerald-600" />
+      </div>
+      <div className="mt-5 flex items-center gap-6">
+        <div className={`flex h-24 w-24 shrink-0 items-center justify-center rounded-full ${bg}`}>
+          <span className={`text-3xl font-black ${colour}`}>{score.toFixed(0)}%</span>
+        </div>
+        <div className="grid gap-1 text-sm">
+          <p className="text-slate-700"><strong>{data.verified_pickups}</strong> verified out of <strong>{data.total_pickups}</strong> completed pickups</p>
+          <p className="text-slate-500 text-xs">Last updated: {new Date(data.updated_at).toLocaleDateString()}</p>
+          {score < 50 && (
+            <p className="flex items-center gap-1 text-xs text-rose-600 font-semibold mt-1">
+              <AlertTriangle className="h-3 w-3" /> Low score. Ensure waste is properly segregated.
+            </p>
+          )}
+        </div>
+      </div>
+    </article>
+  );
+}
+
+// ── Phase 1: Redeem Rewards card ──────────────────────────────────────────────
+
+function RedeemCard({ userId }: { userId: number }) {
+  const queryClient = useQueryClient();
+  const [redeemMsg, setRedeemMsg] = useState<Record<number, string>>({});
+
+  const catalogQuery = useQuery({
+    queryKey: ['catalog'],
+    queryFn: async () => {
+      const resp = await api.get<CatalogItem[]>('/redemptions/catalog');
+      return resp.data;
+    },
+  });
+
+  const redeem = useMutation({
+    mutationFn: (catalogItemId: number) =>
+      api.post<Redemption>('/redemptions', { catalog_item_id: catalogItemId }),
+    onSuccess: (data, catalogItemId) => {
+      setRedeemMsg((prev) => ({ ...prev, [catalogItemId]: '✅ Redeemed! Status: requested.' }));
+      void queryClient.invalidateQueries({ queryKey: ['user-points', userId] });
+    },
+    onError: (err, catalogItemId) => {
+      const msg = err instanceof Error
+        ? (err.message.includes('Insufficient') ? '❌ Insufficient points.' : '❌ Redemption failed.')
+        : '❌ Redemption failed.';
+      setRedeemMsg((prev) => ({ ...prev, [catalogItemId]: msg }));
+    },
+  });
+
+  if (catalogQuery.isLoading) return <div className="glass-card rounded-[2rem] p-6 animate-pulse h-40" />;
+  const items = catalogQuery.data ?? [];
+  if (items.length === 0) return null;
+
+  return (
+    <article className="glass-card rounded-[2rem] p-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-black text-slate-950">Redeem Rewards</h2>
+          <p className="text-slate-600">Spend your EcoSync points on real benefits.</p>
+        </div>
+        <ShoppingBag className="h-10 w-10 text-emerald-600" />
+      </div>
+      <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {items.map((item) => (
+          <div key={item.id} className="rounded-2xl bg-white/80 p-4 grid gap-2">
+            <div>
+              <p className="font-bold text-slate-900 text-sm">{item.item_name}</p>
+              <p className="text-xs text-slate-500 capitalize">{item.category.replace('_', ' ')}</p>
+            </div>
+            <p className="text-lg font-black text-emerald-700">{item.points_cost} pts</p>
+            {redeemMsg[item.id] ? (
+              <p className="text-xs font-semibold">{redeemMsg[item.id]}</p>
+            ) : (
+              <button
+                type="button"
+                disabled={redeem.isPending}
+                onClick={() => void redeem.mutateAsync(item.id)}
+                className="rounded-xl bg-emerald-600 px-4 py-1.5 text-xs font-bold text-white disabled:opacity-60"
+              >
+                Redeem
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+    </article>
+  );
+}
+
+// ── Main user dashboard ───────────────────────────────────────────────────────
 
 export function UserDashboard() {
   const queryClient = useQueryClient();
@@ -300,22 +572,31 @@ export function UserDashboard() {
           <h2 className="text-2xl font-black text-slate-950">Scheduled pickups</h2>
           <div className="mt-5 grid gap-3">
             {pickups.map((pickup) => (
-              <div key={pickup.id} className="flex flex-col gap-2 rounded-2xl bg-white/80 p-4 md:flex-row md:items-center md:justify-between">
-                <div>
-                  <p className="font-bold text-slate-900">{pickup.waste_type} · {pickup.status}</p>
-                  <p className="text-sm text-slate-600">{pickup.scheduled_date} at {pickup.scheduled_time}</p>
-                  <p className="text-sm text-slate-500">Driver: {pickup.driver_id ?? 'Auto-assignment pending'}</p>
+              <div key={pickup.id} className="rounded-2xl bg-white/80 p-4">
+                <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                  <div>
+                    <p className="font-bold text-slate-900">{pickup.waste_type} · {pickup.status}</p>
+                    <p className="text-sm text-slate-600">{pickup.scheduled_date} at {pickup.scheduled_time}</p>
+                    <p className="text-sm text-slate-500">Driver: {pickup.driver_id ?? 'Auto-assignment pending'}</p>
+                  </div>
+                  <button
+                    className={`rounded-2xl px-5 py-2 text-sm font-bold ${trackedPickupId === pickup.id ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-800'}`}
+                    type="button"
+                    onClick={() => {
+                      setTrackedPickupId(pickup.id);
+                      trackingPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }}
+                  >
+                    <MapPinned className="mr-1 inline h-4 w-4" />{trackedPickupId === pickup.id ? 'Tracking' : 'Track'}
+                  </button>
                 </div>
-                <button
-                  className={`rounded-2xl px-5 py-2 text-sm font-bold ${trackedPickupId === pickup.id ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-800'}`}
-                  type="button"
-                  onClick={() => {
-                    setTrackedPickupId(pickup.id);
-                    trackingPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }}
-                >
-                  <MapPinned className="mr-1 inline h-4 w-4" />{trackedPickupId === pickup.id ? 'Tracking' : 'Track'}
-                </button>
+                {/* Phase 1: confirm / dispute controls */}
+                {pickup.status === 'completed' && (
+                  <PickupConfirmDispute
+                    pickup={pickup}
+                    onDone={() => void queryClient.invalidateQueries({ queryKey: ['pickups', user.id] })}
+                  />
+                )}
               </div>
             ))}
           </div>
@@ -323,6 +604,14 @@ export function UserDashboard() {
       ) : (
         <EmptyState title="No pickups yet" description="Schedule your first pickup to unlock live tracking and analytics." />
       )}
+
+      {/* Phase 1: Points/Tier + Compliance + Redeem */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        <PointsTierCard userId={user.id} />
+        <ComplianceCard userId={user.id} />
+      </div>
+      <RedeemCard userId={user.id} />
+
       <article className="glass-card rounded-[2rem] p-6">
         <div className="flex items-center gap-3">
           <MessageSquareWarning className="h-6 w-6 text-emerald-600" />
@@ -351,4 +640,3 @@ export function UserDashboard() {
     </section>
   );
 }
-

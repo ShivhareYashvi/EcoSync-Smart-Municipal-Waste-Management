@@ -106,7 +106,12 @@ class OperationsService:
 
     def create_complaint(self, session: Session, payload: ComplaintCreate) -> ComplaintRead:
         self._ensure_user_exists(session, payload.user_id)
-        complaint = Complaint(**payload.model_dump())
+        user = session.scalar(select(User).where(User.id == payload.user_id))
+        complaint_data = payload.model_dump()
+        # Inherit zone from user if not explicitly provided
+        if user and user.zone_id:
+            complaint_data.setdefault("zone_id", user.zone_id)
+        complaint = Complaint(**complaint_data)
         session.add(complaint)
         session.commit()
         session.refresh(complaint)
@@ -117,6 +122,11 @@ class OperationsService:
         if complaint is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Complaint not found")
         complaint.status = payload.status
+        # Set resolved_at timestamp when the complaint reaches a terminal state
+        from app.models.enums import ComplaintStatus as CS
+        if payload.status in (CS.RESOLVED, CS.REJECTED) and complaint.resolved_at is None:
+            from datetime import datetime, timezone as tz
+            complaint.resolved_at = datetime.now(tz.utc)
         session.commit()
         session.refresh(complaint)
         return ComplaintRead.model_validate(complaint)

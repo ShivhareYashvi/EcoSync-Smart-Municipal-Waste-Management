@@ -22,7 +22,9 @@ class ComplaintStatusUpdate(BaseModel):
 class ComplaintRead(ComplaintBase):
     id: int
     user_id: int
+    zone_id: int | None = None
     status: ComplaintStatus
+    resolved_at: datetime | None = None
     created_at: datetime
     updated_at: datetime
 

@@ -1,8 +1,9 @@
-import { ChangeEvent, FormEvent, useMemo, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../lib/api';
 import { dashboardPathForRole } from '../lib/navigation';
 import type { LoginResponse, OTPResponse, UploadResponse, UserRole } from '../lib/types';
+import type { Zone } from '../lib/types';
 import { useSessionStore } from '../store/session';
 
 type RegisterForm = {
@@ -13,6 +14,7 @@ type RegisterForm = {
   address: string;
   role: UserRole;
   vehicle_number: string;
+  zone_id: string;
 };
 
 const initialForm: RegisterForm = {
@@ -22,7 +24,8 @@ const initialForm: RegisterForm = {
   password: '',
   address: '',
   role: 'citizen',
-  vehicle_number: ''
+  vehicle_number: '',
+  zone_id: ''
 };
 
 export function RegisterPage() {
@@ -39,6 +42,12 @@ export function RegisterPage() {
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isBusy, setIsBusy] = useState(false);
+  const [zones, setZones] = useState<Zone[]>([]);
+
+  // Fetch zones for the ward selector
+  useEffect(() => {
+    api.get<Zone[]>('/zones').then((r) => setZones(r.data)).catch(() => {/* zones optional */});
+  }, []);
 
   const canRegister = useMemo(() => otpVerified && !isBusy && verifiedPhone === form.phone, [form.phone, isBusy, otpVerified, verifiedPhone]);
 
@@ -113,6 +122,7 @@ export function RegisterPage() {
         ...form,
         email: form.email || null,
         vehicle_number: form.role === 'driver' ? form.vehicle_number : null,
+        zone_id: form.zone_id ? parseInt(form.zone_id) : null,
         electricity_bill_path
       });
       const loginResponse = await api.post<LoginResponse>('/auth/login', {
@@ -164,6 +174,24 @@ export function RegisterPage() {
             <option value="driver">Driver</option>
             <option value="admin">Admin</option>
           </select>
+          {/* Zone selector */}
+          {zones.length > 0 ? (
+            <select
+              id="register-zone"
+              className="rounded-2xl border border-slate-200 px-4 py-3"
+              value={form.zone_id}
+              onChange={(event) => updateField('zone_id', event.target.value)}
+            >
+              <option value="">Select your ward / zone</option>
+              {zones.map((z) => (
+                <option key={z.id} value={z.id}>{z.name}</option>
+              ))}
+            </select>
+          ) : (
+            <div className="rounded-2xl border border-dashed border-slate-200 px-4 py-3 text-sm text-slate-400">
+              Zone selection not available (zones not yet seeded).
+            </div>
+          )}
           {form.role === 'driver' ? (
             <input className="rounded-2xl border border-slate-200 px-4 py-3" placeholder="Vehicle number" value={form.vehicle_number} onChange={(event) => updateField('vehicle_number', event.target.value)} />
           ) : (

@@ -5,7 +5,11 @@ import { useSessionStore } from '../store/session';
 const links: Array<{ to: string; label: string; role?: string }> = [
   { to: '/dashboard/user', label: 'Citizen', role: 'citizen' },
   { to: '/dashboard/driver', label: 'Driver', role: 'driver' },
-  { to: '/dashboard/admin', label: 'Admin', role: 'admin' },
+  { to: '/dashboard/admin', label: 'Operations', role: 'admin' },
+  { to: '/dashboard/admin/zones', label: 'Zone Analytics', role: 'admin' },
+  { to: '/dashboard/admin/fleet', label: 'Fleet', role: 'admin' },
+  { to: '/dashboard/admin/bulk-generators', label: 'Bulk Gen.', role: 'admin' },
+  { to: '/dashboard/admin/routes', label: 'Routes', role: 'admin' },
   { to: '/features', label: 'Features' }
 ];
 
