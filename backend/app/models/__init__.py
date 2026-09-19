@@ -47,6 +47,7 @@ from app.models.recycling_receipt import RecyclingReceipt
 from app.models.recycling_transaction import RecyclingTransaction
 from app.models.redemption import Redemption
 from app.models.redemption_catalog import RedemptionCatalog
+from app.models.idempotency_key import IdempotencyKey
 from app.models.referral import Referral
 from app.models.reward import Reward
 from app.models.route import Route, RouteStop
@@ -65,6 +66,7 @@ __all__ = [
     "Driver",
     "DriverAvailability",
     "DriverLocation",
+    "IdempotencyKey",
     "Notification",
     "OTPChallenge",
     "PickupRequest",

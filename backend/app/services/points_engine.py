@@ -72,6 +72,14 @@ class PointsService:
         Enforces the 50-pt/week weight-bonus cap at the service level.
         """
         pickup = self._get_pickup(session, pickup_id)
+
+        # Anti-duplicate guard: return existing transaction if already created for this pickup
+        existing_tx = session.scalar(
+            select(PointsTransaction).where(PointsTransaction.pickup_id == pickup_id)
+        )
+        if existing_tx is not None:
+            return existing_tx
+
         history = self._build_history(session, pickup.user_id)
         raw_points = calculate_points(pickup, history)
 

@@ -1,11 +1,41 @@
 import { useEffect, useRef, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Camera, CheckCircle, CheckCircle2, Clock, LocateFixed, MapPinned, Navigation, PackageCheck, SkipForward, Truck, Weight } from 'lucide-react';
+import {
+  AlertTriangle,
+  Camera,
+  CheckCircle,
+  CheckCircle2,
+  Clock,
+  Cloud,
+  LocateFixed,
+  MapPinned,
+  Navigation,
+  PackageCheck,
+  RefreshCw,
+  SkipForward,
+  Truck,
+  Weight,
+  Wifi,
+  WifiOff,
+} from 'lucide-react';
 import { EmptyState } from '../../components/EmptyState';
 import { StatCard } from '../../components/StatCard';
 import { TrackingMap } from '../../components/TrackingMap';
 import { api } from '../../lib/api';
 import type { DriverLocation, Pickup, PickupStatus, Route, WasteCategory } from '../../lib/types';
+import {
+  dismissConflict,
+  getOfflineConflicts,
+  savePendingPickupLog,
+  savePendingStopUpdate,
+  type OfflineConflict,
+} from '../../lib/offlineStore';
+import {
+  generateIdempotencyKey,
+  subscribeToConflicts,
+  subscribeToSyncStatus,
+  syncPendingMutations,
+} from '../../lib/syncEngine';
 import { useSessionStore } from '../../store/session';
 
 // ── Phase 1: Log Pickup Details sub-form ───────
@@ -48,19 +78,60 @@ function LogPickupForm({ pickup, onSuccess }: LogFormProps) {
         setUploading(true);
         try {
           resolvedPhotoUrl = await uploadPhoto(photoFile);
+        } catch {
+          // If offline photo upload fails, proceed with null photo URL so weight logging isn't blocked
+          resolvedPhotoUrl = null;
         } finally {
           setUploading(false);
         }
       }
-      const resp = await api.post<Pickup>(`/pickups/${pickup.id}/log`, {
-        weight_kg: weight,
-        waste_category: wasteCategory,
-        photo_url: resolvedPhotoUrl,
-      });
+
+      const idempotencyKey = generateIdempotencyKey();
+
+      // Offline detection: save to IndexedDB mutation queue
+      if (typeof navigator !== 'undefined' && !navigator.onLine) {
+        await savePendingPickupLog({
+          idempotencyKey,
+          pickupId: pickup.id,
+          payload: {
+            weight_kg: weight,
+            waste_category: wasteCategory,
+            photo_url: resolvedPhotoUrl || undefined,
+          },
+          createdAt: new Date().toISOString(),
+          status: 'pending',
+        });
+        return {
+          id: pickup.id,
+          weight_kg: weight,
+          waste_category: wasteCategory,
+          photo_url: resolvedPhotoUrl,
+          segregation_verified: Boolean(resolvedPhotoUrl),
+        } as Pickup;
+      }
+
+      const resp = await api.post<Pickup>(
+        `/pickups/${pickup.id}/log`,
+        {
+          weight_kg: weight,
+          waste_category: wasteCategory,
+          photo_url: resolvedPhotoUrl,
+        },
+        {
+          headers: {
+            'Idempotency-Key': idempotencyKey,
+          },
+        }
+      );
       return resp.data;
     },
     onSuccess: () => {
-      setLogMsg('Pickup details logged successfully!');
+      const isOffline = typeof navigator !== 'undefined' && !navigator.onLine;
+      setLogMsg(
+        isOffline
+          ? 'Offline mode: Pickup logged locally in IndexedDB. Will sync when reconnected.'
+          : 'Pickup details logged successfully!'
+      );
       setLogErr(null);
       onSuccess();
     },
@@ -165,7 +236,27 @@ function TodaysRoute({ driverUserId }: { driverUserId: number }) {
 
   const stopStatusMutation = useMutation({
     mutationFn: async ({ routeId, stopId, status }: { routeId: number; stopId: number; status: string }) => {
-      return (await api.patch<Route>(`/routes/${routeId}/stops/${stopId}/status`, { status })).data;
+      const idempotencyKey = generateIdempotencyKey();
+      if (typeof navigator !== 'undefined' && !navigator.onLine) {
+        await savePendingStopUpdate({
+          idempotencyKey,
+          routeId,
+          stopId,
+          payload: { status },
+          createdAt: new Date().toISOString(),
+          status: 'pending',
+        });
+        return null;
+      }
+      return (
+        await api.patch<Route>(
+          `/routes/${routeId}/stops/${stopId}/status`,
+          { status },
+          {
+            headers: { 'Idempotency-Key': idempotencyKey },
+          }
+        )
+      ).data;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['driver-routes', driverUserId] }),
   });
@@ -295,6 +386,11 @@ export function DriverDashboard() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [trackingActive, setTrackingActive] = useState(false);
+  const [isOnline, setIsOnline] = useState(typeof navigator !== 'undefined' ? navigator.onLine : true);
+  const [queueCount, setQueueCount] = useState(0);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [conflicts, setConflicts] = useState<OfflineConflict[]>([]);
+
   const watchIdRef = useRef<number | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const latRef = useRef('');
@@ -309,6 +405,41 @@ export function DriverDashboard() {
     },
     enabled: Boolean(user?.driver_id)
   });
+
+  // Track online/offline status and subscribe to sync engine & conflicts
+  useEffect(() => {
+    const handleOnline = () => {
+      setIsOnline(true);
+      void syncPendingMutations().then(() => {
+        void queryClient.invalidateQueries({ queryKey: ['driver-pickups'] });
+        void queryClient.invalidateQueries({ queryKey: ['driver-routes'] });
+      });
+    };
+    const handleOffline = () => {
+      setIsOnline(false);
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    const unsubSync = subscribeToSyncStatus((count, syncing) => {
+      setQueueCount(count);
+      setIsSyncing(syncing);
+    });
+
+    const unsubConflict = subscribeToConflicts((newConflict) => {
+      setConflicts((prev) => [newConflict, ...prev]);
+    });
+
+    void getOfflineConflicts().then(setConflicts);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+      unsubSync();
+      unsubConflict();
+    };
+  }, [queryClient]);
 
   const selectedPickup = useMemo(
     () => pickupsQuery.data?.find((pickup) => pickup.id === selectedPickupId) ?? pickupsQuery.data?.[0] ?? null,
@@ -341,6 +472,9 @@ export function DriverDashboard() {
       if (!trackingActive || !selectedPickup || !user?.driver_id) return;
 
       const pushLocation = async (lat: string, lng: string) => {
+        // Paused while offline: never queue or broadcast stale GPS points
+        if (typeof navigator !== 'undefined' && !navigator.onLine) return;
+
         const now = Date.now();
         if (now - lastPostTimeRef.current < 5000) return; // throttle: at most once per 5 s
         lastPostTimeRef.current = now;
@@ -418,6 +552,9 @@ export function DriverDashboard() {
 
   const sendLocation = useMutation({
     mutationFn: async () => {
+      if (typeof navigator !== 'undefined' && !navigator.onLine) {
+        throw new Error('Device is offline. Real-time GPS broadcasting is paused.');
+      }
       if (!selectedPickup || !user?.driver_id) {
         return;
       }
@@ -457,6 +594,80 @@ export function DriverDashboard() {
 
   return (
     <section className="grid gap-6">
+      {/* Offline Status & Sync Banners */}
+      {!isOnline && (
+        <div className="flex items-center justify-between rounded-2xl bg-amber-500/10 border border-amber-500/20 px-5 py-4 text-amber-900 shadow-sm">
+          <div className="flex items-center gap-3">
+            <WifiOff className="h-5 w-5 text-amber-600 animate-pulse shrink-0" />
+            <div>
+              <p className="font-bold text-sm text-amber-950">Offline Mode Active</p>
+              <p className="text-xs text-amber-800">
+                Mutations are saved locally in IndexedDB. Real-time GPS pings are paused until connectivity is restored.
+              </p>
+            </div>
+          </div>
+          <span className="rounded-full bg-amber-200/70 px-3 py-1 text-xs font-bold text-amber-900">
+            {queueCount} queued
+          </span>
+        </div>
+      )}
+
+      {isOnline && queueCount > 0 && (
+        <div className="flex items-center justify-between rounded-2xl bg-sky-50 border border-sky-200 px-5 py-3 text-sky-900 shadow-sm">
+          <div className="flex items-center gap-3">
+            <RefreshCw className={`h-4 w-4 text-sky-600 ${isSyncing ? 'animate-spin' : ''}`} />
+            <p className="text-xs font-semibold text-sky-950">
+              {isSyncing ? `Replaying ${queueCount} offline mutation(s)...` : `${queueCount} pending mutation(s) queued for sync.`}
+            </p>
+          </div>
+          <button
+            type="button"
+            disabled={isSyncing}
+            onClick={() => void syncPendingMutations().then(() => {
+              void queryClient.invalidateQueries({ queryKey: ['driver-pickups'] });
+              void queryClient.invalidateQueries({ queryKey: ['driver-routes'] });
+            })}
+            className="rounded-xl bg-sky-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-sky-700 disabled:opacity-50 transition-colors shadow-sm"
+          >
+            Sync Now
+          </button>
+        </div>
+      )}
+
+      {/* Offline Conflict Notifications */}
+      {conflicts.length > 0 && (
+        <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 space-y-2 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-rose-900 font-bold text-sm">
+              <AlertTriangle className="h-4 w-4 text-rose-600 shrink-0" />
+              <span>Sync Divergence Alerts ({conflicts.length})</span>
+            </div>
+          </div>
+          <div className="space-y-2 max-h-48 overflow-y-auto">
+            {conflicts.map((conflict) => (
+              <div key={conflict.id} className="flex items-start justify-between rounded-xl bg-white p-3 border border-rose-100 text-xs shadow-xs">
+                <div>
+                  <p className="font-semibold text-slate-900">{conflict.message}</p>
+                  <p className="text-slate-500 mt-0.5">{new Date(conflict.timestamp).toLocaleTimeString()}</p>
+                </div>
+                {conflict.id && (
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      await dismissConflict(conflict.id!);
+                      setConflicts((prev) => prev.filter((c) => c.id !== conflict.id));
+                    }}
+                    className="text-rose-600 hover:text-rose-800 font-semibold ml-3 shrink-0"
+                  >
+                    Dismiss
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="grid gap-4 md:grid-cols-3">
         <StatCard label="Assigned pickups" value={String(pickups.length)} icon={Truck} />
         <StatCard label="Completed today" value={String(completed)} icon={PackageCheck} tone="blue" />

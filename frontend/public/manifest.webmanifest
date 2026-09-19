@@ -1,0 +1,17 @@
+{
+  "name": "EcoSync Municipal Platform",
+  "short_name": "EcoSync",
+  "description": "Smart municipal waste management, verified collection, and route optimization platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#059669",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%23059669'/><text x='50' y='65' font-size='45' font-weight='bold' text-anchor='middle' fill='white'>E</text></svg>",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}

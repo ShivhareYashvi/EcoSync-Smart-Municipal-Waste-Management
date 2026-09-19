@@ -39,6 +39,9 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+from app.middleware.idempotency_middleware import IdempotencyMiddleware
+
+app.add_middleware(IdempotencyMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[str(settings.frontend_origin).rstrip("/")],

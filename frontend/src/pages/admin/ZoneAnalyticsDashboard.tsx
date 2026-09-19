@@ -15,6 +15,7 @@ import {
 import { api } from '../../lib/api';
 import type { CityWideAnalytics, ComplaintHotspot } from '../../lib/types';
 import { AlertTriangle, CheckCircle2, Clock, TrendingUp, Zap } from 'lucide-react';
+import { ComplaintHeatmapMap } from '../../components/admin/ComplaintHeatmapMap';
 
 // ── tiny helpers ──
 
@@ -124,6 +125,9 @@ export function ZoneAnalyticsDashboard() {
         <KPIBadge value={String(totalOverdue)} label="Overdue Complaints" color={totalOverdue > 0 ? '#ef4444' : '#64748b'} />
         <KPIBadge value={String(activeHotspots)} label="Active Hotspots" color={activeHotspots > 0 ? '#f59e0b' : '#64748b'} />
       </div>
+
+      {/* Spatial Geospatial Heatmap Layer */}
+      <ComplaintHeatmapMap />
 
       {/* Charts row */}
       <div className="grid gap-6 lg:grid-cols-2">
