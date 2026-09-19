@@ -197,3 +197,27 @@ class CompostBatchStatus(StrEnum):
     COMPOSTING = "composting"
     COMPLETED = "completed"
 
+
+# ── Phase 4: Citizen Engagement & Community ────────────────────────────
+
+
+class SocietyMemberRole(StrEnum):
+    """Role of a user within a housing society."""
+
+    MEMBER = "member"
+    RWA_ADMIN = "rwa_admin"
+
+
+class SocietyMemberStatus(StrEnum):
+    """Approval status of a society membership (RWA admin roles require approval)."""
+
+    PENDING = "pending"
+    ACTIVE = "active"
+
+
+class ReferralStatus(StrEnum):
+    """Lifecycle status of a citizen-to-citizen referral."""
+
+    PENDING = "pending"
+    COMPLETED = "completed"
+

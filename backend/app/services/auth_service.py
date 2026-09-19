@@ -74,6 +74,7 @@ class AuthService:
             address=payload.address,
             verified=True,
             electricity_bill_path=payload.electricity_bill_path,
+            locale_preference=payload.locale_preference or "en",
             created_at=now,
             updated_at=now,
         )
@@ -81,6 +82,9 @@ class AuthService:
         try:
             session.flush()
             user.household_id = f"ECO-{now.year}-{user.id:06d}"
+            if payload.referral_code:
+                from app.services.referral_service import referral_service
+                referral_service.process_referral_on_registration(session, user.id, payload.referral_code)
             if payload.role == UserRole.DRIVER and payload.vehicle_number:
                 session.add(
                     Driver(

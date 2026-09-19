@@ -8,6 +8,7 @@ from app.api.v1.complaints_ext import router as complaints_ext_router
 from app.api.v1.compliance import router as compliance_router
 from app.api.v1.compost_batches import router as compost_batches_router
 from app.api.v1.epr_credits import router as epr_credits_router
+from app.api.v1.leaderboards import router as leaderboards_router
 from app.api.v1.operations import router as operations_router
 from app.api.v1.pickups_ext import router as pickups_ext_router
 from app.api.v1.points import router as points_router
@@ -15,7 +16,9 @@ from app.api.v1.recyclers import router as recyclers_router
 from app.api.v1.recycling_receipts import router as recycling_receipts_router
 from app.api.v1.recycling_transactions import router as recycling_transactions_router
 from app.api.v1.redemptions import router as redemptions_router
+from app.api.v1.referrals import router as referrals_router
 from app.api.v1.routes_api import router as routes_router
+from app.api.v1.societies import router as societies_router
 from app.api.v1.tracking import router as tracking_router
 from app.api.v1.upload_pickup_photo import router as upload_photo_router
 from app.api.v1.uploads import router as uploads_router
@@ -57,3 +60,7 @@ router.include_router(recycling_transactions_router)
 router.include_router(recycling_receipts_router)
 router.include_router(epr_credits_router)
 router.include_router(compost_batches_router)
+# Phase 4 routers
+router.include_router(societies_router)
+router.include_router(leaderboards_router)
+router.include_router(referrals_router)

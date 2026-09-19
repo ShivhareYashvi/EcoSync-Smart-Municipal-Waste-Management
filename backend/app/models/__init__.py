@@ -2,6 +2,7 @@ from app.models.brand_account import BrandAccount
 from app.models.bulk_generator import BulkGenerator
 from app.models.complaint import Complaint
 from app.models.complaint_hotspot import ComplaintHotspot
+from app.models.complaint_upvote import ComplaintUpvote
 from app.models.compliance_score import ComplianceScore
 from app.models.compost_batch import CompostBatch
 from app.models.driver import Driver
@@ -23,15 +24,19 @@ from app.models.enums import (
     RecyclerVerificationStatus,
     RecyclingTransactionStatus,
     RedemptionStatus,
+    ReferralStatus,
     RewardSource,
     RouteStatus,
     RouteStopStatus,
+    SocietyMemberRole,
+    SocietyMemberStatus,
     UserRole,
     UserTier,
     WasteCategory,
     WasteType,
 )
 from app.models.epr_credit import EPRCredit
+from app.models.leaderboard_opt_in import LeaderboardOptIn
 from app.models.notification import Notification
 from app.models.otp_challenge import OTPChallenge
 from app.models.pickup_request import PickupRequest
@@ -42,8 +47,11 @@ from app.models.recycling_receipt import RecyclingReceipt
 from app.models.recycling_transaction import RecyclingTransaction
 from app.models.redemption import Redemption
 from app.models.redemption_catalog import RedemptionCatalog
+from app.models.referral import Referral
 from app.models.reward import Reward
 from app.models.route import Route, RouteStop
+from app.models.society import Society
+from app.models.society_membership import SocietyMembership
 from app.models.user import User
 from app.models.user_tier import UserTierRecord
 from app.models.vehicle import Vehicle
@@ -103,4 +111,14 @@ __all__ = [
     "RecyclingReceipt",
     "RecyclingTransaction",
     "RecyclingTransactionStatus",
+    # Phase 4
+    "ComplaintUpvote",
+    "LeaderboardOptIn",
+    "Referral",
+    "ReferralStatus",
+    "Society",
+    "SocietyMemberRole",
+    "SocietyMemberStatus",
+    "SocietyMembership",
 ]
+

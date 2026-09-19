@@ -31,6 +31,8 @@ export interface User {
   verification_status?: RecyclerVerificationStatus | null;
   materials_accepted?: MaterialType[] | null;
   service_zone_ids?: number[] | null;
+  zone_id?: number | null;
+  locale_preference?: string;
   created_at: string;
   updated_at: string;
 }
@@ -63,10 +65,14 @@ export interface Pickup {
 export interface Complaint {
   id: number;
   user_id: number;
+  zone_id?: number | null;
   category: string;
   description: string;
   image: string | null;
   status: ComplaintStatus;
+  upvote_count?: number;
+  user_has_upvoted?: boolean;
+  resolved_at?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -376,5 +382,100 @@ export interface CompostBatch {
   status: CompostBatchStatus;
   buyer_note?: string | null;
   created_at: string;
+}
+
+// ── Phase 4: Citizen Engagement & Community ──────────────
+export type SocietyMemberRole = 'member' | 'rwa_admin';
+export type SocietyMemberStatus = 'pending' | 'active' | 'rejected';
+export type ReferralStatus = 'pending' | 'completed';
+
+export interface Society {
+  id: number;
+  name: string;
+  address: string;
+  zone_id: number;
+  created_at: string;
+}
+
+export interface SocietyMembership {
+  id: number;
+  user_id: number;
+  society_id: number;
+  role: SocietyMemberRole;
+  status: SocietyMemberStatus;
+  registration_doc_path?: string | null;
+  joined_at: string;
+  user_name?: string | null;
+  user_email?: string | null;
+  society_name?: string | null;
+}
+
+export interface SocietyDashboard {
+  society_id: number;
+  society_name: string;
+  zone_id: number;
+  total_members: number;
+  active_members: number;
+  privacy_suppressed: boolean;
+  message?: string | null;
+  average_compliance?: number | null;
+  total_verified_pickups?: number | null;
+  total_points_earned?: number | null;
+  zone_rank?: number | null;
+}
+
+export interface LeaderboardSettings {
+  user_id: number;
+  opted_in: boolean;
+  display_handle?: string | null;
+  opted_in_at?: string | null;
+}
+
+export interface IndividualLeaderboardEntry {
+  rank: number;
+  user_id: number;
+  display_handle: string;
+  points: number;
+  compliance_score: number;
+  verified_pickups: number;
+  zone_id?: number | null;
+  society_id?: number | null;
+}
+
+export interface SocietyLeaderboardEntry {
+  rank: number;
+  society_id: number;
+  society_name: string;
+  zone_id: number;
+  active_members: number;
+  average_compliance: number;
+  total_verified_pickups: number;
+  total_points: number;
+}
+
+export interface ReferralCodeResponse {
+  referral_code: string;
+  referral_link: string;
+  bonus_points: number;
+}
+
+export interface ReferralItem {
+  id: number;
+  referred_user_id: number;
+  referred_user_name?: string | null;
+  status: ReferralStatus;
+  points_awarded: boolean;
+  created_at: string;
+}
+
+export interface ReferralSummary {
+  referral_code: string;
+  referral_link: string;
+  bonus_points_per_referral: number;
+  total_referrals: number;
+  completed_referrals: number;
+  pending_referrals: number;
+  total_points_earned: number;
+  referrals: ReferralItem[];
 }
 

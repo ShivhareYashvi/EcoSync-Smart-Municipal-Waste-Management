@@ -1,9 +1,16 @@
 from fastapi import APIRouter, Depends, Query, Response, status
 from sqlalchemy.orm import Session
 
+from app.core.security import get_current_user
 from app.db import get_db
+from app.models.user import User
 from app.schemas.analytics import AnalyticsSummary
-from app.schemas.complaint import ComplaintCreate, ComplaintRead, ComplaintStatusUpdate
+from app.schemas.complaint import (
+    ComplaintCreate,
+    ComplaintRead,
+    ComplaintStatusUpdate,
+    ComplaintUpvoteResponse,
+)
 from app.schemas.notification import NotificationCreate, NotificationRead
 from app.schemas.pickup_request import PickupAssignment, PickupRequestCreate, PickupRequestRead, PickupStatusUpdate
 from app.schemas.reward import RewardCreate, RewardRead, RewardRedeem
@@ -51,8 +58,34 @@ def create_complaint(payload: ComplaintCreate, session: Session = Depends(get_db
 
 
 @router.get("/complaints", response_model=list[ComplaintRead])
-def list_complaints(user_id: int | None = Query(default=None), session: Session = Depends(get_db)) -> list[ComplaintRead]:
-    return operations_service.list_complaints(session, user_id=user_id)
+def list_complaints(
+    user_id: int | None = Query(default=None),
+    sort_by: str | None = Query(default=None, description="Sort order, e.g. 'upvotes' or 'created_at'"),
+    current_user: User = Depends(get_current_user),
+    session: Session = Depends(get_db),
+) -> list[ComplaintRead]:
+    return operations_service.list_complaints(
+        session,
+        user_id=user_id,
+        sort_by=sort_by,
+        current_user_id=current_user.id if current_user else None,
+    )
+
+
+@router.post("/complaints/{complaint_id}/upvote", response_model=ComplaintUpvoteResponse)
+def upvote_complaint(
+    complaint_id: int,
+    current_user: User = Depends(get_current_user),
+    session: Session = Depends(get_db),
+) -> ComplaintUpvoteResponse:
+    """Toggle upvote on an existing complaint."""
+    result = operations_service.toggle_complaint_upvote(
+        session, complaint_id, current_user.id
+    )
+    return ComplaintUpvoteResponse(
+        upvoted=result["upvoted"],
+        upvote_count=result["upvote_count"],
+    )
 
 
 @router.patch("/complaints/{complaint_id}/status", response_model=ComplaintRead)

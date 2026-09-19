@@ -17,6 +17,8 @@ class RegisterRequest(BaseModel):
     materials_accepted: list[MaterialType] | None = None
     service_zone_ids: list[int] | None = None
     verification_doc_url: str | None = Field(default=None, max_length=512)
+    referral_code: str | None = Field(default=None, max_length=50)
+    locale_preference: str = Field(default="en", max_length=10)
 
 
 class LoginRequest(BaseModel):

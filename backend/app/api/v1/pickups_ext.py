@@ -47,6 +47,10 @@ def log_pickup_details(
     points_service.award_points(session, pickup_id)
     compliance_service.recalculate(session, pickup.user_id)
 
+    # Trigger referral bonus check if this is the citizen's first verified pickup
+    from app.services.referral_service import referral_service
+    referral_service.check_and_award_referral_bonus(session, pickup_id)
+
     return PickupRequestRead.model_validate(pickup)
 
 
@@ -74,6 +78,10 @@ def confirm_pickup(
         points_service.approve_transaction(session, tx.id)
 
     compliance_service.recalculate(session, pickup.user_id)
+
+    from app.services.referral_service import referral_service
+    referral_service.check_and_award_referral_bonus(session, pickup_id)
+
     session.refresh(pickup)
     return PickupRequestRead.model_validate(pickup)
 

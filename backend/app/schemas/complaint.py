@@ -27,5 +27,14 @@ class ComplaintRead(ComplaintBase):
     resolved_at: datetime | None = None
     created_at: datetime
     updated_at: datetime
+    upvote_count: int = 0
+    user_has_upvoted: bool = False
 
     model_config = {"from_attributes": True}
+
+
+class ComplaintUpvoteResponse(BaseModel):
+    """Response returned when a complaint upvote is toggled."""
+
+    upvoted: bool
+    upvote_count: int

@@ -9,6 +9,7 @@ import { EmptyState } from '../../components/EmptyState';
 import { StatCard } from '../../components/StatCard';
 import { TrackingMap } from '../../components/TrackingMap';
 import { CitizenRecyclingMarketplace } from '../../components/user/CitizenRecyclingMarketplace';
+import { CommunityHubPanel } from '../../components/community/CommunityHubPanel';
 import { api, buildTrackingSocketUrl } from '../../lib/api';
 import type {
   CatalogItem, ComplianceScore, Complaint, DriverLocation, Pickup,
@@ -615,6 +616,9 @@ export function UserDashboard() {
 
       {/* Phase 3: Marketplace (Sell Recyclables, Sales, Receipts) */}
       <CitizenRecyclingMarketplace userId={user.id} />
+
+      {/* Phase 4: Citizen Engagement & Community Hub */}
+      <CommunityHubPanel currentUser={user} />
 
       <article className="glass-card rounded-[2rem] p-6">
         <div className="flex items-center gap-3">

@@ -3,6 +3,12 @@ from app.schemas.auth import LoginRequest, OTPRequest, OTPResponse, OTPVerifyReq
 from app.schemas.complaint import ComplaintCreate, ComplaintRead, ComplaintStatusUpdate
 from app.schemas.compliance import ComplianceScoreRead
 from app.schemas.driver import DriverCreate, DriverRead as DriverProfileRead, DriverUpdate
+from app.schemas.leaderboard import (
+    IndividualLeaderboardEntry,
+    LeaderboardSettingsRead,
+    LeaderboardSettingsUpdate,
+    SocietyLeaderboardEntry,
+)
 from app.schemas.notification import NotificationCreate, NotificationRead
 from app.schemas.pickup_request import (
     PickupAssignment,
@@ -14,7 +20,19 @@ from app.schemas.pickup_request import (
 )
 from app.schemas.points import PointsTransactionRead, UserTierRead
 from app.schemas.redemption import RedemptionCatalogRead, RedemptionCreate, RedemptionRead
+from app.schemas.referral import (
+    ReferralCodeResponse,
+    ReferralItemRead,
+    ReferralSummaryRead,
+)
 from app.schemas.reward import RewardCreate, RewardRead, RewardRedeem
+from app.schemas.society import (
+    RWAAdminVerifyRequest,
+    SocietyCreate,
+    SocietyDashboardRead,
+    SocietyMembershipRead,
+    SocietyRead,
+)
 from app.schemas.tracking import DriverLocationCreate, DriverLocationRead, DriverRead
 from app.schemas.upload import UploadResponse
 from app.schemas.user import UserCreate, UserRead, UserUpdate
@@ -32,6 +50,9 @@ __all__ = [
     "DriverRead",
     "DriverUpdate",
     "EfficiencyMetric",
+    "IndividualLeaderboardEntry",
+    "LeaderboardSettingsRead",
+    "LeaderboardSettingsUpdate",
     "LoginRequest",
     "NotificationCreate",
     "NotificationRead",
@@ -45,6 +66,10 @@ __all__ = [
     "PickupRequestRead",
     "PickupStatusUpdate",
     "PointsTransactionRead",
+    "RWAAdminVerifyRequest",
+    "ReferralCodeResponse",
+    "ReferralItemRead",
+    "ReferralSummaryRead",
     "RegisterRequest",
     "RedemptionCatalogRead",
     "RedemptionCreate",
@@ -52,6 +77,11 @@ __all__ = [
     "RewardCreate",
     "RewardRead",
     "RewardRedeem",
+    "SocietyCreate",
+    "SocietyDashboardRead",
+    "SocietyLeaderboardEntry",
+    "SocietyMembershipRead",
+    "SocietyRead",
     "TokenResponse",
     "UploadResponse",
     "UserCreate",

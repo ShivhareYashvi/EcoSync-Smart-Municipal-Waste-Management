@@ -25,6 +25,7 @@ class User(TimestampMixin, Base):
     household_id: Mapped[str | None] = mapped_column(String(64), unique=True, index=True)
     electricity_bill_path: Mapped[str | None] = mapped_column(String(512))
     zone_id: Mapped[int | None] = mapped_column(ForeignKey("zones.id", ondelete="SET NULL"), nullable=True, index=True)
+    locale_preference: Mapped[str] = mapped_column(String(10), default="en", nullable=False)
 
     pickup_requests = relationship("PickupRequest", back_populates="user", foreign_keys="PickupRequest.user_id")
     complaints = relationship("Complaint", back_populates="user")
@@ -47,4 +48,12 @@ class User(TimestampMixin, Base):
     # ── Phase 3 back-references ─────────────────
     recycler_profile = relationship("Recycler", back_populates="user", uselist=False)
     recycling_transactions = relationship("RecyclingTransaction", back_populates="citizen")
+
+    # ── Phase 4 back-references ─────────────────
+    society_memberships = relationship("SocietyMembership", back_populates="user")
+    leaderboard_opt_in = relationship("LeaderboardOptIn", back_populates="user", uselist=False)
+    complaint_upvotes = relationship("ComplaintUpvote", back_populates="user")
+    referrals_sent = relationship("Referral", back_populates="referrer", foreign_keys="Referral.referrer_id")
+    referrals_received = relationship("Referral", back_populates="referred_user", foreign_keys="Referral.referred_user_id")
+
 

@@ -1,10 +1,11 @@
 from io import StringIO
+from typing import Any
 
 import pandas as pd
 from fastapi import HTTPException, status
-from sqlalchemy import Select, desc, select
+from sqlalchemy import Select, desc, func, select
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from app.models.complaint import Complaint
 from app.models.driver import Driver
@@ -131,12 +132,104 @@ class OperationsService:
         session.refresh(complaint)
         return ComplaintRead.model_validate(complaint)
 
-    def list_complaints(self, session: Session, user_id: int | None = None) -> list[ComplaintRead]:
-        query: Select[tuple[Complaint]] = select(Complaint).order_by(desc(Complaint.created_at))
+    def list_complaints(
+        self,
+        session: Session,
+        user_id: int | None = None,
+        sort_by: str | None = None,
+        current_user_id: int | None = None,
+    ) -> list[ComplaintRead]:
+        from app.models.complaint_upvote import ComplaintUpvote
+
+        query = select(Complaint).options(joinedload(Complaint.upvotes))
         if user_id is not None:
             query = query.where(Complaint.user_id == user_id)
-        result = session.scalars(query)
-        return [ComplaintRead.model_validate(item) for item in result.all()]
+
+        if sort_by == "upvotes":
+            upvote_subq = (
+                select(
+                    ComplaintUpvote.complaint_id,
+                    func.count(ComplaintUpvote.id).label("cnt"),
+                )
+                .group_by(ComplaintUpvote.complaint_id)
+                .subquery()
+            )
+            query = query.outerjoin(
+                upvote_subq, Complaint.id == upvote_subq.c.complaint_id
+            ).order_by(
+                func.coalesce(upvote_subq.c.cnt, 0).desc(),
+                desc(Complaint.created_at),
+            )
+        else:
+            query = query.order_by(desc(Complaint.created_at))
+
+        items = session.scalars(query).unique().all()
+        results: list[ComplaintRead] = []
+        for c in items:
+            upvotes_list = c.upvotes or []
+            upvote_cnt = len(upvotes_list)
+            has_upvoted = False
+            if current_user_id:
+                has_upvoted = any(u.user_id == current_user_id for u in upvotes_list)
+            results.append(
+                ComplaintRead(
+                    id=c.id,
+                    user_id=c.user_id,
+                    zone_id=c.zone_id,
+                    status=c.status,
+                    category=c.category,
+                    description=c.description,
+                    image=c.image,
+                    resolved_at=c.resolved_at,
+                    created_at=c.created_at,
+                    updated_at=c.updated_at,
+                    upvote_count=upvote_cnt,
+                    user_has_upvoted=has_upvoted,
+                )
+            )
+        return results
+
+    def toggle_complaint_upvote(
+        self, session: Session, complaint_id: int, user_id: int
+    ) -> dict[str, Any]:
+        from app.models.complaint_upvote import ComplaintUpvote
+
+        complaint = session.scalar(select(Complaint).where(Complaint.id == complaint_id))
+        if not complaint:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Complaint {complaint_id} not found.",
+            )
+
+        existing = session.scalar(
+            select(ComplaintUpvote).where(
+                ComplaintUpvote.complaint_id == complaint_id,
+                ComplaintUpvote.user_id == user_id,
+            )
+        )
+        if existing:
+            session.delete(existing)
+            session.commit()
+            upvoted = False
+        else:
+            upvote = ComplaintUpvote(complaint_id=complaint_id, user_id=user_id)
+            session.add(upvote)
+            try:
+                session.commit()
+                upvoted = True
+            except IntegrityError:
+                session.rollback()
+                upvoted = True
+
+        cnt = (
+            session.scalar(
+                select(func.count(ComplaintUpvote.id)).where(
+                    ComplaintUpvote.complaint_id == complaint_id
+                )
+            )
+            or 0
+        )
+        return {"upvoted": upvoted, "upvote_count": cnt}
 
     def create_reward(self, session: Session, payload: RewardCreate) -> RewardRead:
         self._ensure_user_exists(session, payload.user_id)

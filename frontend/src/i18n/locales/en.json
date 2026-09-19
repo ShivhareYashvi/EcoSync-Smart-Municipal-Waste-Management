@@ -1,0 +1,150 @@
+{
+  "guideTitle": "Municipal Waste Segregation Guide",
+  "guideSubtitle": "Segregate at source to protect sanitation workers, enable recycling, and earn compliance points.",
+  "searchPlaceholder": "Search waste item (e.g., eggshells, milk pouch, battery)...",
+  "categories": [
+    {
+      "id": "wet",
+      "name": "Wet & Biodegradable Waste",
+      "binColor": "Green Bin",
+      "colorCode": "#16a34a",
+      "bgLight": "#f0fdf4",
+      "description": "Organic kitchen and garden materials suitable for municipal composting and biomethanation.",
+      "acceptedItems": [
+        "Cooked and uncooked food leftovers",
+        "Fruit and vegetable peels",
+        "Eggshells and tea bags (paper/staple-free)",
+        "Coffee grounds and filters",
+        "Fallen leaves, flowers, and garden twigs",
+        "Bones, fish scales, and meat scraps",
+        "Used coconut shells and sugarcane bagasse"
+      ],
+      "prohibitedItems": [
+        "Plastic food wrappers and cling film",
+        "Sanitary napkins and diapers",
+        "Chemical residues or pesticides",
+        "Pet litter with synthetic silica"
+      ],
+      "instructions": [
+        "Drain excess liquids before disposing into the green bin.",
+        "Do not dispose of organic waste in sealed single-use plastic carry bags.",
+        "Keep bin lid tightly closed to prevent pest breeding."
+      ]
+    },
+    {
+      "id": "dry",
+      "name": "Dry & Recyclable Waste",
+      "binColor": "Blue Bin",
+      "colorCode": "#2563eb",
+      "bgLight": "#eff6ff",
+      "description": "Non-biodegradable recyclable items intended for registered recyclers and EPR credit logging.",
+      "acceptedItems": [
+        "Plastic bottles (PET, HDPE shampoo/detergent bottles)",
+        "Rinsed and dried milk pouches and oil packets",
+        "Newspapers, magazines, office paper, and shredded paper",
+        "Flattened cardboard and corrugated delivery boxes",
+        "Aluminium beverage cans and tin food cans",
+        "Clean glass bottles, jars, and glassware",
+        "Tetra Pak beverage cartons (rinsed and flattened)"
+      ],
+      "prohibitedItems": [
+        "Food-stained pizza boxes or greasy paper",
+        "Broken window glass or mirrors (wrap separately)",
+        "Thermocol / styrofoam (check with local depot)",
+        "Medical needles or syringes"
+      ],
+      "instructions": [
+        "Rinse and dry all plastic packets and drink containers to prevent mold and foul odor.",
+        "Flatten cardboard cartons to optimize collection vehicle space.",
+        "Keep dry waste clean — wet contamination reduces recycling viability by up to 80%."
+      ]
+    },
+    {
+      "id": "hazardous",
+      "name": "Domestic Hazardous Waste",
+      "binColor": "Red / Dark Bin",
+      "colorCode": "#dc2626",
+      "bgLight": "#fef2f2",
+      "description": "Toxic, flammable, corrosive, or dangerous household chemicals and sharps.",
+      "acceptedItems": [
+        "Expired prescription medications and syrups",
+        "Household batteries (AA, AAA, button cells, rechargeable)",
+        "Fluorescent tubes and CFL bulbs",
+        "Aerosol spray cans, insecticides, and mosquito repellents",
+        "Paints, thinners, turpentine, and varnishes",
+        "Bleach, acid cleaners, and drain uncloggers",
+        "Broken mercury thermometers"
+      ],
+      "prohibitedItems": [
+        "Commercial industrial chemical barrels",
+        "Explosives or unspent fireworks"
+      ],
+      "instructions": [
+        "Never dump hazardous fluids down household sinks or storm drains.",
+        "Keep original labels on paint cans and chemical containers.",
+        "Store batteries in a cool, dry plastic container before handing over."
+      ]
+    },
+    {
+      "id": "sanitary",
+      "name": "Sanitary & Biomedical Waste",
+      "binColor": "Marked Disposal / Yellow",
+      "colorCode": "#d97706",
+      "bgLight": "#fffbeb",
+      "description": "Intimate hygiene and wound-care materials requiring sanitary incineration protocols.",
+      "acceptedItems": [
+        "Sanitary napkins and tampons",
+        "Baby and adult diapers",
+        "Used bandages, gauze, and medical cotton",
+        "Incontinence pads",
+        "Personal tissue wipes and masks",
+        "Used condoms"
+      ],
+      "prohibitedItems": [
+        "General kitchen waste or recyclables"
+      ],
+      "instructions": [
+        "Wrap each item securely in multiple layers of old newspaper or disposal pouches.",
+        "Mark the wrapped packet with a prominent red 'X' or dot.",
+        "Hand over separately to the sanitation worker — never flush down toilets."
+      ]
+    },
+    {
+      "id": "e_waste",
+      "name": "Electronic Waste (E-Waste)",
+      "binColor": "Special E-Waste Bin",
+      "colorCode": "#7c3aed",
+      "bgLight": "#f5f3ff",
+      "description": "Discarded electrical and electronic equipment containing valuable metals and hazardous components.",
+      "acceptedItems": [
+        "Old mobile phones, chargers, USB cords, and earphones",
+        "Laptops, computer peripherals, and keyboards",
+        "Small kitchen appliances (toasters, blenders, electric kettles)",
+        "Electronic toys and remote controls",
+        "Circuit boards and power banks"
+      ],
+      "prohibitedItems": [
+        "Swollen or leaking lithium batteries (handle with caution under hazardous stream)"
+      ],
+      "instructions": [
+        "Do not attempt to dismantle or smash electronic devices at home.",
+        "Remove removable batteries before handing over.",
+        "Schedule an on-demand municipal e-waste pickup or drop at authorized EPR depots."
+      ]
+    }
+  ],
+  "dos": [
+    "Do segregate into at least 3 distinct bins: Wet (Green), Dry (Blue), and Hazardous/Sanitary.",
+    "Do rinse milk pouches, beverage cartons, and food tins before placing in dry recyclables.",
+    "Do flatten corrugated cardboard cartons to maximize collection efficiency.",
+    "Do wrap sanitary napkins and diapers securely and mark with a red identifier.",
+    "Do verify pickup weights with your driver to earn verified compliance points."
+  ],
+  "donts": [
+    "Don't mix wet kitchen waste with dry recyclable plastics or paper.",
+    "Don't dispose of batteries, paints, or CFLs in regular domestic bins.",
+    "Don't flush sanitary products, wipes, or plastics down household toilets.",
+    "Don't use unsegregated black plastic garbage bags for municipal door-to-door pickups.",
+    "Don't burn leaves, plastic, or waste in open air — it violates municipal bylaws."
+  ]
+}

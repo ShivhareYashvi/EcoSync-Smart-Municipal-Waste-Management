@@ -27,3 +27,4 @@ class Zone(Base):
     bulk_generators = relationship("BulkGenerator", back_populates="zone")
     routes = relationship("Route", back_populates="zone")
     hotspots = relationship("ComplaintHotspot", back_populates="zone")
+    societies = relationship("Society", back_populates="zone")

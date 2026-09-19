@@ -6,6 +6,7 @@ import { StatCard } from '../../components/StatCard';
 import { CompostBatchPanel } from '../../components/admin/CompostBatchPanel';
 import { EPRCreditLedgerPanel } from '../../components/admin/EPRCreditLedgerPanel';
 import { RecyclerVerificationQueue } from '../../components/admin/RecyclerVerificationQueue';
+import { RWAAdminApprovalQueue } from '../../components/admin/RWAAdminApprovalQueue';
 import { API_BASE_URL, api } from '../../lib/api';
 import type { AnalyticsSummary, Driver, Pickup } from '../../lib/types';
 
@@ -133,6 +134,9 @@ export function AdminDashboard() {
 
       {/* Phase 3: Compost Batch Tracking */}
       <CompostBatchPanel />
+
+      {/* Phase 4: RWA Admin Approval Queue */}
+      <RWAAdminApprovalQueue />
     </section>
   );
 }
