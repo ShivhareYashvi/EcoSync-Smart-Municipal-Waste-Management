@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Award, Building2, CheckCircle2, Coins, ShieldCheck } from 'lucide-react';
+import { Award, Building2 } from 'lucide-react';
 import { api } from '../../lib/api';
-import { BrandAccount, EPRCredit } from '../../lib/types';
+import type { BrandAccount, EPRCredit } from '../../lib/types';
 
 export function EPRCreditLedgerPanel() {
   const queryClient = useQueryClient();

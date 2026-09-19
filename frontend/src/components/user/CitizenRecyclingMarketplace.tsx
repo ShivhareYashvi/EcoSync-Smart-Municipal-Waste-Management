@@ -2,22 +2,13 @@ import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   CheckCircle,
-  Coins,
   FileCheck,
-  FileText,
-  HelpCircle,
-  Package,
   PlusCircle,
-  Scale,
   Send,
-  ShieldAlert,
-  ShieldCheck,
-  Tag,
-  TrendingUp,
   XCircle,
 } from 'lucide-react';
 import { api } from '../../lib/api';
-import { MaterialType, Recycler, RecyclingReceipt, RecyclingTransaction } from '../../lib/types';
+import type { MaterialType, Recycler, RecyclingReceipt, RecyclingTransaction } from '../../lib/types';
 
 interface Props {
   userId: number;
@@ -86,8 +77,9 @@ export function CitizenRecyclingMarketplace({ userId }: Props) {
       queryClient.invalidateQueries({ queryKey: ['recycling-transactions', userId] });
       setSubTab('transactions');
     },
-    onError: (err: any) => {
-      setFormErr(err.response?.data?.detail || err.message || 'Failed to submit sale request');
+    onError: (err: unknown) => {
+      const errorObj = err as { response?: { data?: { detail?: string } }; message?: string };
+      setFormErr(errorObj.response?.data?.detail || errorObj.message || 'Failed to submit sale request');
       setFormMsg(null);
     }
   });

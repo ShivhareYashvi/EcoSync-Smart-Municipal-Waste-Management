@@ -356,15 +356,17 @@ export function UserDashboard() {
     refetchInterval: 5000
   });
 
+  const activeTrackedId = trackedPickup?.id;
+
   useEffect(() => {
     setLiveLocation(null);
-    if (!trackedPickup?.id) return undefined;
+    if (!activeTrackedId) return undefined;
     let socket: WebSocket;
     let alive = true;
 
     function connect() {
       if (!alive) return;
-      socket = new WebSocket(buildTrackingSocketUrl(trackedPickup!.id));
+      socket = new WebSocket(buildTrackingSocketUrl(activeTrackedId!));
       socket.onopen = () => { try { socket.send('subscribe'); } catch { /* ignore */ } };
       socket.onmessage = (event) => {
         try {
@@ -386,7 +388,7 @@ export function UserDashboard() {
       alive = false;
       socket?.close();
     };
-  }, [trackedPickup?.id]);
+  }, [activeTrackedId]);
 
   const createPickup = useMutation({
     mutationFn: async () => {

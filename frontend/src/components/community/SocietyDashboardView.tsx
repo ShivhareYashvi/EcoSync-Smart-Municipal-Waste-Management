@@ -9,10 +9,9 @@ import {
   Shield,
   Trophy,
   UserCheck,
-  Users,
 } from 'lucide-react';
 import { api } from '../../lib/api';
-import {
+import type {
   Society,
   SocietyDashboard,
   SocietyMembership,
@@ -75,7 +74,7 @@ export const SocietyDashboardView: React.FC<SocietyDashboardViewProps> = ({ curr
       try {
         const res = await api.get<SocietyDashboard>(`/societies/${selectedSocietyId}/dashboard`);
         setDashboard(res.data);
-      } catch (err: any) {
+      } catch {
         // If 403 (e.g. citizen hasn't joined yet), set dashboard to null
         setDashboard(null);
       } finally {

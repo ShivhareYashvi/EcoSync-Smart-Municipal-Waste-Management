@@ -10,6 +10,7 @@ build/
 .coverage/
 htmlcov/
 *.tsbuildinfo
+.pytest_cache/
 
 # Environment and local files
 .env

@@ -7,10 +7,9 @@ import {
   Info,
   Search,
   Sparkles,
-  Trash2,
   XCircle,
 } from 'lucide-react';
-import { getGuideContent, GuideCategory } from '../../i18n/guide';
+import { getGuideContent, type GuideCategory } from '../../i18n/guide';
 
 interface SegregationGuideProps {
   userLocale?: string | null;

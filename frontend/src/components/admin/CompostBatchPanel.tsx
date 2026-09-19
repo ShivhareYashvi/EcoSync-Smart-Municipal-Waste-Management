@@ -38,7 +38,7 @@ export function CompostBatchPanel() {
   const createBatchMutation = useMutation({
     mutationFn: async () => {
       if (!zoneId) throw new Error('Please select a zone');
-      const payload: any = {
+      const payload: Record<string, unknown> = {
         zone_id: Number(zoneId),
         period_start: periodStart,
         period_end: periodEnd,
@@ -56,8 +56,9 @@ export function CompostBatchPanel() {
       setFormErr(null);
       queryClient.invalidateQueries({ queryKey: ['compost-batches'] });
     },
-    onError: (err: any) => {
-      setFormErr(err.response?.data?.detail || err.message || 'Failed to create compost batch');
+    onError: (err: unknown) => {
+      const errorObj = err as { response?: { data?: { detail?: string } }; message?: string };
+      setFormErr(errorObj.response?.data?.detail || errorObj.message || 'Failed to create compost batch');
     }
   });
 

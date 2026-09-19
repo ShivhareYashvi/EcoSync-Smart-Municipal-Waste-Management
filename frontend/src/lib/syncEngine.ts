@@ -52,7 +52,7 @@ export async function syncPendingMutations(): Promise<{ synced: number; failed: 
   }
 
   isCurrentlySyncing = true;
-  let initialCount = await getPendingQueueCount();
+  const initialCount = await getPendingQueueCount();
   notifyStatus(initialCount, true);
 
   let synced = 0;
@@ -71,8 +71,9 @@ export async function syncPendingMutations(): Promise<{ synced: number; failed: 
         });
         await deletePendingPickupLog(item.id);
         synced++;
-      } catch (err: any) {
-        if (err.response && err.response.status === 409) {
+      } catch (err: unknown) {
+        const errorResponse = (err as { response?: { status?: number } })?.response;
+        if (errorResponse && errorResponse.status === 409) {
           // Conflict: Server state diverged from offline client log
           const conflictData: Omit<OfflineConflict, 'id'> = {
             type: 'pickup_log',
@@ -109,8 +110,9 @@ export async function syncPendingMutations(): Promise<{ synced: number; failed: 
         );
         await deletePendingStopUpdate(item.id);
         synced++;
-      } catch (err: any) {
-        if (err.response && err.response.status === 409) {
+      } catch (err: unknown) {
+        const errorResponse = (err as { response?: { status?: number } })?.response;
+        if (errorResponse && errorResponse.status === 409) {
           const conflictData: Omit<OfflineConflict, 'id'> = {
             type: 'stop_update',
             entityId: item.stopId,

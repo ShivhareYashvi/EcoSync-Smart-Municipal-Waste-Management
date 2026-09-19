@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { CircleMarker, MapContainer, Popup, TileLayer, Tooltip } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { api } from '../../lib/api';
-import type { HeatmapPoint, HeatmapResponse } from '../../lib/types';
+import type { HeatmapResponse } from '../../lib/types';
 import { AlertCircle, Flame, Layers, RefreshCw } from 'lucide-react';
 
 interface ComplaintHeatmapMapProps {

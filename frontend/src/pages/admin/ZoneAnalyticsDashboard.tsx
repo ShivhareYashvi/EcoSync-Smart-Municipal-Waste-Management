@@ -3,7 +3,6 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
-  Cell,
   Legend,
   RadialBar,
   RadialBarChart,
@@ -92,13 +91,6 @@ export function ZoneAnalyticsDashboard() {
     name: z.zone_name.replace(' Ward', ''),
     value: z.segregation_compliance_pct,
     fill: ZONE_COLORS[i % ZONE_COLORS.length],
-  }));
-
-  const slaChartData = slaData.map((s) => ({
-    name: s.zone_name.replace(' Ward', ''),
-    open: s.open_complaints,
-    overdue: s.overdue_complaints,
-    avgHours: s.avg_resolution_hours ?? 0,
   }));
 
   if (analyticsQuery.isLoading) {

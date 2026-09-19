@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '../../lib/api';
 import type { Route, Zone, Vehicle } from '../../lib/types';
-import { MapPin, Navigation, Plus, CheckCircle2, SkipForward, Clock } from 'lucide-react';
+import { Navigation, Plus, CheckCircle2, SkipForward, Clock } from 'lucide-react';
 
 type DispatchForm = {
   driver_id: string;

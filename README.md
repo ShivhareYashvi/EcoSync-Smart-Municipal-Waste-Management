@@ -1,126 +1,118 @@
-# EcoSync
+# EcoSync — Smart Municipal Waste Management & Circular Economy Platform
 
-EcoSync is a full-stack smart municipal waste management platform for coordinating citizens, collection drivers, and municipal administrators.
+EcoSync is a full-stack, multi-role municipal waste management and circular economy platform designed to coordinate citizens, collection drivers, verified recyclers, and municipal administrators.
 
-## Project Overview
+---
 
-The platform is designed to support verified household onboarding, OTP-based registration, electricity bill verification, pickup scheduling, complaint workflows, rewards, route visibility, and analytics for cleaner municipal operations.
+## 🌟 Platform Capabilities (Phases 1–5)
 
-## Tech Stack
+### Phase 1: Verified Pickup Logging & Closed-Loop Points
+- **Driver Verification**: Collection drivers log actual pickup weights (kg), waste categories (wet, dry, hazardous, e-waste, sanitary), and upload optional photo proof.
+- **Deterministic Points Engine**:
+  - Base award: 10 points for on-time segregated pickup.
+  - Weight bonus: +2 pts per kg over 5 kg, strictly capped weekly.
+  - Streak multiplier: $1.25\times$ for $4+$ consecutive weeks of compliant segregation.
+  - Transparent dispute reversal: flagged transactions reverse earned points without negative drift.
+- **Citizen Tier Progression**: Bronze $\rightarrow$ Silver $\rightarrow$ Gold $\rightarrow$ Platinum with dynamic catalog redemption.
 
-- **Frontend:** React, Vite, TypeScript, TailwindCSS, React Router, Zustand, React Query, Axios, Framer Motion, Recharts
-- **Backend:** FastAPI, SQLAlchemy, Alembic, Pydantic, JWT authentication
-- **Database:** PostgreSQL
-- **Maps:** Leaflet with OpenStreetMap tiles for real pickup and driver tracking
-- **Notifications:** Twilio SMS integration for OTP delivery
-- **Analytics:** Pandas-powered backend analytics summary and CSV export
+### Phase 2: Municipal Operations & Fleet Management
+- **Multi-Zone Governance**: Administrative zones, ward polygons, and localized collection policies.
+- **Fleet Registry & Dispatch**: Vehicle management (EV, Diesel, CNG) mapped to assigned municipal drivers.
+- **Bulk Waste Generators**: Dedicated tracking for high-volume entities (apartments, tech parks, commercial complexes).
+- **Batch Route Optimization**: Nearest-neighbor routing algorithm optimizing multi-stop daily collection routes with estimated arrival times.
+- **Spatial Incident Heatmap & Hotspots**: Automated detection of complaint clusters ($> 5$ incidents in 30 days) and dynamic Leaflet-based geospatial heatmap rendering in the admin dashboard.
 
-## Environment Variables
+### Phase 3: Recycler Marketplace & EPR Credit Ledger (Ledger-Only)
+- **Role 4: Verified Recyclers**: Dedicated onboarding, license verification, and municipal admin approval queue.
+- **Public Scrap Price Board**: Real-time indicative scrap rates across major recyclables (plastic, paper, metal, e-waste, glass) with historical rate card tracking.
+- **Ledger-Only Marketplace**: Citizens request recyclable sales; recyclers confirm weights and issue digital receipts (no direct fiat transactions or payment gateway required).
+- **EPR Credit Ledger**: Recycler transactions generate verifiable Extended Producer Responsibility (EPR) credits with status lifecycle (`available` $\rightarrow$ `allocated` $\rightarrow$ `retired`).
+- **Municipal Compost Batches**: Wet-waste recovery tracker that aggregates residential organic collections into cured agricultural compost batches.
 
-Create `backend/.env` before running the API:
+### Phase 4: Citizen Engagement & Community
+- **Strict Opt-In Leaderboards**: Default state is opted **out**. Citizens must explicitly opt in to appear on individual leaderboards; supports custom anonymous handles and zone/city scopes.
+- **RWA / Society Portal with $k$-Anonymity**: Aggregated society dashboards enforce a strict threshold ($k \ge 3$) to prevent deriving individual household compliance or dispute records.
+- **Community Complaint Upvoting**: Citizens upvote existing neighborhood civic complaints with unique database constraints to prevent duplicate reports.
+- **Referral Rewards Engine**: Anti-gaming referral mechanism where bonus points (100 pts) are disbursed strictly upon the invitee's first verified collection.
+- **Localized Segregation Guide**: Multi-stream sorting guide supporting regional languages with seamless English fallback.
 
-```env
-APP_NAME="EcoSync API"
-ENVIRONMENT="local"
-DATABASE_URL="postgresql://ecosync:ecosync@localhost:5432/ecosync"
-JWT_SECRET_KEY="replace-with-a-secure-secret"
-FRONTEND_ORIGIN="http://localhost:5173"
-UPLOAD_DIR="backend/uploads"
-MAX_UPLOAD_SIZE_MB="10"
-TWILIO_ACCOUNT_SID=""
-TWILIO_AUTH_TOKEN=""
-TWILIO_FROM_PHONE=""
+### Phase 5: Progressive Web App & Offline Resilience
+- **Offline Shell Caching**: Service worker (`public/sw.js`) and Web App Manifest (`manifest.webmanifest`) for standalone mobile and field installation.
+- **Zero-Dependency IndexedDB Queue**: Client-side IndexedDB store (`offlineStore.ts`) buffers pickup logs and route stop updates when field connectivity drops.
+- **Automated Background Sync**: Auto-sync engine (`syncEngine.ts`) replays pending mutations upon network reconnection.
+- **Paused GPS Broadcasts**: Real-time driver location pings are automatically paused while offline to prevent broadcasting or replaying stale coordinates.
+- **Server-Side SHA-256 Idempotency**: FastAPI middleware (`IdempotencyMiddleware`) protects mutating endpoints against network retries:
+  - Cache hit returns original payload (`X-Cache-Lookup: HIT`).
+  - Payload tampering or divergence with same key returns `409 Conflict` and triggers client-side divergence alerts.
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Technologies |
+|---|---|
+| **Frontend** | React 18, Vite, TypeScript, TailwindCSS, React Query, React Router, Zustand, Axios, Leaflet / React Leaflet, Recharts, Lucide Icons |
+| **Backend** | Python 3.11, FastAPI, SQLAlchemy ORM, Alembic Migrations, Pydantic v2, SQLite / PostgreSQL |
+| **PWA & Offline** | Web App Manifest, Service Worker API, Native IndexedDB API |
+| **Testing** | Pytest, AnyIO, TypeScript Compiler (`tsc`), ESLint 9 |
+
+---
+
+## 🚀 Quick Start
+
+### 1. Prerequisites
+- Python 3.10+
+- Node.js 18+ and npm
+
+### 2. Backend Setup
+```bash
+cd backend
+python -m venv venv
+# On Windows:
+.\venv\Scripts\activate
+# On Linux/macOS:
+# source venv/bin/activate
+
+pip install -r requirements.txt
+alembic upgrade head
+uvicorn app.main:app --reload --port 8000
 ```
+Backend API will be available at: `http://localhost:8000`
+- Interactive Swagger UI: `http://localhost:8000/docs`
+- ReDoc Documentation: `http://localhost:8000/redoc`
 
-## Frontend Setup
-
+### 3. Frontend Setup
 ```bash
 cd frontend
 npm install
-npm run lint
 npm run dev
 ```
+Frontend development server will run at: `http://localhost:5173`
 
-The frontend runs on <http://localhost:5173> by default.
+---
 
-## Backend Setup
+## 🧪 Testing & Validation
 
+### Backend Test Suite (96 Tests)
+Run the full test suite including unit, integration, and idempotency tests:
 ```bash
 cd backend
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env  # create manually if the example is not present yet
-alembic upgrade head
-uvicorn app.main:app --reload
+pytest tests/ -v
 ```
 
-The API runs on <http://localhost:8000> by default.
+### Frontend Build & Lint Verification
+Validate TypeScript types, production asset bundles, and code cleanliness:
+```bash
+cd frontend
+npm run lint    # ESLint checking (0 errors, 0 warnings)
+npm run build   # TypeScript compiler & Vite production bundle
+```
 
-## Database Setup
+---
 
-1. Create a PostgreSQL database named `ecosync`.
-2. Configure `DATABASE_URL` in `backend/.env`.
-3. Run Alembic migrations from the `backend` directory.
+## 🔒 Security & Privacy Guarantees
 
-The schema includes `users`, `pickup_requests`, `complaints`, `rewards`, `drivers`, `notifications`, `otp_challenges`, and `driver_locations`.
-
-## Integrated Feature Notes
-
-- **Database persistence:** auth, pickups, complaints, rewards, notifications, OTPs, and live tracking events are persisted with SQLAlchemy and PostgreSQL.
-- **Live tracking:** driver location updates are available through REST endpoints and `/api/v1/tracking/pickups/{pickup_id}/ws`.
-- **Maps:** the frontend dashboards render OpenStreetMap maps with Leaflet for pickup destinations and live driver positions.
-- **Uploads:** electricity bills can be uploaded through `/api/v1/uploads/electricity-bills` and are served from `/uploads/...`.
-- **Analytics:** `/api/v1/analytics/summary` returns aggregated metrics and `/api/v1/analytics/export.csv` exports persisted pickup data.
-
-## API Documentation
-
-When the backend server is running, FastAPI exposes interactive documentation at:
-
-- Swagger UI: <http://localhost:8000/docs>
-- ReDoc: <http://localhost:8000/redoc>
-
-## Creating Driver and Citizen Accounts for Flow Testing
-
-Use the frontend at <http://localhost:5173/register> to create citizen and driver accounts, or call the auth endpoints directly from Swagger.
-
-1. Request an OTP for the phone number you want to use.
-2. Verify the OTP for that phone number.
-3. Complete registration with the citizen or driver role.
-4. Sign in at <http://localhost:5173/login> and confirm you land on the matching dashboard.
-
-### Citizen test account
-
-- Choose the `Citizen` role on the registration page.
-- Fill in name, phone, password, address, and optionally upload an electricity bill.
-- After login, you should land on `/dashboard/user`.
-- Use the citizen dashboard to schedule a pickup and watch live driver tracking after assignment.
-
-### Driver test account
-
-- Choose the `Driver` role on the registration page.
-- Fill in the standard registration fields and provide a `vehicle number` because driver registration requires it.
-- After login, you should land on `/dashboard/driver`.
-- Use the driver dashboard to open an assigned pickup, update status, and send live location updates.
-
-### Admin test account
-
-Admin accounts cannot be created through public registration. Provision an administrator through a protected administrative process, then sign in at <http://localhost:5173/login> to use `/dashboard/admin`.
-
-### Recommended end-to-end flow check
-
-1. Create and log in with a citizen account, then schedule a pickup.
-2. Create and log in with a driver account.
-3. Sign in with a provisioned admin account.
-4. In the admin dashboard, assign the citizen pickup to the driver.
-5. In the driver dashboard, push location updates and change the pickup status.
-6. Return to the citizen dashboard and confirm the assigned driver and live route updates appear.
-
-### OTP note for local testing
-
-- OTP verification is required before registration succeeds.
-- For a complete local sign-up flow, configure the Twilio environment variables in `backend/.env` so the verification code is delivered by SMS.
-
-## Planning and Progress Tracking
-
-All project planning, architecture notes, dependency-safe task selection, generated file lists, and progress updates are maintained exclusively in `tasks.json`.
+1. **Opt-In Leaderboards**: Citizens never appear on leaderboards by default (`opted_in = False`).
+2. **$k$-Anonymity Aggregate Suppression**: RWA / society metrics return `privacy_suppressed = True` if the active household count is below 3.
+3. **Idempotency Fingerprinting**: All offline driver mutation replays require client-generated UUID `Idempotency-Key` headers validated with SHA-256 payload digests.
+4. **GPS Integrity**: Driver coordinates are strictly real-time and never queued or replayed retrospectively.

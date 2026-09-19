@@ -6,17 +6,14 @@ import {
   CheckCircle,
   Clock,
   Coins,
-  FileCheck,
   PlusCircle,
   RefreshCw,
   Scale,
   ShieldCheck,
-  Tag,
   TrendingUp,
-  XCircle,
 } from 'lucide-react';
 import { api } from '../../lib/api';
-import { MaterialType, RateCard, Recycler, RecyclingTransaction } from '../../lib/types';
+import type { MaterialType, RateCard, Recycler, RecyclingTransaction } from '../../lib/types';
 import { useSessionStore } from '../../store/session';
 
 export function RecyclerDashboard() {
@@ -76,8 +73,9 @@ export function RecyclerDashboard() {
       queryClient.invalidateQueries({ queryKey: ['recycler-rates', recycler?.id] });
       queryClient.invalidateQueries({ queryKey: ['public-rates'] });
     },
-    onError: (err: any) => {
-      setRateError(err.response?.data?.detail || 'Failed to update rate card');
+    onError: (err: unknown) => {
+      const errorObj = err as { response?: { data?: { detail?: string } }; message?: string };
+      setRateError(errorObj.response?.data?.detail || errorObj.message || 'Failed to update rate card');
     }
   });
 
@@ -96,8 +94,9 @@ export function RecyclerDashboard() {
       setLogError(null);
       queryClient.invalidateQueries({ queryKey: ['recycling-transactions'] });
     },
-    onError: (err: any) => {
-      setLogError(err.response?.data?.detail || 'Failed to log pickup');
+    onError: (err: unknown) => {
+      const errorObj = err as { response?: { data?: { detail?: string } }; message?: string };
+      setLogError(errorObj.response?.data?.detail || errorObj.message || 'Failed to log pickup');
     }
   });
 

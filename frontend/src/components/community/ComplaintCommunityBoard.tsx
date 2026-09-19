@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
-  AlertTriangle,
   ArrowUpDown,
   CheckCircle2,
   Clock,
@@ -11,7 +10,7 @@ import {
   ThumbsUp,
 } from 'lucide-react';
 import { api } from '../../lib/api';
-import { Complaint, User } from '../../lib/types';
+import type { Complaint, User } from '../../lib/types';
 
 interface ComplaintCommunityBoardProps {
   currentUser?: User | null;
@@ -32,10 +31,10 @@ export const ComplaintCommunityBoard: React.FC<ComplaintCommunityBoardProps> = (
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [actionMsg, setActionMsg] = useState<string | null>(null);
 
-  const fetchComplaints = async () => {
+  const fetchComplaints = useCallback(async () => {
     setLoading(true);
     try {
-      const params: Record<string, any> = {
+      const params: Record<string, string | number> = {
         sort_by: sortBy,
       };
       if (filterMine && currentUser?.id) {
@@ -48,11 +47,11 @@ export const ComplaintCommunityBoard: React.FC<ComplaintCommunityBoardProps> = (
     } finally {
       setLoading(false);
     }
-  };
+  }, [sortBy, filterMine, currentUser?.id]);
 
   useEffect(() => {
-    fetchComplaints();
-  }, [sortBy, filterMine]);
+    void fetchComplaints();
+  }, [fetchComplaints]);
 
   const handleToggleUpvote = async (complaintId: number) => {
     setUpvotingId(complaintId);

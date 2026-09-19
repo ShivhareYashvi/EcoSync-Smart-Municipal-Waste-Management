@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
-  Award,
   Building2,
   Check,
   Eye,
   EyeOff,
   Globe,
-  Lock,
-  Medal,
   RefreshCw,
   Settings2,
   Shield,
@@ -15,7 +12,7 @@ import {
   Users,
 } from 'lucide-react';
 import { api } from '../../lib/api';
-import {
+import type {
   IndividualLeaderboardEntry,
   LeaderboardSettings,
   SocietyLeaderboardEntry,
@@ -51,18 +48,18 @@ export const OptInLeaderboard: React.FC<OptInLeaderboardProps> = ({ currentUser 
   };
 
   // Load leaderboard data
-  const fetchLeaderboards = async () => {
+  const fetchLeaderboards = useCallback(async () => {
     setLoading(true);
     try {
       if (tab === 'individual') {
-        const params: Record<string, any> = { scope };
+        const params: Record<string, string | number> = { scope };
         if (scope === 'zone' && currentUser?.zone_id) {
           params.zone_id = currentUser.zone_id;
         }
         const res = await api.get<IndividualLeaderboardEntry[]>('/leaderboards/individual', { params });
         setIndividualEntries(res.data);
       } else {
-        const params: Record<string, any> = {};
+        const params: Record<string, string | number> = {};
         if (scope === 'zone' && currentUser?.zone_id) {
           params.zone_id = currentUser.zone_id;
         }
@@ -74,15 +71,15 @@ export const OptInLeaderboard: React.FC<OptInLeaderboardProps> = ({ currentUser 
     } finally {
       setLoading(false);
     }
-  };
+  }, [tab, scope, currentUser?.zone_id]);
 
   useEffect(() => {
-    fetchSettings();
+    void fetchSettings();
   }, []);
 
   useEffect(() => {
-    fetchLeaderboards();
-  }, [tab, scope]);
+    void fetchLeaderboards();
+  }, [fetchLeaderboards]);
 
   const handleToggleOptIn = async (newOptedIn: boolean) => {
     setIsSavingSettings(true);

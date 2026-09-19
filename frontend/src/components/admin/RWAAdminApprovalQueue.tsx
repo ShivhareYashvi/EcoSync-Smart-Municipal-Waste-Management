@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-  AlertCircle,
   Building,
   CheckCircle,
   Clock,
@@ -12,7 +11,7 @@ import {
   XCircle,
 } from 'lucide-react';
 import { api } from '../../lib/api';
-import { SocietyMembership } from '../../lib/types';
+import type { SocietyMembership } from '../../lib/types';
 
 export const RWAAdminApprovalQueue: React.FC = () => {
   const [pendingAdmins, setPendingAdmins] = useState<SocietyMembership[]>([]);

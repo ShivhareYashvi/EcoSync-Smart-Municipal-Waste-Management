@@ -6,7 +6,6 @@ import {
   CheckCircle,
   CheckCircle2,
   Clock,
-  Cloud,
   LocateFixed,
   MapPinned,
   Navigation,
@@ -15,7 +14,6 @@ import {
   SkipForward,
   Truck,
   Weight,
-  Wifi,
   WifiOff,
 } from 'lucide-react';
 import { EmptyState } from '../../components/EmptyState';
