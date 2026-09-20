@@ -61,8 +61,9 @@ function PickupConfirmDispute({ pickup, onDone }: PickupActionsProps) {
     onError: () => setErr('Dispute failed. Please try again.'),
   });
 
-  // Only show actions for logged pickups not yet confirmed/disputed
-  if (!pickup.segregation_verified) return null;
+  // Only show actions for logged pickups that have not yet been completed/reviewed
+  if (pickup.weight_kg === null) return null;
+
 
   return (
     <div className="mt-2 rounded-xl bg-blue-50/70 border border-blue-100 p-3 grid gap-2">

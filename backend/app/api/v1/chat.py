@@ -1,17 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
-import requests
 
+from app.core.security import get_current_user
 from app.db import get_db
-from app.core.config import get_settings
-from app.services.auth_service import auth_service
-from app.schemas.user import UserRead
+from app.models.enums import UserRole
 from app.models.user import User
 from app.services.sms_service import send_twilio_sms
 
 router = APIRouter(prefix="/chat", tags=["chat"])
-settings = get_settings()
 
 class ChatMessageRequest(BaseModel):
     phone: str
@@ -19,15 +16,24 @@ class ChatMessageRequest(BaseModel):
     user_id: int
 
 @router.post("/send")
-def send_chat_message(payload: ChatMessageRequest, session: Session = Depends(get_db)):
-    """Send an SMS-based chat message using Fast2SMS."""
+def send_chat_message(
+    payload: ChatMessageRequest,
+    current_user: User = Depends(get_current_user),
+    session: Session = Depends(get_db),
+):
+    """Send an SMS-based chat message using Twilio SMS."""
+    if current_user.role != UserRole.ADMIN and current_user.id != payload.user_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You can only send messages under your own user identity",
+        )
     
-    current_user = session.get(User, payload.user_id)
-    if not current_user:
-        raise HTTPException(status_code=404, detail="User not found")
+    target_user = session.get(User, payload.user_id)
+    if not target_user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     
     try:
-        send_twilio_sms(payload.phone, f"EcoSync Message from {current_user.name}:\n{payload.message}")
+        send_twilio_sms(payload.phone, f"EcoSync Message from {target_user.name}:\n{payload.message}")
         return {"status": "success", "message": "Message sent via Twilio successfully."}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"SMS Gateway Error: {str(e)}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"SMS Gateway Error: {str(e)}")

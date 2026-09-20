@@ -42,8 +42,14 @@ def verify_otp(payload: OTPVerifyRequest, session: Session = Depends(get_db)) ->
 def forgot_password(payload: OTPRequest, session: Session = Depends(get_db)) -> OTPResponse:
     normalized_phone = normalize_phone(payload.phone)
     if auth_service.get_user_by_phone(session, normalized_phone) is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+        return OTPResponse(
+            phone=normalized_phone,
+            expires_in_seconds=otp_service.ttl_seconds,
+            delivery_channel="sms",
+            message="If this phone number is registered, an OTP verification code has been sent.",
+        )
     return request_otp(OTPRequest(phone=normalized_phone), session)
+
 
 
 @router.post("/forgot-password/reset", response_model=TokenResponse)

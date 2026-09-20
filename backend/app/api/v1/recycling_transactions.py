@@ -40,7 +40,8 @@ def get_recycling_transaction(
     current_user: User = Depends(get_current_user),
 ) -> TransactionRead:
     """Retrieve details of a specific recycling transaction."""
-    return recycling_transaction_service.get_transaction(session, transaction_id)
+    return recycling_transaction_service.get_transaction(session, current_user, transaction_id)
+
 
 
 @router.post("/{transaction_id}/log", response_model=TransactionRead)

@@ -1,4 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom';
+import { dashboardPathForRole } from '../lib/navigation';
 import { useSessionStore } from '../store/session';
 
 export function ProtectedRoute({ allowedRoles }: { allowedRoles: string[] }) {
@@ -9,9 +10,10 @@ export function ProtectedRoute({ allowedRoles }: { allowedRoles: string[] }) {
   }
 
   if (!allowedRoles.includes(user.role)) {
-    // If they have the wrong role, redirect to their own dashboard
-    return <Navigate to={`/dashboard/${user.role}`} replace />;
+    // If they have the wrong role, redirect to their role-specific dashboard path
+    return <Navigate to={dashboardPathForRole(user.role)} replace />;
   }
 
   return <Outlet />;
 }
+

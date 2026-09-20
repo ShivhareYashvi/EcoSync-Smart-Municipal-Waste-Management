@@ -88,10 +88,17 @@ class OTPService:
         )
 
     def verify_code(self, session: Session, phone: str, code: str) -> bool:
+        normalized_phone = normalize_phone(phone)
         if settings.environment == "local" and code == "1234":
+            record = session.scalar(
+                select(OTPChallenge).where(OTPChallenge.phone == normalized_phone).order_by(desc(OTPChallenge.created_at)).limit(1)
+            )
+            if record:
+                record.verified = True
+                session.flush()
+                session.commit()
             return True
 
-        normalized_phone = normalize_phone(phone)
         record = session.scalar(
             select(OTPChallenge).where(OTPChallenge.phone == normalized_phone).order_by(desc(OTPChallenge.created_at)).limit(1)
         )
@@ -105,32 +112,37 @@ class OTPService:
             
         if expires_at < datetime.now(timezone.utc):
             return False
-        import requests
-        formatted_phone = normalized_phone
-        try:
-            if not (settings.twilio_account_sid and settings.twilio_auth_token and settings.twilio_verify_service_sid):
-                raise RuntimeError(
-                    "Twilio credentials are not configured. Set TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, "
-                    "and TWILIO_VERIFY_SERVICE_SID in environment variables."
-                )
-            url = f"https://verify.twilio.com/v2/Services/{settings.twilio_verify_service_sid}/VerificationCheck"
-            auth = (settings.twilio_account_sid, settings.twilio_auth_token)
-            data = {
-                "To": formatted_phone,
-                "Code": code
-            }
-            response = requests.post(url, data=data, auth=auth, timeout=10)
-            result = response.json()
-            if response.status_code in (200, 201) and result.get("status") == "approved":
-                if record:
+
+        # If Twilio is configured and channel was sms, verify via Twilio Verify API
+        has_twilio = bool(settings.twilio_account_sid and settings.twilio_auth_token and settings.twilio_verify_service_sid)
+        if has_twilio and record.delivery_channel == "sms":
+            import requests
+            try:
+                url = f"https://verify.twilio.com/v2/Services/{settings.twilio_verify_service_sid}/VerificationCheck"
+                auth = (settings.twilio_account_sid, settings.twilio_auth_token)
+                data = {
+                    "To": normalized_phone,
+                    "Code": code,
+                }
+                response = requests.post(url, data=data, auth=auth, timeout=10)
+                result = response.json()
+                if response.status_code in (200, 201) and result.get("status") == "approved":
                     record.verified = True
                     session.flush()
                     session.commit()
-                return True
-            return False
-        except Exception as e:
-            print(f"\n[Twilio Verify Exception]: {str(e)}\n")
-            return False
+                    return True
+            except Exception as e:
+                print(f"\n[Twilio Verify Exception]: {str(e)}\n")
+
+        # Fallback / local challenge verification against database hash
+        if verify_password(code, record.code_hash):
+            record.verified = True
+            session.flush()
+            session.commit()
+            return True
+
+        return False
+
 
     def is_verified(self, session: Session, phone: str) -> bool:
         normalized_phone = normalize_phone(phone)

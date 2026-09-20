@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, timezone
 
-from sqlalchemy import DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy import DateTime, ForeignKey, Index, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db_base import Base
@@ -10,8 +10,11 @@ class IdempotencyKey(Base):
     """Server-side idempotency record to guarantee single execution of mutating operations."""
 
     __tablename__ = "idempotency_keys"
+    __table_args__ = (Index("ix_idempotency_keys_key", "key", unique=True),)
 
-    key: Mapped[str] = mapped_column(String(128), primary_key=True, index=True)
+    key: Mapped[str] = mapped_column(String(128), primary_key=True)
+
+
     user_id: Mapped[int | None] = mapped_column(
         ForeignKey("users.id", ondelete="CASCADE"), nullable=True, index=True
     )

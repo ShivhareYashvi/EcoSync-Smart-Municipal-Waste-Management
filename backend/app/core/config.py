@@ -2,7 +2,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Literal
 
-from pydantic import AnyHttpUrl, Field
+from pydantic import AliasChoices, AnyHttpUrl, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -24,7 +24,11 @@ class Settings(BaseSettings):
     twilio_account_sid: str | None = None
     twilio_auth_token: str | None = None
     twilio_verify_service_sid: str | None = None
-    twilio_from_number: str | None = None
+    twilio_from_number: str | None = Field(
+        default=None,
+        validation_alias=AliasChoices("twilio_from_number", "twilio_from_phone"),
+    )
+
 
 
 @lru_cache

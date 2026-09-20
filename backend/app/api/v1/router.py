@@ -37,18 +37,18 @@ def api_status() -> dict[str, str]:
 
 
 router.include_router(auth_router)
-router.include_router(operations_router, dependencies=[Depends(get_current_user)])
-router.include_router(tracking_router, dependencies=[Depends(get_current_user)])
-router.include_router(uploads_router, dependencies=[Depends(get_current_user)])
+router.include_router(zones_router)  # Public GET /zones for registration; admin endpoints guarded internally
+router.include_router(uploads_router)  # Public document uploads for registration; photo uploads guarded separately
 router.include_router(upload_photo_router, dependencies=[Depends(get_current_user)])
-router.include_router(chat_router, dependencies=[Depends(get_current_user)])
+router.include_router(tracking_router)  # REST endpoints guarded with get_current_user; WebSocket handshake flexible
+router.include_router(chat_router)  # Guarded internally with get_current_user
+router.include_router(operations_router, dependencies=[Depends(get_current_user)])
 # Phase 1 routers
 router.include_router(pickups_ext_router, dependencies=[Depends(get_current_user)])
 router.include_router(compliance_router, dependencies=[Depends(get_current_user)])
 router.include_router(points_router, dependencies=[Depends(get_current_user)])
 router.include_router(redemptions_router, dependencies=[Depends(get_current_user)])
 # Phase 2 routers
-router.include_router(zones_router, dependencies=[Depends(get_current_user)])
 router.include_router(complaints_ext_router, dependencies=[Depends(get_current_user)])
 router.include_router(analytics_zones_router, dependencies=[Depends(get_current_user)])
 router.include_router(vehicles_router, dependencies=[Depends(get_current_user)])
@@ -64,3 +64,4 @@ router.include_router(compost_batches_router)
 router.include_router(societies_router)
 router.include_router(leaderboards_router)
 router.include_router(referrals_router)
+

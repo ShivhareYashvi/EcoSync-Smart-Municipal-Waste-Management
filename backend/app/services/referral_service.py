@@ -15,6 +15,7 @@ from app.schemas.referral import (
     ReferralItemRead,
     ReferralSummaryRead,
 )
+from app.core.config import get_settings
 from app.services.points_engine import points_service
 
 REFERRAL_BONUS_POINTS = 100
@@ -45,7 +46,8 @@ class ReferralService:
     def get_code_and_link(self, user_id: int) -> ReferralCodeResponse:
         """Get referral code and shareable registration URL."""
         code = self.generate_referral_code(user_id)
-        link = f"http://localhost:5173/register?ref={code}"
+        base_origin = str(get_settings().frontend_origin).rstrip('/')
+        link = f"{base_origin}/register?ref={code}"
         return ReferralCodeResponse(
             referral_code=code,
             referral_link=link,
@@ -135,7 +137,8 @@ class ReferralService:
     ) -> ReferralSummaryRead:
         """Fetch all referrals initiated by the user and current earnings summary."""
         code = self.generate_referral_code(user_id)
-        link = f"http://localhost:5173/register?ref={code}"
+        base_origin = str(get_settings().frontend_origin).rstrip('/')
+        link = f"{base_origin}/register?ref={code}"
 
         referrals = session.scalars(
             select(Referral)

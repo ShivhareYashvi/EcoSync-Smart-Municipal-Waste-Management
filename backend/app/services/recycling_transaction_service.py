@@ -211,11 +211,31 @@ class RecyclingTransactionService:
         txns = session.scalars(query).all()
         return [self._to_transaction_read(t, session) for t in txns]
 
-    def get_transaction(self, session: Session, transaction_id: int) -> TransactionRead:
-        txn = session.scalar(select(RecyclingTransaction).where(RecyclingTransaction.id == transaction_id))
+    def get_transaction(
+        self, session: Session, current_user: User, transaction_id: int
+    ) -> TransactionRead:
+        txn = session.scalar(
+            select(RecyclingTransaction)
+            .options(selectinload(RecyclingTransaction.recycler))
+            .where(RecyclingTransaction.id == transaction_id)
+        )
         if txn is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Transaction not found")
+
+        # Authorization: Citizen who initiated, assigned recycler, or admin
+        is_owner_citizen = current_user.role == UserRole.CITIZEN and txn.citizen_id == current_user.id
+        is_assigned_recycler = (
+            current_user.role == UserRole.RECYCLER
+            and txn.recycler is not None
+            and txn.recycler.user_id == current_user.id
+        )
+        if current_user.role != UserRole.ADMIN and not is_owner_citizen and not is_assigned_recycler:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Not authorized to view this transaction",
+            )
         return self._to_transaction_read(txn, session)
+
 
     def list_receipts_for_citizen(self, session: Session, citizen_id: int) -> list[ReceiptRead]:
         receipts = session.scalars(

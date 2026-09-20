@@ -20,7 +20,8 @@ MAINTENANCE_WARN_DAYS = 7
 def _enrich_vehicle(vehicle: Vehicle, session: Session) -> VehicleRead:
     today = date.today()
     days_until_due = (vehicle.maintenance_due_date - today).days
-    maintenance_due_soon = 0 <= days_until_due <= MAINTENANCE_WARN_DAYS
+    maintenance_due_soon = days_until_due <= MAINTENANCE_WARN_DAYS
+
 
     # Completed pickups for this vehicle in the last 7 days via route_stops
     week_ago = datetime.now(timezone.utc) - timedelta(days=7)
