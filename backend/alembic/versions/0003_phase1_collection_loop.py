@@ -21,6 +21,7 @@ Seed data:
 """
 
 from collections.abc import Sequence
+from datetime import datetime, timezone
 
 import sqlalchemy as sa
 from alembic import op
@@ -162,10 +163,10 @@ def upgrade() -> None:
         sa.column("points_cost", sa.Integer),
         sa.column("category", sa.String),
         sa.column("active", sa.Boolean),
-        sa.column("created_at", sa.DateTime),
-        sa.column("updated_at", sa.DateTime),
+        sa.column("created_at", sa.DateTime(timezone=True)),
+        sa.column("updated_at", sa.DateTime(timezone=True)),
     )
-    now = sa.func.now()
+    now = datetime.now(timezone.utc)
     op.bulk_insert(
         catalog,
         [

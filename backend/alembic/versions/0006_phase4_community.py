@@ -99,7 +99,7 @@ def upgrade() -> None:
             sa.ForeignKey("users.id", ondelete="CASCADE"),
             primary_key=True,
         ),
-        sa.Column("opted_in", sa.Boolean(), nullable=False, server_default=sa.false_()),
+        sa.Column("opted_in", sa.Boolean(), nullable=False, server_default=sa.false()),
         sa.Column("display_handle", sa.String(120), nullable=True),
         sa.Column("opted_in_at", sa.DateTime(timezone=True), nullable=True),
     )
@@ -156,7 +156,7 @@ def upgrade() -> None:
             nullable=False,
             server_default="pending",
         ),
-        sa.Column("points_awarded", sa.Boolean(), nullable=False, server_default=sa.false_()),
+        sa.Column("points_awarded", sa.Boolean(), nullable=False, server_default=sa.false()),
         sa.Column(
             "created_at",
             sa.DateTime(timezone=True),

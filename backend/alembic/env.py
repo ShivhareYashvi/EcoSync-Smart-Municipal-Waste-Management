@@ -1,12 +1,37 @@
 from logging.config import fileConfig
 
 from alembic import context
-from sqlalchemy import engine_from_config, pool
+from alembic.ddl.impl import DefaultImpl
+from sqlalchemy import Column, MetaData, PrimaryKeyConstraint, String, Table, engine_from_config, pool
 from sqlalchemy.engine import Connection
 
 from app.core.config import get_settings
 from app.db_base import Base
 from app import models  # noqa: F401 - imports model metadata for Alembic autogenerate
+
+# Allow Alembic version numbers longer than standard 32 chars (e.g. 0004_phase2_operations_compliance is 34 chars)
+def _version_table_with_custom_len(
+    self,
+    *,
+    version_table: str,
+    version_table_schema: str | None,
+    version_table_pk: bool,
+    **kw,
+) -> Table:
+    vt = Table(
+        version_table,
+        MetaData(),
+        Column("version_num", String(128), nullable=False),
+        schema=version_table_schema,
+    )
+    if version_table_pk:
+        vt.append_constraint(
+            PrimaryKeyConstraint("version_num", name=f"{version_table}_pkc")
+        )
+    return vt
+
+
+DefaultImpl.version_table_impl = _version_table_with_custom_len
 
 config = context.config
 settings = get_settings()

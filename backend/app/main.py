@@ -53,6 +53,16 @@ app.add_middleware(
 app.mount("/uploads", StaticFiles(directory=settings.upload_dir), name="uploads")
 
 
+@app.get("/", tags=["system"])
+def root() -> dict[str, str]:
+    """Root endpoint providing links to documentation and health status."""
+    return {
+        "message": f"Welcome to {settings.app_name}",
+        "docs": "/docs",
+        "health": "/health",
+    }
+
+
 @app.get("/health", tags=["system"])
 def health_check() -> dict[str, str]:
     """Basic health check used by deployment platforms."""
