@@ -21,6 +21,10 @@ export default function App() {
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/price-board" element={<PriceBoardPage />} />
+      <Route path="/rates" element={<PriceBoardPage />} />
+      <Route path="/portal/citizen" element={<Navigate to="/dashboard/user" replace />} />
+      <Route path="/portal/driver" element={<Navigate to="/dashboard/driver" replace />} />
+      <Route path="/portal/admin" element={<Navigate to="/dashboard/admin" replace />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/login/:role" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
@@ -47,6 +51,8 @@ export default function App() {
       <Route path="/features" element={<DashboardLayout />}>
         <Route index element={<FeatureModulesPage />} />
       </Route>
+      {/* Catch-all fallback so unmatched routes never render a blank white screen */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
