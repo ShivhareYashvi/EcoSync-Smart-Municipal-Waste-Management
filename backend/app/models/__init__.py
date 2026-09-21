@@ -76,7 +76,7 @@ __all__ = [
     "User",
     "UserRole",
     "WasteType",
-    # Phase 1
+    # Collection & Rewards
     "CatalogCategory",
     "ComplianceScore",
     "PointsTransaction",
@@ -87,7 +87,7 @@ __all__ = [
     "UserTier",
     "UserTierRecord",
     "WasteCategory",
-    # Phase 2
+    # Municipal Operations & Fleet
     "BillingStatus",
     "BulkGenerator",
     "BulkGeneratorCategory",
@@ -100,7 +100,7 @@ __all__ = [
     "RouteStopStatus",
     "Vehicle",
     "Zone",
-    # Phase 3
+    # Recycler Marketplace & EPR Ledger
     "BrandAccount",
     "CompostBatch",
     "CompostBatchStatus",
@@ -113,7 +113,7 @@ __all__ = [
     "RecyclingReceipt",
     "RecyclingTransaction",
     "RecyclingTransactionStatus",
-    # Phase 4
+    # Citizen Engagement & Community
     "ComplaintUpvote",
     "LeaderboardOptIn",
     "Referral",

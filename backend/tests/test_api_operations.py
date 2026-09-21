@@ -1,4 +1,4 @@
-"""API integration tests for Phase 2 endpoints — happy path + one failure case each."""
+"""API integration tests for municipal operations and fleet endpoints — happy path + one failure case each."""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ from tests.conftest import TestingSessionLocal, test_engine
 
 @pytest.fixture()
 def client(setup_db):
-    """FastAPI TestClient with DB override and Phase 2 seed data."""
+    """FastAPI TestClient with DB override and operations seed data."""
     from app.main import app
     from app.db import get_db
 
@@ -31,7 +31,7 @@ def client(setup_db):
     app.dependency_overrides.clear()
 
 
-# ── Seed helpers ─
+#  Seed helpers ─
 
 def _seed_db(session) -> None:
     from datetime import datetime, timezone
@@ -105,7 +105,7 @@ def _auth(token: str) -> dict:
     return {"Authorization": f"Bearer {token}"}
 
 
-# ── Zone tests ────
+#  Zone tests 
 
 class TestZones:
     def test_list_zones_returns_seeded(self, client):
@@ -131,7 +131,7 @@ class TestZones:
         assert resp.status_code == 404
 
 
-# ── Vehicle tests ─
+#  Vehicle tests ─
 
 class TestVehicles:
     def test_create_and_list_vehicle(self, client):
@@ -180,7 +180,7 @@ class TestVehicles:
         assert resp.json()["days_until_due"] <= 7
 
 
-# ── Bulk generator tests ────────────────────────
+#  Bulk generator tests ─
 
 class TestBulkGenerators:
     def test_register_and_list(self, client):
@@ -222,7 +222,7 @@ class TestBulkGenerators:
         assert resp.status_code == 409
 
 
-# ── Route generation tests ──────────────────────
+#  Route generation tests ─
 
 class TestRouteGeneration:
     def test_generate_route_with_eligible_pickup(self, client):
@@ -284,7 +284,7 @@ class TestRouteGeneration:
         assert updated_stop["status"] == "arrived"
 
 
-# ── Complaint heatmap tests ─────────────────────
+#  Complaint heatmap tests 
 
 class TestComplaintHeatmap:
     def test_heatmap_returns_valid_structure(self, client):

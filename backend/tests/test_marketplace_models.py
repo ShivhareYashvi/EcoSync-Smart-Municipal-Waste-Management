@@ -1,4 +1,4 @@
-"""Tests for Phase 3 models, relationships, and migration definitions."""
+"""Tests for marketplace models, relationships, and migration definitions."""
 
 from datetime import date, datetime, timezone
 from decimal import Decimal
@@ -26,7 +26,7 @@ from app.models import (
 from tests.conftest import TestingSessionLocal
 
 
-def test_phase3_recycler_and_rate_card(setup_db):
+def test_marketplace_recycler_and_rate_card(setup_db):
     """Test Recycler profile and RecyclerRateCard models and relationships."""
     now = datetime.now(timezone.utc)
     with TestingSessionLocal() as session:
@@ -89,7 +89,7 @@ def test_phase3_recycler_and_rate_card(setup_db):
         assert plastic_card.rate_per_kg == Decimal("15.50")
 
 
-def test_phase3_transaction_receipt_and_epr_credit(setup_db):
+def test_marketplace_transaction_receipt_and_epr_credit(setup_db):
     """Test full transaction -> receipt -> EPR credit lifecycle at model level."""
     now = datetime.now(timezone.utc)
     with TestingSessionLocal() as session:
@@ -201,7 +201,7 @@ def test_phase3_transaction_receipt_and_epr_credit(setup_db):
         assert reloaded_receipt.epr_credit.brand.org_name == "EcoFMCG India Ltd"
 
 
-def test_phase3_compost_batch(setup_db):
+def test_marketplace_compost_batch(setup_db):
     """Test CompostBatch model with zone reference and status transitions."""
     now = datetime.now(timezone.utc)
     with TestingSessionLocal() as session:

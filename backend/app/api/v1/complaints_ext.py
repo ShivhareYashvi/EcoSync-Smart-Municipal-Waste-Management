@@ -10,10 +10,10 @@ from app.db import get_db
 from app.models.complaint import Complaint
 from app.models.enums import ComplaintStatus
 from app.schemas.complaint import ComplaintRead
-from app.schemas.phase2 import ComplaintHotspotRead, HeatmapResponse, ZoneSLARead
+from app.schemas.operations import ComplaintHotspotRead, HeatmapResponse, ZoneSLARead
 from app.services.hotspot_service import OVERDUE_DAYS, hotspot_service
 
-router = APIRouter(tags=["complaints-phase2"])
+router = APIRouter(tags=["complaints-operations"])
 
 
 @router.get("/complaints/heatmap", response_model=HeatmapResponse)

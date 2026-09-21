@@ -1,4 +1,4 @@
-"""Unit tests for Phase 3: exact Decimal arithmetic, rate card versioning, and EPR credit mechanics."""
+"""Unit tests for marketplace: exact Decimal arithmetic, rate card versioning, and EPR credit mechanics."""
 
 from datetime import date, datetime, timezone
 from decimal import Decimal

@@ -1,4 +1,4 @@
-"""Tests for Phase 2 data models and schema changes (Task 1)."""
+"""Tests for municipal operations data models and schema changes."""
 
 from datetime import date, datetime, timezone
 

@@ -9,10 +9,9 @@ from app.models.enums import SocietyMemberRole, SocietyMemberStatus
 
 class SocietyMembership(Base):
     """Links a citizen to a housing society with a role and approval status.
-
     Regular members join immediately (status=active).  RWA admin
     memberships require municipal-admin approval (status=pending until
-    verified), mirroring the recycler-verification pattern from Phase 3.
+    verified), mirroring the recycler-verification workflow.
     """
 
     __tablename__ = "society_memberships"

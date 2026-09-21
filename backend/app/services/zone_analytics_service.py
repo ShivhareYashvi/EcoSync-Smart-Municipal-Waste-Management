@@ -16,7 +16,7 @@ from app.models.enums import ComplaintStatus, HotspotStatus, PickupStatus
 from app.models.pickup_request import PickupRequest
 from app.models.user import User
 from app.models.zone import Zone
-from app.schemas.phase2 import CityWideAnalytics, ZoneAnalytics
+from app.schemas.operations import CityWideAnalytics, ZoneAnalytics
 
 
 class ZoneAnalyticsService:
@@ -57,12 +57,12 @@ class ZoneAnalyticsService:
         return buf.getvalue()
 
     def _compute_for_zone(self, session: Session, zone: Zone) -> ZoneAnalytics:
-        # ── Users in this zone ──────────────────
+        #  Users in this zone 
         user_ids = [
             u.id for u in session.scalars(select(User).where(User.zone_id == zone.id)).all()
         ]
 
-        # ── Segregation compliance: avg rolling_score of users in zone ────────
+        #  Segregation compliance: avg rolling_score of users in zone 
         compliance_records = session.scalars(
             select(ComplianceScore).where(ComplianceScore.user_id.in_(user_ids))
         ).all() if user_ids else []
@@ -71,7 +71,7 @@ class ZoneAnalyticsService:
         else:
             avg_compliance = 0.0
 
-        # ── Complaint SLA: avg resolution time in hours ───────────────────────
+        #  Complaint SLA: avg resolution time in hours 
         zone_complaints = session.scalars(
             select(Complaint).where(Complaint.zone_id == zone.id)
         ).all()
@@ -85,7 +85,7 @@ class ZoneAnalyticsService:
             )
             avg_sla = round(total_hours / len(resolved), 1)
 
-        # ── Pickups: missed rate and total kg ───
+        #  Pickups: missed rate and total kg ─
         zone_pickups = session.scalars(
             select(PickupRequest).where(PickupRequest.zone_id == zone.id)
         ).all()
@@ -94,7 +94,7 @@ class ZoneAnalyticsService:
         missed_rate = round((cancelled / total_pickups * 100), 1) if total_pickups > 0 else 0.0
         total_kg = round(sum(p.weight_kg for p in zone_pickups if p.weight_kg is not None), 2)
 
-        # ── Active hotspots ─────────────────────
+        #  Active hotspots 
         active_hotspots = session.scalar(
             select(func.count(ComplaintHotspot.id)).where(
                 ComplaintHotspot.zone_id == zone.id,

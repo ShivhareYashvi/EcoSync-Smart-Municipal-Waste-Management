@@ -14,7 +14,7 @@ from app.models.route import Route, RouteStop
 from app.models.user import User
 from app.models.vehicle import Vehicle
 from app.models.zone import Zone
-from app.schemas.phase2 import RouteGenerateRequest, RouteRead, RouteStopStatusUpdate
+from app.schemas.operations import RouteGenerateRequest, RouteRead, RouteStopStatusUpdate
 from app.services.route_optimizer import NearestNeighborRouteOptimizer, RouteOptimizer
 from app.services.zone_service import ZONE_DEPOTS
 

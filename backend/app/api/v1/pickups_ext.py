@@ -1,4 +1,4 @@
-"""Extended pickup endpoints — Phase 1 logging, confirm, and dispute."""
+"""Extended pickup endpoints — Verified collection logging, confirmation, and disputes."""
 
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
@@ -12,7 +12,7 @@ from app.services.points_engine import points_service
 from fastapi import HTTPException
 from sqlalchemy import select
 
-router = APIRouter(tags=["pickups-phase1"])
+router = APIRouter(tags=["pickups-collection"])
 
 
 @router.post("/pickups/{pickup_id}/log", response_model=PickupRequestRead, status_code=status.HTTP_200_OK)

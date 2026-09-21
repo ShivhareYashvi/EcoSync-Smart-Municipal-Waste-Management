@@ -31,7 +31,7 @@ class Complaint(TimestampMixin, Base):
     user = relationship("User", back_populates="complaints")
     zone = relationship("Zone", back_populates="complaints", foreign_keys=[zone_id])
 
-    # ── Phase 4: Complaint upvotes ─────────────────
+    #  Citizen Engagement: Complaint upvotes
     upvotes = relationship("ComplaintUpvote", back_populates="complaint", cascade="all, delete-orphan")
 
 

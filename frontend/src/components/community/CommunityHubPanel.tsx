@@ -38,7 +38,7 @@ export const CommunityHubPanel: React.FC<CommunityHubPanelProps> = ({ currentUse
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-emerald-600 font-bold text-xs uppercase tracking-wider">
             <HeartHandshake className="w-4 h-4" />
-            Phase 4 Community Hub
+            Citizen Community Hub
           </div>
           <h2 className="text-2xl font-black text-slate-950">Citizen Engagement &amp; Community</h2>
           <p className="text-slate-600 text-xs">

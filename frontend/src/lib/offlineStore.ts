@@ -94,7 +94,7 @@ function getDB(): Promise<IDBDatabase> {
   return dbPromise;
 }
 
-// ── Pending Pickup Logs ──
+//  Pending Pickup Logs 
 
 export async function savePendingPickupLog(
   item: Omit<PendingPickupLog, 'id'>
@@ -131,7 +131,7 @@ export async function deletePendingPickupLog(id: number): Promise<void> {
   });
 }
 
-// ── Pending Stop Updates ──
+//  Pending Stop Updates 
 
 export async function savePendingStopUpdate(
   item: Omit<PendingStopUpdate, 'id'>
@@ -168,7 +168,7 @@ export async function deletePendingStopUpdate(id: number): Promise<void> {
   });
 }
 
-// ── Offline Conflicts ──
+//  Offline Conflicts 
 
 export async function saveOfflineConflict(
   conflict: Omit<OfflineConflict, 'id'>
@@ -205,7 +205,7 @@ export async function dismissConflict(id: number): Promise<void> {
   });
 }
 
-// ── Overall Queue Summary ──
+//  Overall Queue Summary 
 
 export async function getPendingQueueCount(): Promise<number> {
   try {

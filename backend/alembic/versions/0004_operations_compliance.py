@@ -1,7 +1,7 @@
-"""Add Phase 2 municipal operations, zones, fleet, bulk generators, and routes.
+"""Add municipal operations, zones, fleet, bulk generators, and routes.
 
-Revision ID: 0004_phase2_operations_compliance
-Revises: 0003_phase1_collection_loop
+Revision ID: 0004_operations_compliance
+Revises: 0003_collection_loop
 Create Date: 2026-09-17 09:30:00.000000
 
 Changes
@@ -32,14 +32,14 @@ from collections.abc import Sequence
 import sqlalchemy as sa
 from alembic import op
 
-revision: str = "0004_phase2_operations_compliance"
-down_revision: str | None = "0003_phase1_collection_loop"
+revision: str = "0004_operations_compliance"
+down_revision: str | None = "0003_collection_loop"
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
-    # ── 1. Create zones table ────────────────────
+    #  1. Create zones table ─
     op.create_table(
         "zones",
         sa.Column("id", sa.Integer(), nullable=False),
@@ -53,7 +53,7 @@ def upgrade() -> None:
     op.create_index(op.f("ix_zones_id"), "zones", ["id"], unique=False)
     op.create_index(op.f("ix_zones_code"), "zones", ["code"], unique=True)
 
-    # ── 2. Create vehicles table ─────────────────
+    #  2. Create vehicles table ─
     op.create_table(
         "vehicles",
         sa.Column("id", sa.Integer(), nullable=False),
@@ -76,7 +76,7 @@ def upgrade() -> None:
     op.create_index(op.f("ix_vehicles_assigned_driver_id"), "vehicles", ["assigned_driver_id"], unique=False)
     op.create_index(op.f("ix_vehicles_maintenance_due_date"), "vehicles", ["maintenance_due_date"], unique=False)
 
-    # ── 3. Create bulk_generators table ──────────
+    #  3. Create bulk_generators table 
     op.create_table(
         "bulk_generators",
         sa.Column("id", sa.Integer(), nullable=False),
@@ -105,7 +105,7 @@ def upgrade() -> None:
     op.create_index(op.f("ix_bulk_generators_zone_id"), "bulk_generators", ["zone_id"], unique=False)
     op.create_index(op.f("ix_bulk_generators_contact_user_id"), "bulk_generators", ["contact_user_id"], unique=False)
 
-    # ── 4. Create routes table ───────────────────
+    #  4. Create routes table 
     op.create_table(
         "routes",
         sa.Column("id", sa.Integer(), nullable=False),
@@ -131,7 +131,7 @@ def upgrade() -> None:
     op.create_index(op.f("ix_routes_zone_id"), "routes", ["zone_id"], unique=False)
     op.create_index(op.f("ix_routes_route_date"), "routes", ["route_date"], unique=False)
 
-    # ── 5. Create route_stops table ──────────────
+    #  5. Create route_stops table 
     op.create_table(
         "route_stops",
         sa.Column("id", sa.Integer(), nullable=False),
@@ -154,7 +154,7 @@ def upgrade() -> None:
     op.create_index(op.f("ix_route_stops_route_id"), "route_stops", ["route_id"], unique=False)
     op.create_index(op.f("ix_route_stops_pickup_id"), "route_stops", ["pickup_id"], unique=False)
 
-    # ── 6. Create complaint_hotspots table ──────
+    #  6. Create complaint_hotspots table 
     op.create_table(
         "complaint_hotspots",
         sa.Column("id", sa.Integer(), nullable=False),
@@ -174,7 +174,7 @@ def upgrade() -> None:
     op.create_index(op.f("ix_complaint_hotspots_id"), "complaint_hotspots", ["id"], unique=False)
     op.create_index(op.f("ix_complaint_hotspots_zone_id"), "complaint_hotspots", ["zone_id"], unique=False)
 
-    # ── 7. Extend users table ────────────────────
+    #  7. Extend users table ─
     op.add_column("users", sa.Column("zone_id", sa.Integer(), nullable=True))
     op.create_foreign_key(
         "fk_users_zone_id_zones",
@@ -186,7 +186,7 @@ def upgrade() -> None:
     )
     op.create_index(op.f("ix_users_zone_id"), "users", ["zone_id"], unique=False)
 
-    # ── 8. Extend pickup_requests table ──────────
+    #  8. Extend pickup_requests table 
     op.add_column("pickup_requests", sa.Column("zone_id", sa.Integer(), nullable=True))
     op.add_column("pickup_requests", sa.Column("route_id", sa.Integer(), nullable=True))
     op.add_column("pickup_requests", sa.Column("bulk_generator_id", sa.Integer(), nullable=True))
@@ -222,7 +222,7 @@ def upgrade() -> None:
     op.create_index(op.f("ix_pickup_requests_route_id"), "pickup_requests", ["route_id"], unique=False)
     op.create_index(op.f("ix_pickup_requests_bulk_generator_id"), "pickup_requests", ["bulk_generator_id"], unique=False)
 
-    # ── 9. Extend complaints table ───────────────
+    #  9. Extend complaints table ─
     op.add_column("complaints", sa.Column("zone_id", sa.Integer(), nullable=True))
     op.add_column("complaints", sa.Column("resolved_at", sa.DateTime(timezone=True), nullable=True))
     op.create_foreign_key(
@@ -237,13 +237,13 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
-    # ── 1. Revert complaints column additions ────
+    #  1. Revert complaints column additions 
     op.drop_constraint("fk_complaints_zone_id_zones", "complaints", type_="foreignkey")
     op.drop_index(op.f("ix_complaints_zone_id"), table_name="complaints")
     op.drop_column("complaints", "resolved_at")
     op.drop_column("complaints", "zone_id")
 
-    # ── 2. Revert pickup_requests column additions ─────────────────────────────
+    #  2. Revert pickup_requests column additions 
     op.drop_constraint("fk_pickup_requests_bulk_generator_id_bulk_generators", "pickup_requests", type_="foreignkey")
     op.drop_constraint("fk_pickup_requests_route_id_routes", "pickup_requests", type_="foreignkey")
     op.drop_constraint("fk_pickup_requests_zone_id_zones", "pickup_requests", type_="foreignkey")
@@ -255,12 +255,12 @@ def downgrade() -> None:
     op.drop_column("pickup_requests", "route_id")
     op.drop_column("pickup_requests", "zone_id")
 
-    # ── 3. Revert users column additions ─────────
+    #  3. Revert users column additions ─
     op.drop_constraint("fk_users_zone_id_zones", "users", type_="foreignkey")
     op.drop_index(op.f("ix_users_zone_id"), table_name="users")
     op.drop_column("users", "zone_id")
 
-    # ── 4. Drop tables in reverse order ──────────
+    #  4. Drop tables in reverse order 
     op.drop_index(op.f("ix_complaint_hotspots_zone_id"), table_name="complaint_hotspots")
     op.drop_index(op.f("ix_complaint_hotspots_id"), table_name="complaint_hotspots")
     op.drop_table("complaint_hotspots")

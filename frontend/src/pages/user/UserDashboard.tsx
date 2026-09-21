@@ -28,7 +28,7 @@ const initialSchedule = {
   notes: ''
 };
 
-// ── Tier colour helper ──────────────────────────
+//  Tier colour helper ─
 
 function tierColour(tier: string) {
   if (tier === 'gold') return 'text-yellow-600 bg-yellow-50';
@@ -36,7 +36,7 @@ function tierColour(tier: string) {
   return 'text-amber-700 bg-amber-50';
 }
 
-// ── Phase 1: Confirm / Dispute pickup row controls ────────────────────────────
+//  Confirm / Dispute pickup row controls ─
 
 interface PickupActionsProps {
   pickup: Pickup;
@@ -115,7 +115,7 @@ function PickupConfirmDispute({ pickup, onDone }: PickupActionsProps) {
   );
 }
 
-// ── Phase 1: Points & Tier card ─────────────────
+//  Points & Tier card ─
 
 function PointsTierCard({ userId }: { userId: number }) {
   const { data, isLoading } = useQuery({
@@ -178,7 +178,7 @@ function PointsTierCard({ userId }: { userId: number }) {
   );
 }
 
-// ── Phase 1: Compliance Score card ──────────────
+//  Compliance Score card ─
 
 function ComplianceCard({ userId }: { userId: number }) {
   const { data, isLoading } = useQuery({
@@ -224,7 +224,7 @@ function ComplianceCard({ userId }: { userId: number }) {
   );
 }
 
-// ── Phase 1: Redeem Rewards card ────────────────
+//  Redeem Rewards card ─
 
 function RedeemCard({ userId }: { userId: number }) {
   const queryClient = useQueryClient();
@@ -293,7 +293,7 @@ function RedeemCard({ userId }: { userId: number }) {
   );
 }
 
-// ── Main user dashboard ─────────────────────────
+//  Main user dashboard 
 
 export function UserDashboard() {
   const queryClient = useQueryClient();
@@ -465,67 +465,67 @@ export function UserDashboard() {
                   setError(null);
                   setMessage('Fetching your current GPS location...');
 
-                    if (!window.isSecureContext) {
-                      setError('Location access requires HTTPS or localhost.');
-                      setMessage(null);
-                      return;
-                    }
+                  if (!window.isSecureContext) {
+                    setError('Location access requires HTTPS or localhost.');
+                    setMessage(null);
+                    return;
+                  }
 
-                    if (!navigator.geolocation) {
-                      setError('Geolocation is not supported in this browser.');
-                      setMessage(null);
-                      return;
-                    }
+                  if (!navigator.geolocation) {
+                    setError('Geolocation is not supported in this browser.');
+                    setMessage(null);
+                    return;
+                  }
 
-                    navigator.geolocation.getCurrentPosition(
-                      (position) => {
-                        const latitude = position.coords.latitude.toFixed(6);
-                        const longitude = position.coords.longitude.toFixed(6);
+                  navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                      const latitude = position.coords.latitude.toFixed(6);
+                      const longitude = position.coords.longitude.toFixed(6);
 
-                        if (
-                          !latitude ||
-                          !longitude ||
-                          Number.isNaN(Number(latitude)) ||
-                          Number.isNaN(Number(longitude))
-                        ) {
-                          setError('Invalid GPS coordinates received.');
-                          setMessage(null);
-                          return;
-                        }
-
-                        setSchedule((current) => ({
-                          ...current,
-                          latitude,
-                          longitude
-                        }));
-
-                        setError(null);
-                        setMessage('Location captured successfully.');
-                      },
-                      (geoError) => {
-                        let msg = 'Unable to fetch your current location.';
-
-                        switch (geoError.code) {
-                          case geoError.PERMISSION_DENIED:
-                            msg = 'Location permission denied. Please allow GPS access.';
-                            break;
-                          case geoError.POSITION_UNAVAILABLE:
-                            msg = 'GPS signal unavailable. Try moving outdoors.';
-                            break;
-                          case geoError.TIMEOUT:
-                            msg = 'Location request timed out. Try again.';
-                            break;
-                        }
-
-                        setError(msg);
+                      if (
+                        !latitude ||
+                        !longitude ||
+                        Number.isNaN(Number(latitude)) ||
+                        Number.isNaN(Number(longitude))
+                      ) {
+                        setError('Invalid GPS coordinates received.');
                         setMessage(null);
-                      },
-                      {
-                        enableHighAccuracy: true,
-                        timeout: 15000,
-                        maximumAge: 10000
+                        return;
                       }
-                    )
+
+                      setSchedule((current) => ({
+                        ...current,
+                        latitude,
+                        longitude
+                      }));
+
+                      setError(null);
+                      setMessage('Location captured successfully.');
+                    },
+                    (geoError) => {
+                      let msg = 'Unable to fetch your current location.';
+
+                      switch (geoError.code) {
+                        case geoError.PERMISSION_DENIED:
+                          msg = 'Location permission denied. Please allow GPS access.';
+                          break;
+                        case geoError.POSITION_UNAVAILABLE:
+                          msg = 'GPS signal unavailable. Try moving outdoors.';
+                          break;
+                        case geoError.TIMEOUT:
+                          msg = 'Location request timed out. Try again.';
+                          break;
+                      }
+
+                      setError(msg);
+                      setMessage(null);
+                    },
+                    {
+                      enableHighAccuracy: true,
+                      timeout: 15000,
+                      maximumAge: 10000
+                    }
+                  )
                 }}
               >
                 <LocateFixed className="mr-2 inline h-4 w-4" />Use my location
@@ -595,7 +595,7 @@ export function UserDashboard() {
                     <MapPinned className="mr-1 inline h-4 w-4" />{trackedPickupId === pickup.id ? 'Tracking' : 'Track'}
                   </button>
                 </div>
-                {/* Phase 1: confirm / dispute controls */}
+                {/* Confirm / dispute controls */}
                 {pickup.status === 'completed' && (
                   <PickupConfirmDispute
                     pickup={pickup}
@@ -610,17 +610,17 @@ export function UserDashboard() {
         <EmptyState title="No pickups yet" description="Schedule your first pickup to unlock live tracking and analytics." />
       )}
 
-      {/* Phase 1: Points/Tier + Compliance + Redeem */}
+      {/* Points/Tier + Compliance + Redeem */}
       <div className="grid gap-6 lg:grid-cols-2">
         <PointsTierCard userId={user.id} />
         <ComplianceCard userId={user.id} />
       </div>
       <RedeemCard userId={user.id} />
 
-      {/* Phase 3: Marketplace (Sell Recyclables, Sales, Receipts) */}
+      {/* Recycler Marketplace (Sell Recyclables, Sales, Receipts) */}
       <CitizenRecyclingMarketplace userId={user.id} />
 
-      {/* Phase 4: Citizen Engagement & Community Hub */}
+      {/* Citizen Engagement & Community Hub */}
       <CommunityHubPanel currentUser={user} />
 
       <article className="glass-card rounded-[2rem] p-6">

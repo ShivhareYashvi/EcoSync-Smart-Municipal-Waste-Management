@@ -1,4 +1,4 @@
-"""API integration tests for Phase 4 endpoints — happy path + failure cases."""
+"""API integration tests for citizen engagement & community endpoints — happy path + failure cases."""
 
 from __future__ import annotations
 
@@ -107,7 +107,7 @@ def _auth_header(token: str) -> dict[str, str]:
     return {"Authorization": f"Bearer {token}"}
 
 
-# ── Task 2: Society Tests ──────────────────────────────────────────────
+#  Task 2: Society Tests 
 
 class TestSocietyEndpoints:
     def test_register_and_list_societies(self, client: TestClient):
@@ -195,7 +195,7 @@ class TestSocietyEndpoints:
         assert d_data["total_points_earned"] is None
 
 
-# ── Task 3: Leaderboard Tests ──────────────────────────────────────────
+#  Task 3: Leaderboard Tests 
 
 class TestLeaderboardEndpoints:
     def test_opt_in_toggle_and_strict_exclusion(self, client: TestClient):
@@ -231,7 +231,7 @@ class TestLeaderboardEndpoints:
         assert not any(e["user_id"] == 3 for e in entries)
 
 
-# ── Task 4: Complaint Upvote Tests ─────────────────────────────────────
+#  Task 4: Complaint Upvote Tests 
 
 class TestComplaintUpvoteEndpoints:
     def test_complaint_upvote_toggle_and_sort(self, client: TestClient):
@@ -278,7 +278,7 @@ class TestComplaintUpvoteEndpoints:
         assert toggle_off.json()["upvote_count"] == 1
 
 
-# ── Task 5: Referral Endpoints ─────────────────────────────────────────
+#  Task 5: Referral Endpoints ─
 
 class TestReferralEndpoints:
     def test_referral_code_and_summary(self, client: TestClient):

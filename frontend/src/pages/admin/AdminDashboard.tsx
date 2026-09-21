@@ -126,16 +126,16 @@ export function AdminDashboard() {
         </article>
       </div>
 
-      {/* Phase 3: Recycler Verification Queue */}
+      {/* Recycler Verification Queue */}
       <RecyclerVerificationQueue />
 
-      {/* Phase 3: EPR Credit Ledger & Brand Claim Simulation */}
+      {/* EPR Credit Ledger & Brand Claim Simulation */}
       <EPRCreditLedgerPanel />
 
-      {/* Phase 3: Compost Batch Tracking */}
+      {/* Compost Batch Tracking */}
       <CompostBatchPanel />
 
-      {/* Phase 4: RWA Admin Approval Queue */}
+      {/* RWA Admin Approval Queue */}
       <RWAAdminApprovalQueue />
     </section>
   );

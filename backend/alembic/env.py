@@ -9,7 +9,7 @@ from app.core.config import get_settings
 from app.db_base import Base
 from app import models  # noqa: F401 - imports model metadata for Alembic autogenerate
 
-# Allow Alembic version numbers longer than standard 32 chars (e.g. 0004_phase2_operations_compliance is 34 chars)
+# Allow Alembic version numbers longer than standard 32 chars (e.g. 0007_offline_pwa_idempotency is 30 chars)
 def _version_table_with_custom_len(
     self,
     *,

@@ -1,7 +1,7 @@
-"""Add Phase 4 citizen engagement & community tables.
+"""Add citizen engagement & community tables.
 
-Revision ID: 0006_phase4_community
-Revises: 0005_phase3_marketplace
+Revision ID: 0006_citizen_community
+Revises: 0005_marketplace_ledger
 Create Date: 2026-09-19 12:00:00.000000
 
 Changes
@@ -22,14 +22,14 @@ from collections.abc import Sequence
 import sqlalchemy as sa
 from alembic import op
 
-revision: str = "0006_phase4_community"
-down_revision: str | None = "0005_phase3_marketplace"
+revision: str = "0006_citizen_community"
+down_revision: str | None = "0005_marketplace_ledger"
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
-    # ── 1. societies ────────────────────────────────────────────────────
+    #  1. societies 
     op.create_table(
         "societies",
         sa.Column("id", sa.Integer(), primary_key=True, autoincrement=True),
@@ -50,7 +50,7 @@ def upgrade() -> None:
         ),
     )
 
-    # ── 2. society_memberships ──────────────────────────────────────────
+    #  2. society_memberships 
     op.create_table(
         "society_memberships",
         sa.Column("id", sa.Integer(), primary_key=True, autoincrement=True),
@@ -90,7 +90,7 @@ def upgrade() -> None:
         sa.UniqueConstraint("user_id", "society_id", name="uq_society_membership_user_society"),
     )
 
-    # ── 3. leaderboard_opt_ins ──────────────────────────────────────────
+    #  3. leaderboard_opt_ins 
     op.create_table(
         "leaderboard_opt_ins",
         sa.Column(
@@ -104,7 +104,7 @@ def upgrade() -> None:
         sa.Column("opted_in_at", sa.DateTime(timezone=True), nullable=True),
     )
 
-    # ── 4. complaint_upvotes ────────────────────────────────────────────
+    #  4. complaint_upvotes 
     op.create_table(
         "complaint_upvotes",
         sa.Column("id", sa.Integer(), primary_key=True, autoincrement=True),
@@ -131,7 +131,7 @@ def upgrade() -> None:
         sa.UniqueConstraint("complaint_id", "user_id", name="uq_complaint_upvote_user"),
     )
 
-    # ── 5. referrals ───────────────────────────────────────────────────
+    #  5. referrals ─
     op.create_table(
         "referrals",
         sa.Column("id", sa.Integer(), primary_key=True, autoincrement=True),
@@ -165,7 +165,7 @@ def upgrade() -> None:
         ),
     )
 
-    # ── 6. Add users.locale_preference ─────────────────────────────────
+    #  6. Add users.locale_preference 
     op.add_column(
         "users",
         sa.Column(

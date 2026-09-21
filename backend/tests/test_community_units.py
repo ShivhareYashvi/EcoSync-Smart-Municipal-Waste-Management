@@ -1,4 +1,4 @@
-"""Unit tests for Phase 4: Privacy boundaries, upvote uniqueness, and referral bonus rules."""
+"""Unit tests for citizen engagement & community: Privacy boundaries, upvote uniqueness, and referral bonus rules."""
 
 from datetime import date, datetime, time, timezone
 import pytest

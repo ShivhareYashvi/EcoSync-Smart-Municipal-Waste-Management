@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
 from app.db import get_db
-from app.schemas.phase2 import VehicleCreate, VehicleMaintenanceRead, VehicleRead, VehicleUpdate
+from app.schemas.operations import VehicleCreate, VehicleMaintenanceRead, VehicleRead, VehicleUpdate
 from app.services.fleet_service import fleet_service
 
 router = APIRouter(prefix="/vehicles", tags=["fleet"])

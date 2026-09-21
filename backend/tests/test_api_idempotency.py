@@ -1,4 +1,4 @@
-"""Tests for Phase 5 IdempotencyMiddleware on mutating driver/pickup endpoints."""
+"""Tests for IdempotencyMiddleware on mutating driver/pickup endpoints."""
 
 from datetime import date, datetime, time, timezone
 import pytest
@@ -6,7 +6,6 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
-
 from app.core.security import hash_password
 from app.db import get_db
 from app.db_base import Base

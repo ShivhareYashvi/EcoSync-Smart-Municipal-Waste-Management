@@ -10,7 +10,7 @@ from app.models.bulk_generator import BulkGenerator
 from app.models.enums import BillingStatus
 from app.models.user import User
 from app.models.zone import Zone
-from app.schemas.phase2 import BulkGeneratorCreate, BulkGeneratorRead, BulkGeneratorStatusUpdate
+from app.schemas.operations import BulkGeneratorCreate, BulkGeneratorRead, BulkGeneratorStatusUpdate
 
 
 class BulkGeneratorService:

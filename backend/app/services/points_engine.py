@@ -21,15 +21,15 @@ from app.models.pickup_request import PickupRequest
 from app.models.points_transaction import PointsTransaction
 from app.models.user_tier import UserTierRecord
 
-# ── Tier promotion thresholds ───────────────────
+#  Tier promotion thresholds 
 _SILVER_THRESHOLD = 500   # lifetime points, zero flags
-_GOLD_THRESHOLD = 2_000   # lifetime points (no functional unlock in Phase 1)
+_GOLD_THRESHOLD = 2_000   # lifetime points threshold
 
-# ── Weekly weight-bonus cap (points, not kg) ────
+#  Weekly weight-bonus cap (points, not kg) 
 _WEEKLY_WEIGHT_BONUS_CAP = 50
 
 
-# ── Pure calculation function (unit-testable) ───
+#  Pure calculation function (unit-testable) ─
 
 @dataclass
 class UserHistory:
@@ -58,17 +58,17 @@ def calculate_points(pickup: PickupRequest, user_history: UserHistory) -> int:
     return round((base + weight_bonus) * streak_multiplier)
 
 
-# ── Stateful service ────────────────────────────
+#  Stateful service ─
 
 class PointsService:
     """Persist points awards, enforce caps, update tiers, handle disputes."""
 
-    # ── Public API 
+    #  Public API 
 
     def award_points(self, session: Session, pickup_id: int) -> PointsTransaction:
         """Calculate and persist a points award for a completed, logged pickup.
 
-        Must be called *after* the pickup's Phase 1 fields have been saved.
+        Must be called *after* the pickup's collection verification fields have been saved.
         Enforces the 50-pt/week weight-bonus cap at the service level.
         """
         pickup = self._get_pickup(session, pickup_id)
@@ -155,7 +155,7 @@ class PointsService:
         session.refresh(tx)
         return tx
 
-    # ── Private helpers ─────────────────────────
+    #  Private helpers 
 
     def _get_pickup(self, session: Session, pickup_id: int) -> PickupRequest:
         pickup = session.scalar(select(PickupRequest).where(PickupRequest.id == pickup_id))
@@ -248,7 +248,7 @@ class PointsService:
         tier.points_balance += delta
         tier.points_lifetime += delta
 
-        # Tier promotion (no demotion in Phase 1)
+        # Tier promotion (upward only)
         new_tier = self._compute_tier(tier.points_lifetime, tier.flags_count)
         if new_tier != tier.current_tier:
             tier.current_tier = new_tier

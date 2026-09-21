@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
 from app.db import get_db
-from app.schemas.phase2 import BulkGeneratorCreate, BulkGeneratorRead, BulkGeneratorStatusUpdate
+from app.schemas.operations import BulkGeneratorCreate, BulkGeneratorRead, BulkGeneratorStatusUpdate
 from app.services.bulk_generator_service import bulk_generator_service
 
 router = APIRouter(prefix="/bulk-generators", tags=["bulk-generators"])

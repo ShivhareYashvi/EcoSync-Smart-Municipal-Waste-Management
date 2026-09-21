@@ -1,7 +1,7 @@
-"""Add Phase 5 offline PWA idempotency keys table.
+"""Add offline PWA idempotency keys table.
 
-Revision ID: 0007_phase5_offline_pwa_idempotency
-Revises: 0006_phase4_community
+Revision ID: 0007_offline_pwa_idempotency
+Revises: 0006_citizen_community
 Create Date: 2026-09-19 18:00:00.000000
 
 Changes
@@ -15,8 +15,8 @@ from collections.abc import Sequence
 import sqlalchemy as sa
 from alembic import op
 
-revision: str = "0007_phase5_offline_pwa_idempotency"
-down_revision: str | None = "0006_phase4_community"
+revision: str = "0007_offline_pwa_idempotency"
+down_revision: str | None = "0006_citizen_community"
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 

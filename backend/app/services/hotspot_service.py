@@ -15,7 +15,7 @@ from app.models.enums import ComplaintStatus, HotspotStatus
 from app.models.pickup_request import PickupRequest
 from app.models.user import User
 from app.models.zone import Zone
-from app.schemas.phase2 import (
+from app.schemas.operations import (
     ComplaintHotspotRead,
     HeatmapPoint,
     HeatmapResponse,
@@ -39,7 +39,7 @@ def _depot_coords_for_zone(zone: Zone | None) -> tuple[float, float]:
 class HotspotService:
     """Manages complaint heatmaps, hotspot flagging, and SLA tracking."""
 
-    # ── Heatmap ───
+    #  Heatmap ─
 
     def get_heatmap(self, session: Session) -> HeatmapResponse:
         """
@@ -96,7 +96,7 @@ class HotspotService:
                 )
         return HeatmapResponse(points=points)
 
-    # ── Hotspot detection (called by scheduler) ─
+    #  Hotspot detection (called by scheduler) ─
 
     def run_hotspot_detection(self, session: Session) -> dict[str, int]:
         """
@@ -147,7 +147,7 @@ class HotspotService:
         session.commit()
         return {"flagged": flagged, "resolved": resolved}
 
-    # ── Hotspot listing ─────────────────────────
+    #  Hotspot listing 
 
     def list_hotspots(
         self,
@@ -174,7 +174,7 @@ class HotspotService:
             )
         return result
 
-    # ── SLA ──────
+    #  SLA 
 
     def get_zone_sla(self, session: Session) -> list[ZoneSLARead]:
         zones = session.scalars(select(Zone)).all()

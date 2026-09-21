@@ -2,11 +2,9 @@
 
 from fastapi import APIRouter, Depends, Response
 from sqlalchemy.orm import Session
-
 from app.db import get_db
-from app.schemas.phase2 import CityWideAnalytics, ZoneAnalytics
+from app.schemas.operations import CityWideAnalytics, ZoneAnalytics
 from app.services.zone_analytics_service import zone_analytics_service
-
 router = APIRouter(prefix="/analytics/zones", tags=["analytics-zones"])
 
 

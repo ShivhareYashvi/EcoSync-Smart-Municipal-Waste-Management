@@ -8,7 +8,7 @@ from app.models.enums import CatalogCategory
 class RedemptionCatalog(TimestampMixin, Base):
     """Platform reward catalog item redeemable with closed-loop points.
 
-    No real utility/payment integration in Phase 1 — ledger mechanics only.
+    Closed-loop ledger mechanics only without third-party payment gateway integration.
     Items are soft-deactivated via active=False rather than deleted.
     """
 

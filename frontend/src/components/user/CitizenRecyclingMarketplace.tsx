@@ -114,7 +114,7 @@ export function CitizenRecyclingMarketplace({ userId }: Props) {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-wider">
-              Phase 3 Marketplace
+              Recycling Marketplace
             </span>
             <span className="text-xs text-slate-400 font-semibold">Ledger-Only</span>
           </div>

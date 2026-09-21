@@ -1,6 +1,6 @@
-"""Add Phase 1 collection-loop columns and reward tables.
+"""Add collection-loop columns and reward tables.
 
-Revision ID: 0003_phase1_collection_loop
+Revision ID: 0003_collection_loop
 Revises: 0002_tracking_uploads_otp
 Create Date: 2026-09-17 02:20:00.000000
 
@@ -26,14 +26,14 @@ from datetime import datetime, timezone
 import sqlalchemy as sa
 from alembic import op
 
-revision: str = "0003_phase1_collection_loop"
+revision: str = "0003_collection_loop"
 down_revision: str | None = "0002_tracking_uploads_otp"
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
-    # ── 1. Extend pickup_requests ───────────────
+    #  1. Extend pickup_requests ─
     op.add_column("pickup_requests", sa.Column("weight_kg", sa.Float(), nullable=True))
     op.add_column(
         "pickup_requests",
@@ -53,7 +53,7 @@ def upgrade() -> None:
     )
     op.add_column("pickup_requests", sa.Column("photo_url", sa.String(length=512), nullable=True))
 
-    # ── 2. points_transactions ──────────────────
+    #  2. points_transactions 
     op.create_table(
         "points_transactions",
         sa.Column("id", sa.Integer(), nullable=False),
@@ -79,7 +79,7 @@ def upgrade() -> None:
     op.create_index(op.f("ix_points_transactions_user_id"), "points_transactions", ["user_id"], unique=False)
     op.create_index(op.f("ix_points_transactions_pickup_id"), "points_transactions", ["pickup_id"], unique=False)
 
-    # ── 3. user_tiers ───────────────────────────
+    #  3. user_tiers 
     op.create_table(
         "user_tiers",
         sa.Column("user_id", sa.Integer(), nullable=False),
@@ -96,7 +96,7 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("user_id"),
     )
 
-    # ── 4. redemption_catalog ───────────────────
+    #  4. redemption_catalog 
     op.create_table(
         "redemption_catalog",
         sa.Column("id", sa.Integer(), nullable=False),
@@ -118,7 +118,7 @@ def upgrade() -> None:
     )
     op.create_index(op.f("ix_redemption_catalog_id"), "redemption_catalog", ["id"], unique=False)
 
-    # ── 5. redemptions ──────────────────────────
+    #  5. redemptions ─
     op.create_table(
         "redemptions",
         sa.Column("id", sa.Integer(), nullable=False),
@@ -144,7 +144,7 @@ def upgrade() -> None:
     op.create_index(op.f("ix_redemptions_user_id"), "redemptions", ["user_id"], unique=False)
     op.create_index(op.f("ix_redemptions_catalog_item_id"), "redemptions", ["catalog_item_id"], unique=False)
 
-    # ── 6. compliance_scores ────────────────────
+    #  6. compliance_scores ─
     op.create_table(
         "compliance_scores",
         sa.Column("user_id", sa.Integer(), nullable=False),
@@ -156,7 +156,7 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("user_id"),
     )
 
-    # ── 7. Seed redemption_catalog with 3 placeholder items ──────────────────
+    #  7. Seed redemption_catalog with 3 placeholder items 
     catalog = sa.table(
         "redemption_catalog",
         sa.column("item_name", sa.String),
@@ -201,7 +201,7 @@ def upgrade() -> None:
 def downgrade() -> None:
     # Remove seed data first (cascade via FK is fine since we drop tables)
 
-    # ── Reverse table drops (in reverse creation order) ───────────────────────
+    #  Reverse table drops (in reverse creation order) 
     op.drop_table("compliance_scores")
 
     op.drop_index(op.f("ix_redemptions_catalog_item_id"), table_name="redemptions")
@@ -219,7 +219,7 @@ def downgrade() -> None:
     op.drop_index(op.f("ix_points_transactions_id"), table_name="points_transactions")
     op.drop_table("points_transactions")
 
-    # ── Reverse pickup_requests column additions ─
+    #  Reverse pickup_requests column additions ─
     op.drop_column("pickup_requests", "photo_url")
     op.drop_column("pickup_requests", "segregation_verified")
     op.drop_column("pickup_requests", "waste_category")

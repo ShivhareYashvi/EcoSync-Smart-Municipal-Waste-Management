@@ -13,7 +13,7 @@ from app.services.recycler_service import recycler_service
 router = APIRouter(prefix="/recyclers", tags=["recyclers"])
 
 
-# ── 1. Public Price Board (No Auth Required) 
+#  1. Public Price Board (No Auth Required) 
 
 
 @router.get("/rates", response_model=list[PublicRateRead])
@@ -29,7 +29,7 @@ def get_public_price_board(
     return recycler_service.get_active_rates(session, zone_id=zone_id, material=material)
 
 
-# ── 2. Admin & Recycler Protected Endpoints ─
+#  2. Admin & Recycler Protected Endpoints ─
 
 
 @router.get("/pending", response_model=list[RecyclerRead])

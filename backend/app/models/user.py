@@ -33,23 +33,23 @@ class User(TimestampMixin, Base):
     driver_profile = relationship("Driver", back_populates="user", uselist=False)
     notifications = relationship("Notification", back_populates="user")
 
-    # ── Phase 1 back-references ─────────────────
+    #  Collection & Rewards back-references ─
     points_transactions = relationship("PointsTransaction", back_populates="user")
     user_tier = relationship("UserTierRecord", back_populates="user", uselist=False)
     compliance_score = relationship("ComplianceScore", back_populates="user", uselist=False)
     redemptions = relationship("Redemption", back_populates="user")
 
-    # ── Phase 2 back-references ─────────────────
+    #  Municipal Operations & Fleet back-references ─
     zone = relationship("Zone", back_populates="users", foreign_keys=[zone_id])
     assigned_vehicles = relationship("Vehicle", back_populates="assigned_driver")
     bulk_generators = relationship("BulkGenerator", back_populates="contact_user")
     routes = relationship("Route", back_populates="driver")
 
-    # ── Phase 3 back-references ─────────────────
+    #  Recycler Marketplace & EPR back-references ─
     recycler_profile = relationship("Recycler", back_populates="user", uselist=False)
     recycling_transactions = relationship("RecyclingTransaction", back_populates="citizen")
 
-    # ── Phase 4 back-references ─────────────────
+    #  Citizen Engagement & Community back-references ─
     society_memberships = relationship("SocietyMembership", back_populates="user")
     leaderboard_opt_in = relationship("LeaderboardOptIn", back_populates="user", uselist=False)
     complaint_upvotes = relationship("ComplaintUpvote", back_populates="user")

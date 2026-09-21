@@ -1,4 +1,4 @@
-"""API integration tests for Phase 3 — Marketplace Mechanics (Ledger-Only).
+"""API integration tests for Recycler Marketplace Mechanics (Ledger-Only).
 
 Tests cover:
   - Recycler registration, pending queue, and admin verification
@@ -39,7 +39,7 @@ from tests.conftest import TestingSessionLocal
 
 @pytest.fixture()
 def client(setup_db):
-    """FastAPI TestClient with DB override and Phase 3 seed data."""
+    """FastAPI TestClient with DB override and marketplace seed data."""
     from app.db import get_db
     from app.main import app
 
@@ -199,7 +199,7 @@ def _auth(token: str) -> dict[str, str]:
     return {"Authorization": f"Bearer {token}"}
 
 
-# ── 1. Onboarding & Verification Tests ────────────────────────────────────
+#  1. Onboarding & Verification Tests ─
 
 
 class TestRecyclerOnboarding:
@@ -254,7 +254,7 @@ class TestRecyclerOnboarding:
         assert verify_resp.json()["verification_status"] == "verified"
 
 
-# ── 2. Rate Cards & Public Price Board Tests ──────────────────────────────
+#  2. Rate Cards & Public Price Board Tests ─
 
 
 class TestRateCardsAndPriceBoard:
@@ -306,7 +306,7 @@ class TestRateCardsAndPriceBoard:
         assert len(resp_empty.json()) == 0
 
 
-# ── 3. Recycling Transaction Flow Tests ───────────────────────────────────
+#  3. Recycling Transaction Flow Tests 
 
 
 class TestRecyclingTransactionFlow:
@@ -448,7 +448,7 @@ class TestRecyclingTransactionFlow:
         assert second_confirm.status_code == 400
 
 
-# ── 4. Compost Batch Tracking Tests ───────────────────────────────────────
+#  4. Compost Batch Tracking Tests ─
 
 
 class TestCompostBatches:

@@ -36,7 +36,7 @@ import {
 } from '../../lib/syncEngine';
 import { useSessionStore } from '../../store/session';
 
-// ── Phase 1: Log Pickup Details sub-form ───────
+//  Log Pickup Details sub-form ─
 
 interface LogFormProps {
   pickup: Pickup;
@@ -221,7 +221,7 @@ function LogPickupForm({ pickup, onSuccess }: LogFormProps) {
   );
 }
 
-// ── Phase 2: Today's Route stops panel ─────────
+//  Today's Route stops panel ─
 
 function TodaysRoute({ driverUserId }: { driverUserId: number }) {
   const queryClient = useQueryClient();
@@ -309,13 +309,12 @@ function TodaysRoute({ driverUserId }: { driverUserId: number }) {
           return (
             <div
               key={stop.id}
-              className={`flex items-center justify-between rounded-2xl border px-4 py-3 transition-colors ${
-                stop.status === 'arrived'
+              className={`flex items-center justify-between rounded-2xl border px-4 py-3 transition-colors ${stop.status === 'arrived'
                   ? 'border-emerald-200 bg-emerald-50'
                   : stop.status === 'skipped'
-                  ? 'border-rose-100 bg-rose-50 opacity-70'
-                  : 'border-slate-100 bg-white/60'
-              }`}
+                    ? 'border-rose-100 bg-rose-50 opacity-70'
+                    : 'border-slate-100 bg-white/60'
+                }`}
             >
               <div className="flex items-center gap-3">
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-200 text-xs font-black text-slate-700">
@@ -355,9 +354,8 @@ function TodaysRoute({ driverUserId }: { driverUserId: number }) {
                     </button>
                   </>
                 ) : (
-                  <span className={`rounded-full px-3 py-0.5 text-xs font-bold ${
-                    stop.status === 'arrived' ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-600'
-                  }`}>
+                  <span className={`rounded-full px-3 py-0.5 text-xs font-bold ${stop.status === 'arrived' ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-600'
+                    }`}>
                     {stop.status.toUpperCase()}
                   </span>
                 )}
@@ -371,7 +369,7 @@ function TodaysRoute({ driverUserId }: { driverUserId: number }) {
 }
 
 
-// ── Main driver dashboard ───────────────────────
+//  Main driver dashboard 
 
 export function DriverDashboard() {
   const queryClient = useQueryClient();
@@ -457,71 +455,71 @@ export function DriverDashboard() {
 
   // Start/stop continuous GPS tracking
   useEffect(() => {
-      // Always clear existing watches/intervals first
-      if (watchIdRef.current !== null) {
-        navigator.geolocation.clearWatch(watchIdRef.current);
-        watchIdRef.current = null;
+    // Always clear existing watches/intervals first
+    if (watchIdRef.current !== null) {
+      navigator.geolocation.clearWatch(watchIdRef.current);
+      watchIdRef.current = null;
+    }
+    if (intervalRef.current !== null) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+
+    if (!trackingActive || !selectedPickup || !user?.driver_id) return;
+
+    const pushLocation = async (lat: string, lng: string) => {
+      // Paused while offline: never queue or broadcast stale GPS points
+      if (typeof navigator !== 'undefined' && !navigator.onLine) return;
+
+      const now = Date.now();
+      if (now - lastPostTimeRef.current < 5000) return; // throttle: at most once per 5 s
+      lastPostTimeRef.current = now;
+      try {
+        await api.post(`/tracking/pickups/${selectedPickup.id}/locations`, {
+          driver_id: user.driver_id,
+          latitude: Number(lat),
+          longitude: Number(lng),
+          status,
+          note: note || null
+        });
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: ['driver-tracking', selectedPickup.id] }),
+          queryClient.invalidateQueries({ queryKey: ['driver-pickups', user?.driver_id] })
+        ]);
+      } catch {
+        // silently ignore intermittent push failures
       }
-      if (intervalRef.current !== null) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
+    };
 
-      if (!trackingActive || !selectedPickup || !user?.driver_id) return;
+    if (navigator.geolocation) {
+      watchIdRef.current = navigator.geolocation.watchPosition(
+        (pos) => {
+          const lat = pos.coords.latitude.toFixed(6);
+          const lng = pos.coords.longitude.toFixed(6);
+          setLatitude(lat);
+          setLongitude(lng);
+          latRef.current = lat;
+          lngRef.current = lng;
+          setError(null);
+          void pushLocation(lat, lng); // push immediately on every GPS fix
+        },
+        (geoError) => setMessage(`GPS: ${geoError.message}. Using last known coordinates.`),
+        { enableHighAccuracy: true, maximumAge: 5000, timeout: 15000 }
+      );
+    } else {
+      setMessage('GPS unavailable. Auto-tracking will use the coordinates entered above.');
+    }
 
-      const pushLocation = async (lat: string, lng: string) => {
-        // Paused while offline: never queue or broadcast stale GPS points
-        if (typeof navigator !== 'undefined' && !navigator.onLine) return;
-
-        const now = Date.now();
-        if (now - lastPostTimeRef.current < 5000) return; // throttle: at most once per 5 s
-        lastPostTimeRef.current = now;
-        try {
-          await api.post(`/tracking/pickups/${selectedPickup.id}/locations`, {
-            driver_id: user.driver_id,
-            latitude: Number(lat),
-            longitude: Number(lng),
-            status,
-            note: note || null
-          });
-          await Promise.all([
-            queryClient.invalidateQueries({ queryKey: ['driver-tracking', selectedPickup.id] }),
-            queryClient.invalidateQueries({ queryKey: ['driver-pickups', user?.driver_id] })
-          ]);
-        } catch {
-          // silently ignore intermittent push failures
-        }
-      };
-
-      if (navigator.geolocation) {
-        watchIdRef.current = navigator.geolocation.watchPosition(
-          (pos) => {
-            const lat = pos.coords.latitude.toFixed(6);
-            const lng = pos.coords.longitude.toFixed(6);
-            setLatitude(lat);
-            setLongitude(lng);
-            latRef.current = lat;
-            lngRef.current = lng;
-            setError(null);
-            void pushLocation(lat, lng); // push immediately on every GPS fix
-          },
-          (geoError) => setMessage(`GPS: ${geoError.message}. Using last known coordinates.`),
-          { enableHighAccuracy: true, maximumAge: 5000, timeout: 15000 }
-        );
-      } else {
-        setMessage('GPS unavailable. Auto-tracking will use the coordinates entered above.');
-      }
-
-      // Keepalive: re-push every 15 s in case GPS position hasn't changed
-      intervalRef.current = setInterval(() => {
-        if (latRef.current && lngRef.current) void pushLocation(latRef.current, lngRef.current);
-      }, 15000);
-      return () => {
-        if (watchIdRef.current !== null) navigator.geolocation.clearWatch(watchIdRef.current);
-        if (intervalRef.current !== null) clearInterval(intervalRef.current);
-      };
+    // Keepalive: re-push every 15 s in case GPS position hasn't changed
+    intervalRef.current = setInterval(() => {
+      if (latRef.current && lngRef.current) void pushLocation(latRef.current, lngRef.current);
+    }, 15000);
+    return () => {
+      if (watchIdRef.current !== null) navigator.geolocation.clearWatch(watchIdRef.current);
+      if (intervalRef.current !== null) clearInterval(intervalRef.current);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [trackingActive, selectedPickup?.id, user?.driver_id, status, note]);
+  }, [trackingActive, selectedPickup?.id, user?.driver_id, status, note]);
 
   const trackingQuery = useQuery({
     queryKey: ['driver-tracking', selectedPickup?.id],
@@ -672,7 +670,7 @@ export function DriverDashboard() {
         <StatCard label="Route efficiency" value={pickups.length ? `${Math.round((completed / pickups.length) * 100)}%` : '0%'} icon={Navigation} tone="amber" />
       </div>
 
-      {/* Phase 2: Today's route stop tracking */}
+      {/* Today's route stop tracking */}
       <TodaysRoute driverUserId={user.id} />
 
       <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
@@ -698,7 +696,7 @@ export function DriverDashboard() {
                   <span className="font-bold">#{pickup.id} · {pickup.waste_type}</span>
                   <span className="text-sm">{pickup.status}</span>
                 </button>
-                {/* Phase 1: Show log form for completed pickups that haven't been logged yet */}
+                {/* Show log form for completed pickups that haven't been logged yet */}
                 {selectedPickup?.id === pickup.id && pickup.status === 'completed' && (
                   <LogPickupForm
                     pickup={pickup}

@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
 from app.db import get_db
-from app.schemas.phase2 import RouteGenerateRequest, RouteRead, RouteStopStatusUpdate
+from app.schemas.operations import RouteGenerateRequest, RouteRead, RouteStopStatusUpdate
 from app.services.route_service import route_service
 
 router = APIRouter(prefix="/routes", tags=["routes"])

@@ -52,7 +52,7 @@ class DriverAvailability(StrEnum):
     SUSPENDED = "suspended"
 
 
-# ── Phase 1: Collection loop & rewards ─────────
+#  Collection loop & rewards 
 
 
 class WasteCategory(StrEnum):
@@ -101,7 +101,7 @@ class RedemptionStatus(StrEnum):
     CANCELLED = "cancelled"
 
 
-# ── Phase 2: Municipal Operations & Compliance ─────────────────────────────
+#  Municipal Operations & Compliance 
 
 
 class FuelType(StrEnum):
@@ -153,7 +153,7 @@ class HotspotStatus(StrEnum):
     RESOLVED = "resolved"
 
 
-# ── Phase 3: Marketplace Mechanics (Ledger-Only) ──────────────────────────
+#  Marketplace Mechanics (Ledger-Only) ─
 
 
 class MaterialType(StrEnum):
@@ -198,7 +198,7 @@ class CompostBatchStatus(StrEnum):
     COMPLETED = "completed"
 
 
-# ── Phase 4: Citizen Engagement & Community ────────────────────────────
+#  Citizen Engagement & Community ─
 
 
 class SocietyMemberRole(StrEnum):

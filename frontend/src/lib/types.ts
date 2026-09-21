@@ -53,7 +53,7 @@ export interface Pickup {
   scheduled_time: string;
   coordinates: Coordinates | null;
   notes: string | null;
-  // Phase 1 fields
+  // Collection verification fields
   weight_kg: number | null;
   waste_category: WasteCategory | null;
   segregation_verified: boolean;
@@ -138,7 +138,7 @@ export interface UploadResponse {
   public_url: string;
 }
 
-// ── Phase 1 types ─
+//  Collection & Rewards types ─
 
 export interface PointsTransaction {
   id: number;
@@ -186,7 +186,7 @@ export interface Redemption {
   updated_at: string;
 }
 
-// ── Phase 2 types ─
+//  Municipal Operations & Fleet types ─
 
 export interface Zone {
   id: number;
@@ -284,7 +284,7 @@ export interface CityWideAnalytics {
   city: string;
 }
 
-// ── Phase 3 Marketplace Types ──────────────────────────────────────────────
+//  Recycler Marketplace Types 
 
 export type MaterialType = 'plastic' | 'paper' | 'metal' | 'e_waste' | 'glass';
 export type RecyclerVerificationStatus = 'pending' | 'verified' | 'rejected';
@@ -384,7 +384,7 @@ export interface CompostBatch {
   created_at: string;
 }
 
-// ── Phase 4: Citizen Engagement & Community ──────────────
+//  Citizen Engagement & Community Types 
 export type SocietyMemberRole = 'member' | 'rwa_admin';
 export type SocietyMemberStatus = 'pending' | 'active' | 'rejected';
 export type ReferralStatus = 'pending' | 'completed';

@@ -7,7 +7,7 @@ from app.core.security import get_current_user
 from app.db import get_db
 from app.models.enums import UserRole
 from app.models.user import User
-from app.schemas.phase2 import ZoneRead, ZoneUserAssign
+from app.schemas.operations import ZoneRead, ZoneUserAssign
 from app.services.zone_service import zone_service
 
 router = APIRouter(prefix="/zones", tags=["zones"])

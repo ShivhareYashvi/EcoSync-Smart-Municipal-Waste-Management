@@ -2,11 +2,11 @@
 
 Jobs
 ----
-Phase 1:
+Collection & Pickup Reminders:
 - ``send_evening_reminders``     : Daily at 18:00 UTC — SMS for next-day pickups.
 - ``send_hour_before_reminders`` : Every 15 minutes — SMS for pickups within 1 hour.
 
-Phase 2:
+Municipal Operations & Fleet Health:
 - ``run_hotspot_detection``      : Daily at 02:00 UTC — flag/resolve complaint hotspots.
 - ``alert_maintenance_due``      : Daily at 07:00 UTC — notify about vehicles due for service.
 
@@ -40,7 +40,7 @@ scheduler.add_job(
 )
 
 
-# ── Phase 2 jobs ──
+#  Municipal Operations & Fleet Jobs 
 
 def _run_hotspot_detection() -> None:
     """Group complaints by zone over 30-day window; flag/resolve hotspots."""

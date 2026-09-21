@@ -12,7 +12,7 @@ from app.models.enums import FuelType, PickupStatus
 from app.models.pickup_request import PickupRequest
 from app.models.user import User
 from app.models.vehicle import Vehicle
-from app.schemas.phase2 import VehicleCreate, VehicleMaintenanceRead, VehicleRead, VehicleUpdate
+from app.schemas.operations import VehicleCreate, VehicleMaintenanceRead, VehicleRead, VehicleUpdate
 
 MAINTENANCE_WARN_DAYS = 7
 
