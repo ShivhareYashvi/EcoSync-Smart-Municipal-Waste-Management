@@ -543,7 +543,7 @@ export function UserDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-black text-slate-950">Live route tracking</h2>
-              <p className="text-slate-600">OpenStreetMap live view — select a pickup to track its driver.</p>
+              <p className="text-slate-600">OpenStreetMap live view - select a pickup to track its driver.</p>
             </div>
             <Recycle className="h-10 w-10 text-emerald-600" />
           </div>

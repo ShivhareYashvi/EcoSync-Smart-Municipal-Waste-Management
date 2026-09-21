@@ -1,4 +1,4 @@
-"""Extended pickup endpoints — Verified collection logging, confirmation, and disputes."""
+"""Extended pickup endpoints - Verified collection logging, confirmation, and disputes."""
 
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session

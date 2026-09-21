@@ -1,4 +1,4 @@
-"""Pickup photo upload endpoint — mirrors the electricity-bill upload pipeline."""
+"""Pickup photo upload endpoint - mirrors the electricity-bill upload pipeline."""
 
 from pathlib import Path
 from uuid import uuid4

@@ -1,4 +1,4 @@
-"""Route optimization engine — pluggable interface + nearest-neighbor heuristic.
+"""Route optimization engine - pluggable interface + nearest-neighbor heuristic.
 
 Architecture
 ------------
@@ -86,7 +86,7 @@ class NearestNeighborRouteOptimizer(RouteOptimizer):
     """
     Greedy nearest-neighbor heuristic.
 
-    Time complexity: O(n²) — suitable for up to ~200 stops per route.
+    Time complexity: O(n²) - suitable for up to ~200 stops per route.
     Replace with ``NNOrToolsRouteOptimizer`` (or similar) for larger fleets.
     """
 

@@ -15,7 +15,7 @@ from app.models.zone import Zone
 
 
 # ---------------------------------------------------------------------------
-# Seed data — 6 Bengaluru municipal zones with placeholder depot coordinates.
+# Seed data - 6 Bengaluru municipal zones with placeholder depot coordinates.
 # PLACEHOLDER: Replace with real ward boundaries / depot GPS from the client.
 # ---------------------------------------------------------------------------
 SEED_ZONES = [

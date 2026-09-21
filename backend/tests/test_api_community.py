@@ -1,4 +1,4 @@
-"""API integration tests for citizen engagement & community endpoints — happy path + failure cases."""
+"""API integration tests for citizen engagement & community endpoints - happy path + failure cases."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Compliance score service — rolling 90-day verified-pickup ratio."""
+"""Compliance score service - rolling 90-day verified-pickup ratio."""
 
 from __future__ import annotations
 

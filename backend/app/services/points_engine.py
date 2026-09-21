@@ -1,4 +1,4 @@
-"""Points engine — pure calculation function + stateful service.
+"""Points engine - pure calculation function + stateful service.
 
 The pure ``calculate_points`` function is side-effect-free and fully
 unit-testable without a database.  The ``PointsService`` class wraps it
@@ -41,7 +41,7 @@ class UserHistory:
 def calculate_points(pickup: PickupRequest, user_history: UserHistory) -> int:
     """Return the raw points value for one pickup, ignoring the weekly cap.
 
-    Returns 0 if ``segregation_verified`` is False — the transaction will
+    Returns 0 if ``segregation_verified`` is False - the transaction will
     still be written as ``pending`` by the service layer; the citizen never
     loses points outright, they just await manual review.
 

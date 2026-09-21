@@ -1,4 +1,4 @@
-"""Redemption service — atomic point spend against the closed-loop catalog."""
+"""Redemption service - atomic point spend against the closed-loop catalog."""
 
 from __future__ import annotations
 
@@ -47,7 +47,7 @@ class RedemptionService:
                 detail=f"Insufficient points. Required: {item.points_cost}, Available: {tier.points_balance if tier else 0}",
             )
 
-        # Atomic deduction — within the same transaction
+        # Atomic deduction - within the same transaction
         tier.points_balance -= item.points_cost
         redemption = Redemption(
             user_id=user_id,

@@ -3,12 +3,12 @@
 Jobs
 ----
 Collection & Pickup Reminders:
-- ``send_evening_reminders``     : Daily at 18:00 UTC — SMS for next-day pickups.
-- ``send_hour_before_reminders`` : Every 15 minutes — SMS for pickups within 1 hour.
+- ``send_evening_reminders``     : Daily at 18:00 UTC - SMS for next-day pickups.
+- ``send_hour_before_reminders`` : Every 15 minutes - SMS for pickups within 1 hour.
 
 Municipal Operations & Fleet Health:
-- ``run_hotspot_detection``      : Daily at 02:00 UTC — flag/resolve complaint hotspots.
-- ``alert_maintenance_due``      : Daily at 07:00 UTC — notify about vehicles due for service.
+- ``run_hotspot_detection``      : Daily at 02:00 UTC - flag/resolve complaint hotspots.
+- ``alert_maintenance_due``      : Daily at 07:00 UTC - notify about vehicles due for service.
 
 The scheduler is started and stopped by the FastAPI ``lifespan`` context
 manager in ``app/main.py``.

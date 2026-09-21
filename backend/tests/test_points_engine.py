@@ -1,6 +1,6 @@
 """Unit tests for the pure calculate_points function and PointsService logic.
 
-These tests do NOT touch the database — the pure function is side-effect-free
+These tests do NOT touch the database - the pure function is side-effect-free
 and the service-layer tests use a minimal mock session where needed.
 """
 
@@ -205,7 +205,7 @@ class TestDisputeReversal:
 
         assert mock_tx.status == PointsTransactionStatus.FLAGGED
         assert mock_tier.flags_count == 1
-        assert mock_tier.points_balance == 200  # unchanged — was never credited
+        assert mock_tier.points_balance == 200  # unchanged - was never credited
 
     def test_flag_returns_none_when_no_transaction(self) -> None:
         """Returns None gracefully when no transaction exists for the pickup."""

@@ -1,4 +1,4 @@
-"""Pickup reminder service — SMS notifications via the existing Twilio helper.
+"""Pickup reminder service - SMS notifications via the existing Twilio helper.
 
 Two reminder windows:
 - Evening before: fires daily at 18:00 local, sends SMS for next-day pickups.

@@ -88,7 +88,7 @@ export async function syncPendingMutations(): Promise<{ synced: number; failed: 
           conflictListeners.forEach((fn) => fn({ ...conflictData, id: conflictId }));
           failed++;
         } else {
-          // Network or server error — keep in queue
+          // Network or server error - keep in queue
           failed++;
         }
       }

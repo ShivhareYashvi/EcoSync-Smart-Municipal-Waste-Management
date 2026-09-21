@@ -1,4 +1,4 @@
-"""Pytest configuration — sets DATABASE_URL to SQLite before any app import."""
+"""Pytest configuration - sets DATABASE_URL to SQLite before any app import."""
 
 from __future__ import annotations
 

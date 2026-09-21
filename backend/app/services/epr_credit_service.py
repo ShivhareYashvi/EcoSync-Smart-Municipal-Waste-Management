@@ -16,7 +16,7 @@ class EPRCreditService:
     DEFAULT_BRANDS = [
         {"org_name": "Hindustan Unilever Ltd", "contact_email": "epr@hul.co.in"},
         {"org_name": "Nestlé India Ltd", "contact_email": "sustainability@nestle.in"},
-        {"org_name": "ITC Limited — Packaging Div", "contact_email": "circularity@itc.in"},
+        {"org_name": "ITC Limited - Packaging Div", "contact_email": "circularity@itc.in"},
         {"org_name": "Parle Agro Pvt Ltd", "contact_email": "esg@parleagro.com"},
     ]
 

@@ -22,7 +22,7 @@ def get_public_price_board(
     material: MaterialType | None = Query(default=None, description="Filter rates by recyclable material type"),
     session: Session = Depends(get_db),
 ) -> list[PublicRateRead]:
-    """Public live scrap price board — transparent material rates posted by verified recyclers.
+    """Public live scrap price board - transparent material rates posted by verified recyclers.
 
     No authentication required. Citizens and businesses use this to inspect real-time scrap rates.
     """

@@ -7,7 +7,7 @@ from app.db_base import Base
 
 
 class ComplaintUpvote(Base):
-    """Citizen upvote on a complaint — one vote per user per complaint.
+    """Citizen upvote on a complaint - one vote per user per complaint.
 
     Uniqueness is enforced at the database level via a unique constraint
     on (complaint_id, user_id), not just in application logic.

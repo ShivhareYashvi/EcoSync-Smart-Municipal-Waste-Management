@@ -145,7 +145,7 @@ class TestReferralLifecycleAndAntiGaming:
             assert ref.status == ReferralStatus.PENDING
             assert ref.points_awarded is False
 
-            # Check referrer balance — MUST BE 0!
+            # Check referrer balance - MUST BE 0!
             tier = session.get(UserTierRecord, referrer.id)
             assert tier.points_balance == 0
 

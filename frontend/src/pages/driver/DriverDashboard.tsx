@@ -193,7 +193,7 @@ function LogPickupForm({ pickup, onSuccess }: LogFormProps) {
       </div>
       <div>
         <label className="mb-1 block text-xs font-semibold text-slate-600" htmlFor={`photo-${pickup.id}`}>
-          <Camera className="mr-1 inline h-3 w-3" />Photo proof (optional — enables segregation-verified bonus)
+          <Camera className="mr-1 inline h-3 w-3" />Photo proof (optional - enables segregation-verified bonus)
         </label>
         <input
           id={`photo-${pickup.id}`}
@@ -310,10 +310,10 @@ function TodaysRoute({ driverUserId }: { driverUserId: number }) {
             <div
               key={stop.id}
               className={`flex items-center justify-between rounded-2xl border px-4 py-3 transition-colors ${stop.status === 'arrived'
-                  ? 'border-emerald-200 bg-emerald-50'
-                  : stop.status === 'skipped'
-                    ? 'border-rose-100 bg-rose-50 opacity-70'
-                    : 'border-slate-100 bg-white/60'
+                ? 'border-emerald-200 bg-emerald-50'
+                : stop.status === 'skipped'
+                  ? 'border-rose-100 bg-rose-50 opacity-70'
+                  : 'border-slate-100 bg-white/60'
                 }`}
             >
               <div className="flex items-center gap-3">

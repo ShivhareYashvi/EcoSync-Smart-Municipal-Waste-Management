@@ -75,7 +75,7 @@ export function ZoneAnalyticsDashboard() {
   const avgCompliance =
     zones.length > 0
       ? (zones.reduce((acc, z) => acc + z.segregation_compliance_pct, 0) / zones.length).toFixed(1)
-      : '—';
+      : '-';
   const totalOverdue = slaData.reduce((acc, s) => acc + s.overdue_complaints, 0);
   const activeHotspots = hotspots.length;
 
@@ -107,7 +107,7 @@ export function ZoneAnalyticsDashboard() {
       <div>
         <h2 className="text-2xl font-black text-slate-900">Zone Analytics Dashboard</h2>
         <p className="mt-1 text-sm text-slate-500">
-          {analytics?.city ?? 'City'} — city-wide operational KPIs
+          {analytics?.city ?? 'City'} - city-wide operational KPIs
         </p>
       </div>
 
@@ -195,7 +195,7 @@ export function ZoneAnalyticsDashboard() {
                   <td className="py-3 text-slate-600">
                     {row.avg_resolution_hours != null
                       ? `${row.avg_resolution_hours.toFixed(1)} hrs`
-                      : '—'}
+                      : '-'}
                   </td>
                 </tr>
               ))}
@@ -220,7 +220,7 @@ export function ZoneAnalyticsDashboard() {
         {hotspots.length === 0 ? (
           <div className="flex flex-col items-center gap-2 py-8 text-slate-400">
             <CheckCircle2 className="h-10 w-10 text-emerald-400" />
-            <p>No active hotspots — all zones are within threshold</p>
+            <p>No active hotspots - all zones are within threshold</p>
           </div>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

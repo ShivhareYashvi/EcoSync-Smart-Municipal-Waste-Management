@@ -51,7 +51,7 @@ class PickupRequestRead(PickupRequestBase):
     user_id: int
     driver_id: int | None
     status: PickupStatus
-    # Collection verification fields — nullable until driver logs them
+    # Collection verification fields - nullable until driver logs them
     weight_kg: float | None = None
     waste_category: WasteCategory | None = None
     segregation_verified: bool = False

@@ -18,7 +18,7 @@ from app.schemas.operations import RouteGenerateRequest, RouteRead, RouteStopSta
 from app.services.route_optimizer import NearestNeighborRouteOptimizer, RouteOptimizer
 from app.services.zone_service import ZONE_DEPOTS
 
-# Default optimizer — swap for a different impl without changing this file
+# Default optimizer - swap for a different impl without changing this file
 _default_optimizer: RouteOptimizer = NearestNeighborRouteOptimizer()
 
 

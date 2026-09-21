@@ -56,7 +56,7 @@ class AuthService:
             existing_by_email = session.scalar(select(User).where(User.email == email))
             if existing_by_email is not None:
                 raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email is already registered")
-        # Skip OTP gate in local dev — enforce in staging/production only
+        # Skip OTP gate in local dev - enforce in staging/production only
         if _settings.environment != "local" and not otp_service.is_verified(session, phone):
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Phone number must be OTP verified before registration")
         if payload.role == UserRole.DRIVER and not payload.vehicle_number:

@@ -10,8 +10,8 @@ class LeaderboardOptIn(Base):
     """Per-user opt-in record for individual leaderboard visibility.
 
     Default state is opted **out** (opted_in=False).  A user who has not
-    explicitly opted in must never appear — by name, handle, or
-    implication — on any individual leaderboard.
+    explicitly opted in must never appear - by name, handle, or
+    implication - on any individual leaderboard.
 
     If opted_in is True but display_handle is null, the UI should
     auto-generate an anonymous handle like "Member #1234".

@@ -1,4 +1,4 @@
-# EcoSync — Smart Municipal Waste Management & Circular Economy Platform
+# EcoSync - Smart Municipal Waste Management & Circular Economy Platform
 
 EcoSync is a full-stack, multi-role smart municipal waste management and circular economy platform for coordinating citizens, collection drivers, verified recyclers, and municipal administrators.
 
@@ -22,9 +22,10 @@ The platform supports verified household onboarding, OTP-based registration, ele
 
 ---
 
-## Platform Features by Phase
+## Platform Feature Modules
 
-### Phase 1: Verified Pickup Logging & Closed-Loop Points Engine
+### 1. Verified Pickup Logging & Closed-Loop Points Engine
+
 - **Driver Verification**: Collection drivers record actual pickup weight (kg), waste category (`wet`, `dry`, `hazardous`, `e_waste`, `sanitary`), and optional photo proof.
 - **Deterministic Points Engine**:
   - Base award: 10 points for on-time segregated pickup.
@@ -33,28 +34,32 @@ The platform supports verified household onboarding, OTP-based registration, ele
   - Dispute reversal: Flagged transactions reverse points safely without negative balance drift.
 - **Citizen Tier Progression**: Bronze $\rightarrow$ Silver $\rightarrow$ Gold $\rightarrow$ Platinum tiers with dynamic points redemption catalog.
 
-### Phase 2: Municipal Operations, Fleet Management & Route Optimization
+### 2. Municipal Operations, Fleet Management & Route Optimization
+
 - **Multi-Zone Governance**: Administrative zones, ward boundaries, and localized collection policies.
 - **Fleet Registry & Dispatch**: Vehicle management (EV, Diesel, CNG) mapped to assigned municipal drivers.
 - **Bulk Waste Generators**: Dedicated tracking for high-volume entities (apartments, tech parks, commercial complexes).
 - **Batch Route Optimization**: Nearest-neighbor routing algorithm optimizing daily collection routes with estimated arrival times.
 - **Spatial Incident Heatmap & Hotspots**: Automated detection of complaint hotspots ($> 5$ complaints in 30 days) and dynamic Leaflet-based geospatial heatmap rendering in the admin dashboard.
 
-### Phase 3: Recycler Marketplace & EPR Credit Ledger (Ledger-Only)
+### 3. Recycler Marketplace & EPR Credit Ledger (Ledger-Only)
+
 - **Role 4: Verified Recyclers**: Dedicated onboarding, business license verification, and municipal admin approval queue.
 - **Public Scrap Price Board**: Real-time indicative scrap rates across major recyclables (`plastic`, `paper`, `metal`, `e_waste`, `glass`) with historical rate card tracking.
 - **Ledger-Only Marketplace**: Citizens request recyclable sales; recyclers confirm weights and issue digital receipts (strictly ledger-only; no payment gateway integration or real money movement).
 - **EPR Credit Ledger**: Recycler transactions generate verifiable Extended Producer Responsibility (EPR) credits with status lifecycle (`available` $\rightarrow$ `allocated` $\rightarrow$ `retired`).
 - **Municipal Compost Batches**: Wet-waste recovery tracker aggregating residential organic collections into cured agricultural compost batches.
 
-### Phase 4: Citizen Engagement & Community
+### 4. Citizen Engagement & Community Hub
+
 - **Strict Opt-In Leaderboards**: Default state is opted **out**. Citizens must explicitly opt in to appear on individual leaderboards; supports custom anonymous handles and zone/city scopes.
 - **RWA / Society Portal with $k$-Anonymity**: Aggregated society dashboards enforce a strict threshold ($k \ge 3$) to prevent deriving individual household compliance or dispute records.
 - **Community Complaint Upvoting**: Citizens upvote existing neighborhood civic complaints with unique database constraints to prevent duplicate reports.
 - **Referral Rewards Engine**: Anti-gaming referral mechanism where bonus points (100 pts) are disbursed strictly upon the invitee's first verified collection.
 - **Localized Segregation Guide**: Multi-stream sorting guide supporting regional languages with seamless English fallback.
 
-### Phase 5: Progressive Web App & Offline Resilience
+### 5. Progressive Web App & Offline Resilience
+
 - **Offline Shell Caching**: Service worker (`public/sw.js`) and Web App Manifest (`manifest.webmanifest`) for standalone mobile and field installation.
 - **Zero-Dependency IndexedDB Queue**: Client-side IndexedDB store (`offlineStore.ts`) buffers pickup logs and route stop updates when field connectivity drops.
 - **Automated Background Sync**: Auto-sync engine (`syncEngine.ts`) replays pending mutations upon network reconnection.
@@ -125,6 +130,7 @@ The API runs on <http://localhost:8000> by default.
 1. Create a PostgreSQL database named `ecosync` (or use the included SQLite database for local testing).
 2. Configure `DATABASE_URL` in `backend/.env`.
 3. Run Alembic migrations from the `backend` directory:
+
    ```bash
    alembic upgrade head
    ```
@@ -163,25 +169,30 @@ Use the frontend at <http://localhost:5173/register> to create test accounts, or
 4. Sign in at <http://localhost:5173/login> to land on the role-specific dashboard.
 
 ### 1. Citizen test account
+
 - Choose the `Citizen` role on the registration page.
 - Fill in name, phone, password, address, and optionally upload an electricity bill.
 - Lands on `/dashboard/user`.
 - Capabilities: Schedule pickups, watch live driver tracking, check points & tier status, opt in to community leaderboards, join housing societies, upvote complaints, and request recyclable sales on the scrap market.
 
 ### 2. Driver test account
+
 - Choose the `Driver` role on the registration page.
 - Provide a `vehicle number` (mandatory for driver accounts).
 - Lands on `/dashboard/driver`.
 - Capabilities: View assigned pickups, stream live GPS coordinates, manage today's route stops, log verified weights with photo proof, and work seamlessly offline with automatic IndexedDB synchronization.
 
 ### 3. Recycler test account
+
 - Choose the `Recycler` role on the registration page.
 - Provide business name, GSTIN, facility address, and accepted material streams.
 - Once verified by an admin, lands on `/dashboard/recycler`.
 - Capabilities: Publish material rate cards to the public price board, process citizen scrap pickup requests, verify scrap weights, and issue digital recycling receipts that generate EPR credits.
 
 ### 4. Admin test account
+
 Admin accounts cannot be created through public registration. Provision an administrator in the database, then sign in at <http://localhost:5173/login> to use `/dashboard/admin`.
+
 - Capabilities: Assign pickups, dispatch fleet routes with nearest-neighbor optimization, review pending recycler applications, approve RWA societies, view spatial complaint heatmaps, track compost batches, and monitor city-wide SLA performance.
 
 ---
@@ -217,4 +228,4 @@ npm run build
 
 ## Planning and Progress Tracking
 
-All project architecture notes, database schema snapshots, task statuses, and progress updates across Phases 1–5 are tracked in `tasks.json` and [walkthrough.md](file:///c:/VsCodeFolder/Project/EcoSync-Smart-Municipal-Waste-Management/walkthrough.md).
+All project architecture notes, database schema snapshots, task statuses, and progress updates across modules are tracked in `tasks.json` and [walkthrough.md](file:///c:/VsCodeFolder/Project/EcoSync-Smart-Municipal-Waste-Management/walkthrough.md).

@@ -11,7 +11,7 @@ class Society(Base):
 
     Societies aggregate household compliance and pickup data at the
     community level.  Individual household data is never exposed through
-    the society dashboard — only AVG/SUM/COUNT aggregates.
+    the society dashboard - only AVG/SUM/COUNT aggregates.
     """
 
     __tablename__ = "societies"

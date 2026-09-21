@@ -1,4 +1,4 @@
-"""API integration tests for municipal operations and fleet endpoints — happy path + one failure case each."""
+"""API integration tests for municipal operations and fleet endpoints - happy path + one failure case each."""
 
 from __future__ import annotations
 

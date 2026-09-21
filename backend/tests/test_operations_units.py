@@ -28,10 +28,10 @@ class TestNearestNeighborOptimizer:
     # Each step picks the geometrically closest unvisited stop.
     DEPOT = (0.0, 0.0)
     STOPS = [
-        {"pickup_id": 1, "lat": 0.0, "lng": 1.0},   # A — east 1°
-        {"pickup_id": 2, "lat": 1.0, "lng": 1.0},   # B — northeast
-        {"pickup_id": 3, "lat": 1.0, "lng": 0.0},   # C — north 1°
-        {"pickup_id": 4, "lat": 1.0, "lng": -1.0},  # D — northwest
+        {"pickup_id": 1, "lat": 0.0, "lng": 1.0},   # A - east 1°
+        {"pickup_id": 2, "lat": 1.0, "lng": 1.0},   # B - northeast
+        {"pickup_id": 3, "lat": 1.0, "lng": 0.0},   # C - north 1°
+        {"pickup_id": 4, "lat": 1.0, "lng": -1.0},  # D - northwest
     ]
 
     def test_returns_correct_count(self):
@@ -51,7 +51,7 @@ class TestNearestNeighborOptimizer:
         optimizer = NearestNeighborRouteOptimizer()
         result = optimizer.optimize_stops(self.DEPOT, self.STOPS[:])
         first_pickup_id = result[0]["pickup_id"]
-        # A(pid=1) and C(pid=3) are the closest — both at 1° from depot
+        # A(pid=1) and C(pid=3) are the closest - both at 1° from depot
         assert first_pickup_id in (1, 3)
 
     def test_estimated_arrival_is_monotonically_increasing(self):
@@ -147,7 +147,7 @@ class TestHotspotThresholdLogic:
             session.add(hs)
             session.commit()
 
-            # Zone now has 0 complaints — detection should resolve it
+            # Zone now has 0 complaints - detection should resolve it
             result = hotspot_service.run_hotspot_detection(session)
             assert result["resolved"] >= 1
 

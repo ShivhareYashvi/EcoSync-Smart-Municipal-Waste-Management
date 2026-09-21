@@ -10,7 +10,7 @@ from app.models.enums import PointsTransactionStatus
 class PointsTransaction(Base):
     """Immutable ledger entry for points awarded or reversed on a pickup.
 
-    A new row is written for every award or reversal — status transitions
+    A new row is written for every award or reversal - status transitions
     (pending → approved / flagged) are made in-place on the single row
     created at award time, keeping the ledger simple.
     """

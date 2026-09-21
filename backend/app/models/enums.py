@@ -58,7 +58,7 @@ class DriverAvailability(StrEnum):
 class WasteCategory(StrEnum):
     """Driver-logged waste classification at the point of collection.
 
-    Distinct from WasteType (citizen scheduling category) — this captures
+    Distinct from WasteType (citizen scheduling category) - this captures
     the actual category verified by the driver during pickup.
     """
 

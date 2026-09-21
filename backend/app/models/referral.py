@@ -13,7 +13,7 @@ class Referral(Base):
     A referral row is created at registration time (status=pending,
     points_awarded=False).  It transitions to status=completed and
     points_awarded=True **only** when the referred user completes
-    their first verified pickup — not on registration alone, to
+    their first verified pickup - not on registration alone, to
     prevent trivial fake-account farming of referral points.
     """
 

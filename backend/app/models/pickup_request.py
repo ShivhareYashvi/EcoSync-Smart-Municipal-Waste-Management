@@ -31,7 +31,7 @@ class PickupRequest(TimestampMixin, Base):
     coordinates: Mapped[dict[str, Any] | None] = mapped_column(JSON)
     notes: Mapped[str | None] = mapped_column(Text)
 
-    #  Collection logging columns (all nullable — logged post-completion by driver) 
+    #  Collection logging columns (all nullable - logged post-completion by driver) 
     weight_kg: Mapped[float | None] = mapped_column(Float, nullable=True)
     waste_category: Mapped[WasteCategory | None] = mapped_column(
         Enum(WasteCategory, values_callable=lambda enum: [item.value for item in enum], native_enum=False),
