@@ -10,6 +10,9 @@ Municipal Operations & Fleet Health:
 - ``run_hotspot_detection``      : Daily at 02:00 UTC - flag/resolve complaint hotspots.
 - ``alert_maintenance_due``      : Daily at 07:00 UTC - notify about vehicles due for service.
 
+Database Maintenance:
+- ``purge_expired_otps``         : Daily at 03:30 UTC - clean up expired OTP challenges.
+
 The scheduler is started and stopped by the FastAPI ``lifespan`` context
 manager in ``app/main.py``.
 """
@@ -78,6 +81,29 @@ scheduler.add_job(
     hour=7,
     minute=0,
     id="maintenance_alert",
+    replace_existing=True,
+)
+
+
+#  Database Maintenance Jobs 
+
+def _purge_expired_otps() -> None:
+    """Delete OTP challenges that expired more than 24 hours ago."""
+    from app.db import SessionLocal
+    from app.services.otp_service import otp_service
+    with SessionLocal() as session:
+        deleted = otp_service.purge_expired(session, older_than_hours=24)
+        if deleted:
+            print(f"[OTP Cleanup] Purged {deleted} expired OTP challenge(s).")
+
+
+# OTP cleanup: daily at 03:30 UTC
+scheduler.add_job(
+    _purge_expired_otps,
+    trigger="cron",
+    hour=3,
+    minute=30,
+    id="otp_cleanup",
     replace_existing=True,
 )
 

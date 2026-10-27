@@ -14,7 +14,10 @@ router = APIRouter(prefix="/auth", tags=["authentication"])
 @router.post("/otp/request", response_model=OTPResponse)
 def request_otp(payload: OTPRequest, session: Session = Depends(get_db)) -> OTPResponse:
     normalized_phone = normalize_phone(payload.phone)
-    record = otp_service.create_code(session, normalized_phone)
+    try:
+        record = otp_service.create_code(session, normalized_phone)
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail=str(exc))
     session.commit()
     message = "OTP sent to the registered phone number."
     if record.delivery_channel != "sms":

@@ -1,5 +1,6 @@
 import { FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { api } from '../lib/api';
 import { dashboardPathForRole } from '../lib/navigation';
 import type { LoginResponse, OTPResponse } from '../lib/types';
@@ -24,7 +25,11 @@ export function ForgotPasswordPage() {
       const response = await api.post<OTPResponse>('/auth/forgot-password', { phone });
       setStatusMessage(response.data.message);
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : 'Unable to request OTP.');
+      if (axios.isAxiosError(error)) {
+        setErrorMessage(error.response?.data?.detail ?? error.message);
+      } else {
+        setErrorMessage(error instanceof Error ? error.message : 'Unable to request OTP.');
+      }
     } finally {
       setIsBusy(false);
     }
@@ -44,7 +49,11 @@ export function ForgotPasswordPage() {
       setSession(response.data.access_token, response.data.user);
       navigate(dashboardPathForRole(response.data.user.role));
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : 'Unable to reset password.');
+      if (axios.isAxiosError(error)) {
+        setErrorMessage(error.response?.data?.detail ?? error.message);
+      } else {
+        setErrorMessage(error instanceof Error ? error.message : 'Unable to reset password.');
+      }
     } finally {
       setIsBusy(false);
     }

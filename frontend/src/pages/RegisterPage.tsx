@@ -1,5 +1,6 @@
 import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { api } from '../lib/api';
 import { dashboardPathForRole } from '../lib/navigation';
 import type { LoginResponse, OTPResponse, UploadResponse, UserRole } from '../lib/types';
@@ -104,7 +105,11 @@ export function RegisterPage() {
       setOtpResponse(response.data);
       setStatusMessage(response.data.message);
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : 'Unable to request OTP.');
+      if (axios.isAxiosError(error)) {
+        setErrorMessage(error.response?.data?.detail ?? error.message);
+      } else {
+        setErrorMessage(error instanceof Error ? error.message : 'Unable to request OTP.');
+      }
     } finally {
       setIsBusy(false);
     }
@@ -120,7 +125,11 @@ export function RegisterPage() {
       setVerifiedPhone(form.phone);
       setStatusMessage(response.data.message);
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : 'OTP verification failed.');
+      if (axios.isAxiosError(error)) {
+        setErrorMessage(error.response?.data?.detail ?? error.message);
+      } else {
+        setErrorMessage(error instanceof Error ? error.message : 'OTP verification failed.');
+      }
     } finally {
       setIsBusy(false);
     }
@@ -156,7 +165,11 @@ export function RegisterPage() {
       setSession(loginResponse.data.access_token, loginResponse.data.user);
       navigate(dashboardPathForRole(loginResponse.data.user.role));
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : 'Registration failed.');
+      if (axios.isAxiosError(error)) {
+        setErrorMessage(error.response?.data?.detail ?? error.message);
+      } else {
+        setErrorMessage(error instanceof Error ? error.message : 'Registration failed.');
+      }
     } finally {
       setIsBusy(false);
     }

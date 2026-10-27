@@ -1,4 +1,3 @@
-import os
 import requests
 
 from app.core.config import get_settings
@@ -13,7 +12,7 @@ def send_twilio_sms(to_phone: str, message: str) -> None:
         if not (settings.twilio_account_sid and settings.twilio_auth_token and settings.twilio_from_number):
             raise RuntimeError(
                 "Twilio credentials are not configured. Set TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, "
-                "and TWILIO_FROM_NUMBER in environment variables."
+                "and TWILIO_FROM_PHONE in environment variables."
             )
         url = f"https://api.twilio.com/2010-04-01/Accounts/{settings.twilio_account_sid}/Messages.json"
         auth = (settings.twilio_account_sid, settings.twilio_auth_token)
