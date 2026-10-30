@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { getRefreshToken, getSessionToken, useSessionStore } from '../store/session';
 
-const configuredApiUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000/api/v1';
+const defaultApiHost = typeof window !== 'undefined' && window.location.hostname ? window.location.hostname : 'localhost';
+const configuredApiUrl = import.meta.env.VITE_API_BASE_URL ?? `http://${defaultApiHost}:8000/api/v1`;
 const apiUrl = new URL(configuredApiUrl, window.location.origin);
 
 export const API_BASE_URL = apiUrl.toString().replace(/\/$/, '');
