@@ -23,37 +23,51 @@ def ensure_schema_compatibility(eng) -> None:
     try:
         inspector = inspect(eng)
         table_names = set(inspector.get_table_names())
+        is_pg = "postgresql" in str(eng.url) or "postgres" in str(eng.url)
+        bool_type = "BOOLEAN DEFAULT FALSE" if is_pg else "BOOLEAN DEFAULT 0"
+        datetime_type = "TIMESTAMP" if is_pg else "DATETIME"
+        float_type = "DOUBLE PRECISION" if is_pg else "FLOAT"
         
         if "users" in table_names:
             cols = {c["name"]: c for c in inspector.get_columns("users")}
             columns_to_add = [
-                ("phone_verified", "BOOLEAN DEFAULT 0"),
-                ("email_verified", "BOOLEAN DEFAULT 0"),
-                ("profile_completed", "BOOLEAN DEFAULT 0"),
+                ("phone_verified", bool_type),
+                ("email_verified", bool_type),
+                ("profile_completed", bool_type),
                 ("house_flat_number", "VARCHAR(120)"),
                 ("street_colony", "VARCHAR(255)"),
                 ("locality", "VARCHAR(120)"),
                 ("landmark", "VARCHAR(255)"),
                 ("ward_number", "VARCHAR(50)"),
                 ("pincode", "VARCHAR(10)"),
-                ("latitude", "FLOAT"),
-                ("longitude", "FLOAT"),
+                ("latitude", float_type),
+                ("longitude", float_type),
                 ("failed_login_attempts", "INTEGER DEFAULT 0"),
-                ("locked_until", "DATETIME"),
+                ("locked_until", datetime_type),
                 ("email_verification_token", "VARCHAR(128)"),
                 ("password_reset_token", "VARCHAR(128)"),
-                ("password_reset_token_expires_at", "DATETIME"),
+                ("password_reset_token_expires_at", datetime_type),
             ]
-            with eng.begin() as conn:
-                for col_name, col_type in columns_to_add:
-                    if col_name not in cols:
-                        try:
+            for col_name, col_type in columns_to_add:
+                if col_name not in cols:
+                    try:
+                        with eng.begin() as conn:
                             conn.execute(text(f"ALTER TABLE users ADD COLUMN {col_name} {col_type}"))
+                    except Exception:
+                        pass
+
+            if is_pg:
+                for col_name in ["phone", "password_hash"]:
+                    col_info = cols.get(col_name)
+                    if col_info and not col_info.get("nullable", True):
+                        try:
+                            with eng.begin() as conn:
+                                conn.execute(text(f"ALTER TABLE users ALTER COLUMN {col_name} DROP NOT NULL"))
                         except Exception:
                             pass
 
-                # In SQLite, if older table had phone or password_hash as NOT NULL, relax it
-                if str(eng.url).startswith("sqlite"):
+            # In SQLite, if older table had phone or password_hash as NOT NULL, relax it
+            if str(eng.url).startswith("sqlite"):
                     phone_col = cols.get("phone")
                     if phone_col and not phone_col.get("nullable", True):
                         try:
