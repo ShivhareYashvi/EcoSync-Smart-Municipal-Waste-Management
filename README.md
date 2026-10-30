@@ -1,11 +1,9 @@
 # ♻️ EcoSync — Smart Municipal Waste Management & Circular Economy Platform
 
-[![CI Pipeline](https://github.com/your-org/ecosync/actions/workflows/ci.yml/badge.svg)](https://github.com/your-org/ecosync/actions)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![React](https://img.shields.io/badge/Frontend-React%2019%20+%20Vite-61DAFB?logo=react&logoColor=black)](https://react.dev)
+[![React](<https://img.shields.io/badge/Frontend-React%2019%20+%20Vite-61DAFB?logo=react&logoColor=black>)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/Language-TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL%20%2F%20SQLite-336791?logo=postgresql&logoColor=white)](https://www.postgresql.org)
-[![Tests](https://img.shields.io/badge/Tests-101%20Passed-success)](https://pytest.org)
+[![PostgreSQL](<https://img.shields.io/badge/Database-PostgreSQL%20%2F%20SQLite-336791?logo=postgresql&logoColor=white>)](https://www.postgresql.org)
 
 **EcoSync** is an intelligent, multi-role municipal waste management and circular economy operating system. It coordinates **Citizens**, **Collection Drivers**, **Authorized Recyclers**, and **Municipal Administrators** into a unified, transparent digital network.
 
@@ -14,6 +12,7 @@
 ## 🌟 Key Capabilities
 
 ### 🔐 Streamlined Civic Authentication
+
 * **Option 1: Phone Login (Passwordless OTP)**
   * Validates 10-digit Indian numbers (`+91`, regex `^[6-9]\d{9}$`).
   * 6-digit OTP hashed via SHA-256 with 5-minute expiry.
@@ -36,12 +35,12 @@
 
 ### 👥 Multi-Role Portals
 
-| Role | Core Capabilities |
-| :--- | :--- |
-| **🏠 Citizen** | Request on-demand pickups, track collection vehicles on live Leaflet map, track green points & tier rewards (Bronze $\rightarrow$ Platinum), join housing societies ($k \ge 3$ anonymity), and sell scrap to verified recyclers. |
-| **🚛 Collection Driver** | View optimized daily routes, update stop statuses, log verified weight (kg) with waste categorization (`wet`, `dry`, `hazardous`, `e-waste`, `sanitary`), and work completely offline via native IndexedDB queue. |
-| **♻️ Authorized Recycler** | Manage facility materials, publish indicative scrap rates to the public Price Board, process citizen sales, and issue digital receipts that generate Extended Producer Responsibility (EPR) credits. |
-| **🏛️ Municipal Admin** | City-wide operational dashboard, nearest-neighbor route optimization, fleet vehicle dispatch, spatial complaint heatmaps, and municipal organic compost batch tracking. |
+| Role                               | Core Capabilities                                                                                                                                                                                                                    |
+| :--------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **🏠 Citizen**               | Request on-demand pickups, track collection vehicles on live Leaflet map, track green points & tier rewards (Bronze $\rightarrow$ Platinum), join housing societies ($k \ge 3$ anonymity), and sell scrap to verified recyclers. |
+| **🚛 Collection Driver**     | View optimized daily routes, update stop statuses, log verified weight (kg) with waste categorization (`wet`, `dry`, `hazardous`, `e-waste`, `sanitary`), and work completely offline via native IndexedDB queue.          |
+| **♻️ Authorized Recycler** | Manage facility materials, publish indicative scrap rates to the public Price Board, process citizen sales, and issue digital receipts that generate Extended Producer Responsibility (EPR) credits.                                 |
+| **🏛️ Municipal Admin**     | City-wide operational dashboard, nearest-neighbor route optimization, fleet vehicle dispatch, spatial complaint heatmaps, and municipal organic compost batch tracking.                                                              |
 
 ---
 
@@ -57,6 +56,7 @@
 ## 🚀 Quickstart Guide
 
 ### Prerequisites
+
 * **Node.js** (v18+ recommended) & **npm**
 * **Python** (v3.11+)
 
@@ -83,7 +83,8 @@ pip install -r requirements.txt
 # Start the API server
 uvicorn app.main:app --reload --port 8000
 ```
-> The API will be running at **`http://localhost:8000`**.  
+
+> The API will be running at **`http://localhost:8000`**.
 > Interactive OpenAPI documentation is available at **`http://localhost:8000/docs`**.
 
 ---
@@ -100,6 +101,7 @@ npm install
 # Start Vite development server
 npm run dev
 ```
+
 > The application will be accessible at **`http://localhost:5173`**.
 
 ---
@@ -116,7 +118,7 @@ python seed_dev.py
 Use any of these pre-configured accounts on the [Login Screen](http://localhost:5173/login):
 
 | Role | Email | Phone Number | Password | Dashboard Route |
-| :--- | :--- | :--- | :--- | :--- |
+| :----------------- | :------------------------------- | :------------- | :-------------- | :---------------------- |
 | **Citizen** | `aarav@citizen.org` | `9876543210` | `password123` | `/dashboard/user` |
 | **Driver** | `rajesh.driver@ecosync.org` | `9876543211` | `password123` | `/dashboard/driver` |
 | **Recycler** | `vikram.malhotra@recycler.org` | `9876543212` | `password123` | `/dashboard/recycler` |
@@ -129,12 +131,14 @@ Use any of these pre-configured accounts on the [Login Screen](http://localhost:
 ## 🧪 Testing & Quality Assurance
 
 ### Backend Test Suite (101 Integration & Unit Tests)
+
 ```bash
 cd backend
 pytest tests/ -v
 ```
 
 ### Frontend Typecheck & Production Build
+
 ```bash
 cd frontend
 npm run build
@@ -174,4 +178,5 @@ EcoSync-Smart-Municipal-Waste-Management/
 ---
 
 ## 📄 License
+
 This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
