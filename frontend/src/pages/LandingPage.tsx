@@ -74,7 +74,7 @@ export function LandingPage() {
               Log in
             </Link>
             <Link
-              to="/register"
+              to="/login"
               className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 hover:shadow"
             >
               <span>Get Started</span>
@@ -112,7 +112,7 @@ export function LandingPage() {
               {/* Primary Call-to-Actions */}
               <div className="flex flex-wrap items-center gap-4 pt-2">
                 <Link
-                  to="/register"
+                  to="/login"
                   className="inline-flex items-center gap-2.5 rounded-xl bg-emerald-600 px-6 py-3.5 font-bold text-white shadow-md shadow-emerald-600/20 transition hover:bg-emerald-700 hover:-translate-y-0.5"
                 >
                   <span>Schedule First Pickup</span>
@@ -270,7 +270,7 @@ export function LandingPage() {
                   </div>
 
                   <Link
-                    to="/register"
+                    to="/login"
                     className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 py-3 text-xs font-bold text-white transition hover:bg-slate-800"
                   >
                     <span>Register Household for Live Collection</span>
@@ -737,7 +737,7 @@ export function LandingPage() {
               <ul className="space-y-2 text-xs">
                 <li><a href="http://localhost:8000/docs" target="_blank" rel="noreferrer" className="hover:text-emerald-400 transition">Interactive API Docs</a></li>
                 <li><a href="http://localhost:8000/health" target="_blank" rel="noreferrer" className="hover:text-emerald-400 transition">System Health</a></li>
-                <li><Link to="/register" className="hover:text-emerald-400 transition">Register Household</Link></li>
+                <li><Link to="/login" className="hover:text-emerald-400 transition">Smart Civic Sign-In</Link></li>
               </ul>
             </div>
           </div>

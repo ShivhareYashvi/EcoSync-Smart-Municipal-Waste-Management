@@ -1,5 +1,5 @@
 import React, { FormEvent, useMemo, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { CheckCircle2, ChevronRight, KeyRound, Mail, MapPin, Phone, ShieldCheck, Smartphone, Sparkles } from 'lucide-react';
 import { api } from '../lib/api';
@@ -13,10 +13,14 @@ type EmailMode = 'login' | 'signup';
 export function LoginPage() {
   const navigate = useNavigate();
   const { role } = useParams<{ role?: string }>();
+  const [searchParams] = useSearchParams();
   const setSession = useSessionStore((state) => state.setSession);
 
-  const [authMethod, setAuthMethod] = useState<AuthMethod>('phone');
-  const [emailMode, setEmailMode] = useState<EmailMode>('login');
+  const initialMethod: AuthMethod = searchParams.get('tab') === 'email' || searchParams.get('mode') === 'signup' ? 'email' : 'phone';
+  const initialMode: EmailMode = searchParams.get('mode') === 'signup' ? 'signup' : 'login';
+
+  const [authMethod, setAuthMethod] = useState<AuthMethod>(initialMethod);
+  const [emailMode, setEmailMode] = useState<EmailMode>(initialMode);
 
   // Phone OTP state
   const [phone, setPhone] = useState('');
