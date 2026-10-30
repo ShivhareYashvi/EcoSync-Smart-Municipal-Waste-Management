@@ -7,14 +7,16 @@ import { FleetManagementPage } from './pages/admin/FleetManagementPage';
 import { RouteDispatchPage } from './pages/admin/RouteDispatchPage';
 import { ZoneAnalyticsDashboard } from './pages/admin/ZoneAnalyticsDashboard';
 import { DriverDashboard } from './pages/driver/DriverDashboard';
+import { CompleteProfilePage } from './pages/CompleteProfilePage';
 import { FeatureModulesPage } from './pages/FeatureModulesPage';
+import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { LandingPage } from './pages/LandingPage';
 import { LoginPage } from './pages/LoginPage';
-import { RegisterPage } from './pages/RegisterPage';
-import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { PriceBoardPage } from './pages/PriceBoardPage';
 import { RecyclerDashboard } from './pages/recycler/RecyclerDashboard';
+import { ResetPasswordPage } from './pages/ResetPasswordPage';
 import { UserDashboard } from './pages/user/UserDashboard';
+import { VerifyEmailPage } from './pages/VerifyEmailPage';
 
 export default function App() {
   return (
@@ -27,8 +29,11 @@ export default function App() {
       <Route path="/portal/admin" element={<Navigate to="/dashboard/admin" replace />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/login/:role" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
+      <Route path="/register" element={<LoginPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/verify-email" element={<VerifyEmailPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
+      <Route path="/complete-profile" element={<CompleteProfilePage />} />
       <Route path="/dashboard" element={<DashboardLayout />}>
         <Route index element={<Navigate to="/dashboard/user" replace />} />
         <Route element={<ProtectedRoute allowedRoles={['citizen']} />}>
@@ -56,4 +61,3 @@ export default function App() {
     </Routes>
   );
 }
-

@@ -16,12 +16,23 @@ export interface Coordinates {
 
 export interface User {
   id: number;
-  name: string;
-  phone: string;
+  name: string | null;
+  phone: string | null;
   email: string | null;
   role: UserRole;
-  address: string;
+  address: string | null;
   verified: boolean;
+  phone_verified?: boolean;
+  email_verified?: boolean;
+  profile_completed?: boolean;
+  house_flat_number?: string | null;
+  street_colony?: string | null;
+  locality?: string | null;
+  landmark?: string | null;
+  ward_number?: string | null;
+  pincode?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
   household_id: string | null;
   electricity_bill_path: string | null;
   driver_id: number | null;
@@ -39,8 +50,25 @@ export interface User {
 
 export interface LoginResponse {
   access_token: string;
+  refresh_token?: string;
   token_type: string;
+  is_new_user?: boolean;
+  profile_completed?: boolean;
   user: User;
+}
+
+export interface ProfileAddressPayload {
+  name: string;
+  phone?: string;
+  email?: string;
+  house_flat_number: string;
+  street_colony: string;
+  locality: string;
+  landmark: string;
+  ward_number: string;
+  pincode: string;
+  latitude?: number | null;
+  longitude?: number | null;
 }
 
 export interface Pickup {
