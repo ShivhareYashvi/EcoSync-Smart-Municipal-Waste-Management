@@ -6,6 +6,8 @@ import { api } from '../lib/api';
 import { dashboardPathForRole } from '../lib/navigation';
 import type { LoginResponse, OTPResponse } from '../lib/types';
 import { useSessionStore } from '../store/session';
+import { Navbar } from '../components/Navbar';
+import { Footer } from '../components/Footer';
 
 export function ForgotPasswordPage() {
   const navigate = useNavigate();
@@ -96,7 +98,9 @@ export function ForgotPasswordPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-900 flex flex-col justify-center items-center px-4 py-12">
+    <div className="min-h-screen bg-slate-900 flex flex-col justify-between relative">
+      <Navbar mode="auth" />
+      <main className="flex-1 flex flex-col justify-center items-center px-4 py-8 relative z-10">
       <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl p-8 border border-slate-100 space-y-6">
         <div className="text-center space-y-2">
           <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto">
@@ -268,6 +272,8 @@ export function ForgotPasswordPage() {
           </Link>
         </div>
       </div>
-    </main>
+      </main>
+      <Footer mode="auth" />
+    </div>
   );
 }

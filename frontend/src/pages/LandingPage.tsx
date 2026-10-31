@@ -19,6 +19,8 @@ import {
   Users,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Navbar } from '../components/Navbar';
+import { Footer } from '../components/Footer';
 
 export function LandingPage() {
   // Interactive Simulator State
@@ -35,57 +37,11 @@ export function LandingPage() {
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] text-[#1F2937] antialiased selection:bg-emerald-500 selection:text-white">
-      {/* ── Top Navigation Bar ─────────────── */}
-      <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/85 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 sm:px-8">
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500 text-white shadow-sm transition group-hover:bg-emerald-600">
-              <Recycle className="h-6 w-6 transition-transform group-hover:rotate-45" />
-            </div>
-            <div>
-              <span className="text-xl font-black tracking-tight text-slate-950">EcoSync</span>
-              <span className="hidden text-[11px] font-semibold text-emerald-700 sm:inline ml-2 uppercase tracking-wider bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                Municipal SaaS
-              </span>
-            </div>
-          </Link>
-
-          <nav className="hidden items-center gap-8 md:flex">
-            <a href="#features" className="text-sm font-medium text-slate-600 transition hover:text-emerald-700">
-              Platform Features
-            </a>
-            <a href="#circular-loop" className="text-sm font-medium text-slate-600 transition hover:text-emerald-700">
-              Circular Economy
-            </a>
-            <a href="#telemetry" className="text-sm font-medium text-slate-600 transition hover:text-emerald-700">
-              Civic Impact
-            </a>
-            <Link to="/rates" className="text-sm font-medium text-slate-600 transition hover:text-emerald-700 flex items-center gap-1">
-              Scrap Price Board
-              <span className="inline-block h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            </Link>
-          </nav>
-
-          <div className="flex items-center gap-3">
-            <Link
-              to="/login"
-              className="rounded-xl px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950"
-            >
-              Log in
-            </Link>
-            <Link
-              to="/login"
-              className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 hover:shadow"
-            >
-              <span>Get Started</span>
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </div>
-      </header>
+      {/* ── Top Navigation Bar (Auto-hides on scroll down, reveals on scroll up) ─── */}
+      <Navbar mode="public" />
 
       {/* ── Hero Section ─────────────────── */}
-      <section className="relative overflow-hidden pt-12 pb-20 lg:pt-20 lg:pb-28">
+      <section className="relative overflow-hidden pt-24 pb-20 lg:pt-28 lg:pb-28">
         <div className="absolute top-0 right-1/4 -z-10 h-96 w-96 rounded-full bg-emerald-100/60 blur-3xl" />
         <div className="absolute bottom-0 left-10 -z-10 h-72 w-72 rounded-full bg-lime-100/50 blur-3xl" />
 
@@ -693,61 +649,7 @@ export function LandingPage() {
       </section>
 
       {/* ── Modern Comprehensive Footer ──── */}
-      <footer className="bg-slate-950 text-slate-400 py-16">
-        <div className="mx-auto max-w-7xl px-6 sm:px-8">
-          <div className="grid gap-10 md:grid-cols-5">
-            <div className="md:col-span-2 space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500 text-slate-950 font-bold">
-                  <Recycle className="h-5 w-5" />
-                </div>
-                <span className="text-xl font-black tracking-tight text-white">EcoSync</span>
-              </div>
-              <p className="text-xs leading-relaxed text-slate-400 max-w-sm">
-                Next-generation municipal waste intelligence and circular economy platform. Connecting citizens, municipal fleets, and recyclers with verifiable data.
-              </p>
-              <div className="flex items-center gap-2 pt-2">
-                <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-xs font-semibold text-slate-300">All Systems Operational · PostgreSQL 18</span>
-              </div>
-            </div>
-
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-white mb-3">Role Portals</p>
-              <ul className="space-y-2 text-xs">
-                <li><Link to="/login/citizen" className="hover:text-emerald-400 transition">Citizen Portal</Link></li>
-                <li><Link to="/login/driver" className="hover:text-emerald-400 transition">Driver Field Console</Link></li>
-                <li><Link to="/login/admin" className="hover:text-emerald-400 transition">Municipal Admin</Link></li>
-                <li><Link to="/rates" className="hover:text-emerald-400 transition">Recycler Marketplace</Link></li>
-              </ul>
-            </div>
-
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-white mb-3">Platform</p>
-              <ul className="space-y-2 text-xs">
-                <li><a href="#features" className="hover:text-emerald-400 transition">Core Modules</a></li>
-                <li><a href="#circular-loop" className="hover:text-emerald-400 transition">Circular Flow</a></li>
-                <li><a href="#telemetry" className="hover:text-emerald-400 transition">Civic Metrics</a></li>
-                <li><Link to="/rates" className="hover:text-emerald-400 transition">Scrap Price Board</Link></li>
-              </ul>
-            </div>
-
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-white mb-3">API & Developer</p>
-              <ul className="space-y-2 text-xs">
-                <li><a href="http://localhost:8000/docs" target="_blank" rel="noreferrer" className="hover:text-emerald-400 transition">Interactive API Docs</a></li>
-                <li><a href="http://localhost:8000/health" target="_blank" rel="noreferrer" className="hover:text-emerald-400 transition">System Health</a></li>
-                <li><Link to="/login" className="hover:text-emerald-400 transition">Smart Civic Sign-In</Link></li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="mt-12 border-t border-slate-900 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-            <p>© {new Date().getFullYear()} EcoSync Municipal Platform. All rights reserved.</p>
-            <p>Designed with Material Design principles & Sustainable Tech.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer mode="public" />
     </div>
   );
 }

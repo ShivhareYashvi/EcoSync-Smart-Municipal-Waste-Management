@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
+import { Navbar } from '../components/Navbar';
+import { Footer } from '../components/Footer';
 import {
   ArrowRight,
   Award,
@@ -260,87 +262,11 @@ export function PriceBoardPage() {
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] text-[#1F2937] antialiased">
-      {/* Top Header / Navigation Bar */}
-      <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8">
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-md shadow-emerald-600/20 transition group-hover:scale-105">
-              <Recycle className="h-5 w-5" />
-            </div>
-            <div>
-              <span className="block text-xl font-black tracking-tight text-slate-900 leading-tight">
-                Eco<span className="text-emerald-600">Sync</span>
-              </span>
-              <span className="block -mt-0.5 text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                Circular Scrap Board
-              </span>
-            </div>
-          </Link>
-
-          {/* Center Navigation */}
-          <nav className="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
-            <Link to="/" className="hover:text-emerald-700 transition">
-              Home
-            </Link>
-            <span className="text-emerald-600 font-bold border-b-2 border-emerald-600 pb-0.5">
-              Scrap Rates Board
-            </span>
-            <Link to="/login/citizen" className="hover:text-emerald-700 transition">
-              Citizen Portal
-            </Link>
-            <Link to="/login/driver" className="hover:text-emerald-700 transition">
-              Driver Field Console
-            </Link>
-            <Link to="/login/admin" className="hover:text-emerald-700 transition">
-              Municipal Admin
-            </Link>
-          </nav>
-
-          {/* User Auth or Quick Links */}
-          <div className="flex items-center gap-3">
-            {user ? (
-              <div className="flex items-center gap-2">
-                <Link
-                  to="/dashboard"
-                  className="inline-flex items-center gap-2 rounded-xl bg-emerald-50 px-3.5 py-2 text-xs font-bold text-emerald-800 border border-emerald-200 hover:bg-emerald-100 transition"
-                >
-                  <UserCheck className="h-4 w-4 text-emerald-600" />
-                  {user.name} ({user.role})
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => {
-                    clearSession();
-                    navigate('/');
-                  }}
-                  className="rounded-xl border border-slate-200 p-2 text-slate-500 hover:bg-slate-100 transition"
-                  title="Logout"
-                >
-                  <LogOut className="h-4 w-4" />
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <Link
-                  to="/login"
-                  className="rounded-xl px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100 transition"
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/login"
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-emerald-700 transition"
-                >
-                  Join Citizen Network <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-            )}
-          </div>
-        </div>
-      </header>
+      {/* Top Header (Auto-hides on scroll down, reveals on scroll up) */}
+      <Navbar mode="public" />
 
       {/* Main Container */}
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <main className="mx-auto max-w-7xl px-4 pt-24 pb-12 sm:px-6 lg:px-8">
         {/* Hero Section */}
         <section className="relative mb-10 overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 p-8 sm:p-12 text-white shadow-2xl">
           <div className="pointer-events-none absolute -right-10 -top-10 h-96 w-96 rounded-full bg-emerald-500/20 blur-3xl" />

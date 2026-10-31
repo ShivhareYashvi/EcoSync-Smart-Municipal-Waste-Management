@@ -16,6 +16,8 @@ import { api } from '../lib/api';
 import { dashboardPathForRole } from '../lib/navigation';
 import type { ProfileAddressPayload } from '../lib/types';
 import { useSessionStore } from '../store/session';
+import { Navbar } from '../components/Navbar';
+import { Footer } from '../components/Footer';
 
 // Prominent Bhopal localities for quick selection
 const BHOPAL_LOCALITIES = [
@@ -158,12 +160,15 @@ export function CompleteProfilePage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-900 flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden">
+    <div className="min-h-screen bg-slate-900 flex flex-col justify-between relative overflow-hidden">
+      <Navbar mode="auth" />
+
       {/* Background decoration */}
       <div className="absolute top-0 right-1/3 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
 
-      <section className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden relative z-10">
+      <main className="flex-1 flex flex-col justify-center items-center px-4 py-8 relative z-10">
+        <section className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 p-8 text-white">
           <div className="flex items-center gap-2 text-emerald-200 text-xs font-bold uppercase tracking-widest">
@@ -407,7 +412,10 @@ export function CompleteProfilePage() {
           </button>
         </form>
       </section>
-    </main>
+      </main>
+
+      <Footer mode="auth" />
+    </div>
   );
 }
 

@@ -6,6 +6,8 @@ import { api } from '../lib/api';
 import { dashboardPathForRole } from '../lib/navigation';
 import type { LoginResponse } from '../lib/types';
 import { useSessionStore } from '../store/session';
+import { Navbar } from '../components/Navbar';
+import { Footer } from '../components/Footer';
 
 type AuthMethod = 'phone' | 'email';
 type EmailMode = 'login' | 'signup';
@@ -191,12 +193,15 @@ export function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-900 flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden">
+    <div className="min-h-screen bg-slate-900 flex flex-col justify-between relative overflow-hidden">
+      <Navbar mode="auth" />
+
       {/* Background decoration */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
 
-      <section className="w-full max-w-md bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden relative z-10">
+      <main className="flex-1 flex flex-col justify-center items-center px-4 py-8 relative z-10">
+        <section className="w-full max-w-md bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden">
         {/* Header Banner */}
         <div className="bg-gradient-to-r from-emerald-600 to-teal-700 p-7 text-white">
           <div className="flex items-center gap-2 text-emerald-200 text-xs font-bold uppercase tracking-widest">
@@ -472,6 +477,9 @@ export function LoginPage() {
           </div>
         </div>
       </section>
-    </main>
+      </main>
+
+      <Footer mode="auth" />
+    </div>
   );
 }
