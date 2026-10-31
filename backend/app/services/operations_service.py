@@ -3,18 +3,21 @@ from typing import Any
 
 import pandas as pd
 from fastapi import HTTPException, status
-from sqlalchemy import Select, desc, func, select
+from sqlalchemy import Select, case, desc, func, or_, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, joinedload
 
 from app.models.complaint import Complaint
 from app.models.driver import Driver
 from app.models.driver_location import DriverLocation
-from app.models.enums import ComplaintStatus, DriverAvailability, PickupStatus, RewardSource, WasteType
+from app.models.enums import ComplaintStatus, DriverAvailability, PickupStatus, RewardSource, RouteStatus, RouteStopStatus, WasteType
 from app.models.notification import Notification
 from app.models.pickup_request import PickupRequest
 from app.models.reward import Reward
+from app.models.route import Route, RouteStop
 from app.models.user import User
+from app.models.vehicle import Vehicle
+from app.models.zone import Zone
 from app.schemas.analytics import AnalyticsSummary, EfficiencyMetric, WasteDistributionPoint
 from app.schemas.complaint import ComplaintCreate, ComplaintRead, ComplaintStatusUpdate
 from app.schemas.notification import NotificationCreate, NotificationRead
@@ -48,6 +51,108 @@ class OperationsService:
             ]
         )
 
+    def _auto_assign_ward_vehicle_and_driver(
+        self,
+        session: Session,
+        pickup: PickupRequest,
+        user: User | None,
+        zone_id: int | None,
+    ) -> None:
+        """
+        BMC Bhopal Real-Time Municipal Production Logic:
+        Auto-assigns the dedicated Ward/Colony Municipal Tipper vehicle and Driver.
+        Under Bhopal Municipal Corporation (BMC) operations, each ward has a dedicated
+        tipper vehicle and driver team allocated to that ward depot.
+        """
+        matched_driver: Driver | None = None
+        ward_num = getattr(user, "ward_number", None) if user else None
+
+        # 1. Match Driver assigned to this exact municipal Ward / Zone
+        if zone_id is not None:
+            matched_driver = session.scalar(
+                select(Driver)
+                .join(User, Driver.user_id == User.id)
+                .where(User.zone_id == zone_id)
+                .order_by(
+                    case(
+                        (Driver.availability == DriverAvailability.AVAILABLE, 1),
+                        (Driver.availability == DriverAvailability.ON_ROUTE, 2),
+                        else_=3,
+                    ),
+                    Driver.id,
+                )
+                .limit(1)
+            )
+
+        # 2. Match by ward number if zone lookup didn't find a driver
+        if matched_driver is None and ward_num:
+            matched_driver = session.scalar(
+                select(Driver)
+                .join(User, Driver.user_id == User.id)
+                .where(User.ward_number == ward_num)
+                .order_by(Driver.id)
+                .limit(1)
+            )
+
+        # 3. Fallback: Any AVAILABLE driver across the municipal network
+        if matched_driver is None:
+            matched_driver = session.scalar(
+                select(Driver)
+                .where(Driver.availability == DriverAvailability.AVAILABLE)
+                .order_by(Driver.id)
+                .limit(1)
+            )
+
+        if matched_driver is not None:
+            pickup.driver_id = matched_driver.id
+            pickup.status = PickupStatus.ASSIGNED
+            if matched_driver.availability == DriverAvailability.AVAILABLE:
+                matched_driver.availability = DriverAvailability.ON_ROUTE
+
+            # Retrieve dedicated vehicle assigned to this driver
+            matched_vehicle = session.scalar(
+                select(Vehicle).where(
+                    (Vehicle.assigned_driver_id == matched_driver.user_id)
+                    | (Vehicle.registration_number == matched_driver.vehicle_number)
+                )
+            )
+            vehicle_reg = (
+                matched_vehicle.registration_number
+                if matched_vehicle
+                else matched_driver.vehicle_number
+            )
+            driver_name = matched_driver.user.name if matched_driver.user else "Sanitation Officer"
+            zone_obj = session.get(Zone, zone_id) if zone_id else None
+            ward_label = zone_obj.name if zone_obj else f"Ward {ward_num or 'BMC Central'}"
+
+            # Append assignment trace to pickup notes for full transparency
+            bmc_note = f"[BMC Auto-Dispatch] Dedicated {ward_label} Vehicle [{vehicle_reg}] assigned (Driver: {driver_name})"
+            pickup.notes = f"{pickup.notes} · {bmc_note}".strip(" ·") if pickup.notes else bmc_note
+
+            # Auto-link to the driver's active route for this date if present
+            route = session.scalar(
+                select(Route).where(
+                    Route.driver_id == matched_driver.user_id,
+                    Route.route_date == pickup.scheduled_date,
+                    Route.status.in_([RouteStatus.PLANNED, RouteStatus.IN_PROGRESS]),
+                )
+            )
+            if route is not None:
+                max_seq = (
+                    session.scalar(
+                        select(func.max(RouteStop.sequence_order)).where(RouteStop.route_id == route.id)
+                    )
+                    or 0
+                )
+                stop = RouteStop(
+                    route_id=route.id,
+                    pickup_id=pickup.id,
+                    sequence_order=max_seq + 1,
+                    status=RouteStopStatus.PENDING,
+                )
+                session.add(stop)
+                pickup.route_id = route.id
+
     def create_pickup(self, session: Session, payload: PickupRequestCreate) -> PickupRequestRead:
         self._ensure_user_exists(session, payload.user_id)
         user = session.scalar(select(User).where(User.id == payload.user_id))
@@ -70,13 +175,7 @@ class OperationsService:
             notes=payload.notes,
             status=PickupStatus.PENDING,
         )
-        available_driver = session.scalar(
-            select(Driver).where(Driver.availability == DriverAvailability.AVAILABLE).order_by(Driver.id).limit(1)
-        )
-        if available_driver is not None:
-            pickup.driver_id = available_driver.id
-            pickup.status = PickupStatus.ASSIGNED
-            available_driver.availability = DriverAvailability.ON_ROUTE
+        self._auto_assign_ward_vehicle_and_driver(session, pickup, user, zone_id)
         session.add(pickup)
         try:
             session.commit()

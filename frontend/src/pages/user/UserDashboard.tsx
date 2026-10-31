@@ -1173,13 +1173,13 @@ export function UserDashboard() {
                     </span>
                   </div>
 
-                  {/* 4-Step Visual Progress Stepper */}
-                  <div className="grid grid-cols-4 gap-1 text-center pt-2 border-t border-slate-200/60">
+                  {/* BMC Municipal 5-Stage Live Dispatch Stepper */}
+                  <div className="grid grid-cols-5 gap-1 text-center pt-2 border-t border-slate-200/60">
                     <div className="flex flex-col items-center">
                       <div className="h-6 w-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px] font-bold">
                         ✓
                       </div>
-                      <span className="text-[10px] font-bold text-emerald-800 mt-1">Booked</span>
+                      <span className="text-[10px] font-bold text-emerald-800 mt-1">Scheduled</span>
                     </div>
                     <div className="flex flex-col items-center">
                       <div
@@ -1210,21 +1210,46 @@ export function UserDashboard() {
                         className={`h-6 w-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
                           trackedPickup.status === 'completed'
                             ? 'bg-emerald-600 text-white'
+                            : trackedPickup.status === 'in_progress'
+                            ? 'bg-amber-500 text-white animate-pulse'
                             : 'bg-slate-200 text-slate-500'
                         }`}
                       >
-                        4
+                        {trackedPickup.status === 'completed' ? '✓' : '4'}
+                      </div>
+                      <span className="text-[10px] font-bold text-slate-600 mt-1">Near Door</span>
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <div
+                        className={`h-6 w-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                          trackedPickup.status === 'completed'
+                            ? 'bg-emerald-600 text-white'
+                            : 'bg-slate-200 text-slate-500'
+                        }`}
+                      >
+                        5
                       </div>
                       <span className="text-[10px] font-bold text-slate-600 mt-1">Collected</span>
                     </div>
                   </div>
 
-                  {/* Driver / ETA message */}
-                  <p className="text-[11px] text-slate-500 pt-1">
-                    {trackedPickup.driver_id
-                      ? `Municipal Driver ID #${trackedPickup.driver_id} assigned · Live GPS active.`
-                      : 'Municipal collection vehicle will be assigned before your time slot.'}
-                  </p>
+                  {/* Dedicated Ward Vehicle & Auto-Assignment Notification */}
+                  <div className="pt-1">
+                    {trackedPickup.driver_id ? (
+                      <div className="flex items-center gap-2 text-[11px] text-emerald-900 font-semibold bg-emerald-50 px-3 py-2 rounded-xl border border-emerald-200/80">
+                        <CheckCircle2 className="h-4 w-4 text-emerald-600 flex-shrink-0" />
+                        <span className="leading-tight">
+                          {trackedPickup.notes?.includes('[BMC Auto-Dispatch]')
+                            ? trackedPickup.notes.split('[BMC Auto-Dispatch]')[1].trim().replace(/^·\s*/, '')
+                            : `Dedicated Municipal Ward Collection Vehicle Assigned (Driver #${trackedPickup.driver_id}) · Live GPS Active`}
+                        </span>
+                      </div>
+                    ) : (
+                      <p className="text-[11px] text-slate-500">
+                        Municipal collection vehicle will be automatically dispatched according to your ward schedule.
+                      </p>
+                    )}
+                  </div>
                 </div>
               )}
 

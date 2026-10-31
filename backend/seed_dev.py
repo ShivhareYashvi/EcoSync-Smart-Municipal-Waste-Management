@@ -96,6 +96,29 @@ def seed():
             )
             session.add(driver)
 
+        # 4b. Dedicated Municipal Ward Vehicles (Bhopal Fleet)
+        from datetime import timedelta
+        from app.models.vehicle import Vehicle
+        from app.models.enums import FuelType
+
+        vehicles_data = [
+            ("MP-04-EC-2024", 1200.0, FuelType.ELECTRIC, driver_user.id, True),
+            ("MP-04-EC-2025", 1500.0, FuelType.CNG, None, True),
+            ("MP-04-EC-2026", 1200.0, FuelType.ELECTRIC, None, True),
+        ]
+        for reg, cap, fuel, d_id, active in vehicles_data:
+            v = session.query(Vehicle).filter_by(registration_number=reg).first()
+            if not v:
+                v = Vehicle(
+                    registration_number=reg,
+                    capacity_kg=cap,
+                    fuel_type=fuel,
+                    maintenance_due_date=now.date() + timedelta(days=90),
+                    assigned_driver_id=d_id,
+                    active=active,
+                )
+                session.add(v)
+
         # 5. Recyclers & Rates
         from app.models.recycler import Recycler
         from app.models.recycler_rate_card import RecyclerRateCard
