@@ -58,9 +58,7 @@ from app.models import (
 settings = get_settings()
 
 
-# =============================================================================
 # Admin Authentication Backend
-# =============================================================================
 
 def get_admin_session_secret() -> str:
     """Retrieve the admin session secret key, failing loudly outside local environments."""
@@ -144,9 +142,7 @@ class AdminAuth(AuthenticationBackend):
             return True
 
 
-# =============================================================================
 # Model Views
-# =============================================================================
 
 class UserAdmin(ModelView, model=User):
     name = "User"
@@ -166,7 +162,6 @@ class UserAdmin(ModelView, model=User):
     ]
     column_searchable_list = [User.name, User.email, User.phone]
     column_sortable_list = [User.id, User.name, User.role, User.verified, User.created_at]
-    column_filters = [User.role, User.verified, User.zone_id]
 
     # SECURITY: Never show or expose password hashes or verification tokens
     column_details_exclude_list = [
@@ -234,7 +229,6 @@ class VehicleAdmin(ModelView, model=Vehicle):
     ]
     column_searchable_list = [Vehicle.registration_number]
     column_sortable_list = [Vehicle.id, Vehicle.registration_number, Vehicle.capacity_kg, Vehicle.active]
-    column_filters = [Vehicle.fuel_type, Vehicle.active]
 
     # Vehicles are fully editable
     can_create = True
@@ -251,7 +245,6 @@ class DriverAdmin(ModelView, model=Driver):
     column_list = [Driver.id, Driver.user_id, Driver.vehicle_number, Driver.availability, Driver.created_at]
     column_searchable_list = [Driver.vehicle_number]
     column_sortable_list = [Driver.id, Driver.availability, Driver.created_at]
-    column_filters = [Driver.availability]
 
 
 class DriverLocationAdmin(ModelView, model=DriverLocation):
@@ -291,7 +284,6 @@ class PickupRequestAdmin(ModelView, model=PickupRequest):
     ]
     column_searchable_list = [PickupRequest.notes]
     column_sortable_list = [PickupRequest.id, PickupRequest.status, PickupRequest.scheduled_date]
-    column_filters = [PickupRequest.status, PickupRequest.waste_type]
 
     # Driver assignment and status are editable
     can_create = True
@@ -316,7 +308,6 @@ class ComplaintAdmin(ModelView, model=Complaint):
     ]
     column_searchable_list = [Complaint.description]
     column_sortable_list = [Complaint.id, Complaint.status, Complaint.created_at]
-    column_filters = [Complaint.category, Complaint.status]
 
     # Complaint status and resolution are editable
     can_create = True
@@ -338,7 +329,6 @@ class ComplaintHotspotAdmin(ModelView, model=ComplaintHotspot):
         ComplaintHotspot.first_flagged_at,
     ]
     column_sortable_list = [ComplaintHotspot.id, ComplaintHotspot.complaint_count, ComplaintHotspot.first_flagged_at]
-    column_filters = [ComplaintHotspot.status]
 
 
 class ComplaintUpvoteAdmin(ModelView, model=ComplaintUpvote):
@@ -367,7 +357,6 @@ class RecyclerAdmin(ModelView, model=Recycler):
     ]
     column_searchable_list = [Recycler.business_name]
     column_sortable_list = [Recycler.id, Recycler.verification_status, Recycler.created_at]
-    column_filters = [Recycler.verification_status]
 
     # Recycler verification/approval status is editable
     can_create = True
@@ -390,7 +379,6 @@ class RecyclerRateCardAdmin(ModelView, model=RecyclerRateCard):
         RecyclerRateCard.effective_from,
     ]
     column_sortable_list = [RecyclerRateCard.id, RecyclerRateCard.rate_per_kg, RecyclerRateCard.active]
-    column_filters = [RecyclerRateCard.material, RecyclerRateCard.active]
 
     # Rate cards are editable
     can_create = True
@@ -414,7 +402,6 @@ class BulkGeneratorAdmin(ModelView, model=BulkGenerator):
         BulkGenerator.created_at,
     ]
     column_searchable_list = [BulkGenerator.org_name]
-    column_filters = [BulkGenerator.category, BulkGenerator.billing_status]
 
 
 class RouteAdmin(ModelView, model=Route):
@@ -425,7 +412,6 @@ class RouteAdmin(ModelView, model=Route):
 
     column_list = [Route.id, Route.driver_id, Route.vehicle_id, Route.zone_id, Route.status, Route.route_date]
     column_sortable_list = [Route.id, Route.status, Route.route_date]
-    column_filters = [Route.status]
 
 
 class RouteStopAdmin(ModelView, model=RouteStop):
@@ -436,7 +422,6 @@ class RouteStopAdmin(ModelView, model=RouteStop):
 
     column_list = [RouteStop.id, RouteStop.route_id, RouteStop.pickup_id, RouteStop.sequence_order, RouteStop.status]
     column_sortable_list = [RouteStop.id, RouteStop.sequence_order, RouteStop.status]
-    column_filters = [RouteStop.status]
 
 
 class CompostBatchAdmin(ModelView, model=CompostBatch):
@@ -455,7 +440,6 @@ class CompostBatchAdmin(ModelView, model=CompostBatch):
         CompostBatch.created_at,
     ]
     column_sortable_list = [CompostBatch.id, CompostBatch.total_weight_kg, CompostBatch.created_at]
-    column_filters = [CompostBatch.status]
 
 
 class SocietyAdmin(ModelView, model=Society):
@@ -484,7 +468,6 @@ class SocietyMembershipAdmin(ModelView, model=SocietyMembership):
         SocietyMembership.joined_at,
     ]
     column_sortable_list = [SocietyMembership.id, SocietyMembership.joined_at]
-    column_filters = [SocietyMembership.role, SocietyMembership.status]
 
 
 class UserTierRecordAdmin(ModelView, model=UserTierRecord):
@@ -501,7 +484,6 @@ class UserTierRecordAdmin(ModelView, model=UserTierRecord):
         UserTierRecord.tier_updated_at,
     ]
     column_sortable_list = [UserTierRecord.user_id, UserTierRecord.points_balance, UserTierRecord.tier_updated_at]
-    column_filters = [UserTierRecord.current_tier]
 
 
 class ComplianceScoreAdmin(ModelView, model=ComplianceScore):
@@ -529,7 +511,6 @@ class RedemptionCatalogAdmin(ModelView, model=RedemptionCatalog):
     column_list = [RedemptionCatalog.id, RedemptionCatalog.item_name, RedemptionCatalog.category, RedemptionCatalog.points_cost, RedemptionCatalog.active]
     column_searchable_list = [RedemptionCatalog.item_name]
     column_sortable_list = [RedemptionCatalog.id, RedemptionCatalog.points_cost, RedemptionCatalog.active]
-    column_filters = [RedemptionCatalog.category, RedemptionCatalog.active]
 
 
 class BrandAccountAdmin(ModelView, model=BrandAccount):
@@ -567,7 +548,6 @@ class ReferralAdmin(ModelView, model=Referral):
         Referral.points_awarded,
         Referral.created_at,
     ]
-    column_filters = [Referral.status, Referral.points_awarded]
 
 
 class LeaderboardOptInAdmin(ModelView, model=LeaderboardOptIn):
@@ -582,12 +562,9 @@ class LeaderboardOptInAdmin(ModelView, model=LeaderboardOptIn):
         LeaderboardOptIn.display_handle,
         LeaderboardOptIn.opted_in_at,
     ]
-    column_filters = [LeaderboardOptIn.opted_in]
 
 
-# =============================================================================
 # READ-ONLY LEDGERS & AUDIT TABLES
-# =============================================================================
 
 class OTPChallengeAdmin(ModelView, model=OTPChallenge):
     name = "OTP Challenge"
@@ -673,7 +650,6 @@ class EPRCreditAdmin(ModelView, model=EPRCredit):
         EPRCredit.created_at,
     ]
     column_sortable_list = [EPRCredit.id, EPRCredit.credit_amount, EPRCredit.created_at]
-    column_filters = [EPRCredit.status]
 
     # Strictly Read-Only
     can_create = False
@@ -697,7 +673,6 @@ class PointsTransactionAdmin(ModelView, model=PointsTransaction):
         PointsTransaction.created_at,
     ]
     column_sortable_list = [PointsTransaction.id, PointsTransaction.points, PointsTransaction.created_at]
-    column_filters = [PointsTransaction.status]
 
     # Strictly Read-Only
     can_create = False
@@ -713,7 +688,6 @@ class RewardAdmin(ModelView, model=Reward):
 
     column_list = [Reward.id, Reward.user_id, Reward.points, Reward.source, Reward.redeemed, Reward.created_at]
     column_sortable_list = [Reward.id, Reward.points, Reward.created_at]
-    column_filters = [Reward.source, Reward.redeemed]
 
     # Strictly Read-Only
     can_create = False
@@ -736,7 +710,6 @@ class RedemptionAdmin(ModelView, model=Redemption):
         Redemption.created_at,
     ]
     column_sortable_list = [Redemption.id, Redemption.points_spent, Redemption.created_at]
-    column_filters = [Redemption.status]
 
     # Strictly Read-Only
     can_create = False
@@ -761,7 +734,6 @@ class RecyclingTransactionAdmin(ModelView, model=RecyclingTransaction):
         RecyclingTransaction.created_at,
     ]
     column_sortable_list = [RecyclingTransaction.id, RecyclingTransaction.created_at]
-    column_filters = [RecyclingTransaction.status, RecyclingTransaction.material]
 
     # Strictly Read-Only
     can_create = False
@@ -769,9 +741,7 @@ class RecyclingTransactionAdmin(ModelView, model=RecyclingTransaction):
     can_delete = False
 
 
-# =============================================================================
 # Admin Initialization Factory
-# =============================================================================
 
 def init_admin(app: FastAPI) -> Admin:
     """Initialize SQLAdmin with custom authentication backend and all ModelViews."""

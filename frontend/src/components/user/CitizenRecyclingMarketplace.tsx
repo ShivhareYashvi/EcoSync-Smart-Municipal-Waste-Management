@@ -275,7 +275,9 @@ export function CitizenRecyclingMarketplace({ userId }: Props) {
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div>
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="text-xs font-bold text-slate-400">TXN #{txn.id}</span>
+                        <span className="text-xs font-mono font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-lg border border-slate-200">
+                          TXN-{String(txn.id).padStart(3, '0')}
+                        </span>
                         <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 capitalize">
                           {txn.material}
                         </span>

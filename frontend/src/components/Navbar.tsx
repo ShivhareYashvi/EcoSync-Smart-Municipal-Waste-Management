@@ -141,7 +141,11 @@ export function Navbar({ mode = 'public', title, subtitle }: NavbarProps) {
           <div className="hidden sm:flex items-center gap-2.5">
             {user ? (
               <div className="flex items-center gap-2 rounded-2xl bg-slate-50 p-1 border border-slate-200">
-                <div className="flex items-center gap-2 px-2.5 py-1">
+                <Link
+                  to={user.role === 'citizen' ? '/dashboard/user?tab=profile' : `/dashboard/${user.role}`}
+                  className="flex items-center gap-2 px-2.5 py-1 hover:bg-white rounded-xl transition cursor-pointer"
+                  title="View Civic Profile & ID Card"
+                >
                   <div className="h-7 w-7 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs uppercase">
                     {user.name ? user.name.slice(0, 2) : 'U'}
                   </div>
@@ -149,11 +153,11 @@ export function Navbar({ mode = 'public', title, subtitle }: NavbarProps) {
                     <p className="text-xs font-bold text-slate-900 leading-none truncate max-w-[130px]">
                       {user.name}
                     </p>
-                    <span className="text-[10px] font-semibold text-emerald-700 capitalize">
-                      {user.role}
+                    <span className="text-[10px] font-semibold text-emerald-700 capitalize flex items-center gap-1">
+                      {user.role} <span className="text-[9px] text-slate-400">· ID Card</span>
                     </span>
                   </div>
-                </div>
+                </Link>
 
                 <button
                   type="button"

@@ -198,6 +198,9 @@ export const ComplaintCommunityBoard: React.FC<ComplaintCommunityBoardProps> = (
                 <div className="space-y-2.5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
+                      <span className="font-mono text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-lg border border-slate-200">
+                        CMP-{String(c.id).padStart(3, '0')}
+                      </span>
                       <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-gray-100 text-gray-800 uppercase tracking-wider">
                         {c.category.replace('_', ' ')}
                       </span>

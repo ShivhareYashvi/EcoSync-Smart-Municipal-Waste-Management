@@ -33,6 +33,7 @@ import {
   Sparkles,
   TrendingUp,
   Truck,
+  UserCheck,
   Users,
   X,
   XCircle,
@@ -45,6 +46,7 @@ import { TrackingMap } from '../../components/TrackingMap';
 import { LocationPickerMap } from '../../components/LocationPickerMap';
 import { CitizenRecyclingMarketplace } from '../../components/user/CitizenRecyclingMarketplace';
 import { CommunityHubPanel } from '../../components/community/CommunityHubPanel';
+import { CitizenProfilePanel } from '../../components/user/CitizenProfilePanel';
 import { api, buildTrackingSocketUrl } from '../../lib/api';
 import type {
   CatalogItem,
@@ -59,6 +61,9 @@ import type {
   WasteType
 } from '../../lib/types';
 import { useSessionStore } from '../../store/session';
+
+export const formatPickupCode = (id: number) => `PKP-${String(id).padStart(3, '0')}`;
+export const formatComplaintCode = (id: number) => `CMP-${String(id).padStart(3, '0')}`;
 
 const activePickupStatuses: PickupStatus[] = ['assigned', 'in_progress'];
 
@@ -705,9 +710,16 @@ export function UserDashboard() {
             <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900">
               Welcome back, {user.name} 👋
             </h1>
-            <span className="hidden sm:inline-block rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-800 border border-emerald-200">
-              {user.ward_number ? `Ward ${user.ward_number} Node` : 'Bhopal Resident'}
-            </span>
+            <button
+              type="button"
+              onClick={() => handleTabChange('profile')}
+              className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-800 border border-emerald-200 hover:bg-emerald-100 transition shadow-sm"
+              title="Click to view Civic Profile & Household ID"
+            >
+              <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+              <span>{user.ward_number ? `Ward ${user.ward_number} Node` : 'Bhopal Resident'}</span>
+              <span className="text-[10px] text-emerald-600 underline ml-0.5">Edit Gate</span>
+            </button>
           </div>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
             Doorstep municipal waste management, live GPS tracking, and CPCB circular economy rewards.
@@ -853,6 +865,19 @@ export function UserDashboard() {
           <Users className="h-4 w-4" />
           <span>Community & Grievances</span>
         </button>
+
+        <button
+          type="button"
+          onClick={() => handleTabChange('profile')}
+          className={`flex items-center gap-2 whitespace-nowrap rounded-2xl px-4 py-2.5 text-xs font-black transition ${
+            activeTab === 'profile'
+              ? 'bg-slate-900 text-white shadow-sm'
+              : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+          }`}
+        >
+          <UserCheck className="h-4 w-4" />
+          <span>Civic Profile & ID</span>
+        </button>
       </div>
 
       {/* ─────────────────────────────────────────────────────────────── */}
@@ -887,6 +912,32 @@ export function UserDashboard() {
                   void createPickup.mutateAsync();
                 }}
               >
+                {/* Registered Doorstep Gate Banner */}
+                <div className="rounded-2xl bg-emerald-50/70 p-3.5 border border-emerald-200/80 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2.5">
+                    <div className="h-8 w-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                      <MapPin className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-800">
+                        Registered Doorstep Gate · Ward {user.ward_number || '25'}
+                      </p>
+                      <p className="text-xs font-bold text-slate-800 leading-snug">
+                        {user.house_flat_number
+                          ? `${user.house_flat_number}, ${user.street_colony}, ${user.locality}`
+                          : user.address || 'Bhopal Municipal Network'}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleTabChange('profile')}
+                    className="shrink-0 text-xs font-bold text-emerald-700 underline hover:text-emerald-900"
+                  >
+                    Edit Gate
+                  </button>
+                </div>
+
                 {/* 1. Visual Waste Category Tiles */}
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2.5">
@@ -1088,11 +1139,22 @@ export function UserDashboard() {
                     value={trackedPickupId ?? ''}
                     onChange={(e) => setTrackedPickupId(Number(e.target.value))}
                   >
-                    {pickups.map((p) => (
-                      <option key={p.id} value={p.id}>
-                        #{p.id} · {p.waste_type.toUpperCase()} · {p.status} ({p.scheduled_date})
-                      </option>
-                    ))}
+                    {pickups.map((p) => {
+                      const icon =
+                        p.waste_type === 'wet'
+                          ? '🌿'
+                          : p.waste_type === 'dry'
+                          ? '📦'
+                          : p.waste_type === 'bulky'
+                          ? '🛋️'
+                          : '⚡';
+                      const label = p.waste_type.charAt(0).toUpperCase() + p.waste_type.slice(1);
+                      return (
+                        <option key={p.id} value={p.id}>
+                          {icon} {label} Waste ({p.scheduled_date}) · {p.status.toUpperCase()} · [{formatPickupCode(p.id)}]
+                        </option>
+                      );
+                    })}
                   </select>
                 </div>
               ) : null}
@@ -1102,7 +1164,7 @@ export function UserDashboard() {
                 <div className="rounded-2xl bg-slate-50 p-4 border border-slate-200/80 space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-slate-700">
-                      Request #{trackedPickup.id} · {trackedPickup.waste_type.toUpperCase()}
+                      Pickup [{formatPickupCode(trackedPickup.id)}] · {trackedPickup.waste_type.toUpperCase()} WASTE
                     </span>
                     <span
                       className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${currentBadge.color}`}
@@ -1161,7 +1223,7 @@ export function UserDashboard() {
                   {/* Driver / ETA message */}
                   <p className="text-[11px] text-slate-500 pt-1">
                     {trackedPickup.driver_id
-                      ? `Collector ID #${trackedPickup.driver_id} assigned · Live GPS active.`
+                      ? `Municipal Driver ID #${trackedPickup.driver_id} assigned · Live GPS active.`
                       : 'Municipal collection vehicle will be assigned before your time slot.'}
                   </p>
                 </div>
@@ -1219,6 +1281,9 @@ export function UserDashboard() {
                     >
                       <div>
                         <div className="flex items-center gap-2">
+                          <span className="text-[11px] font-mono font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-lg border border-slate-200">
+                            {formatPickupCode(p.id)}
+                          </span>
                           <span className="text-sm font-bold text-slate-900 capitalize">
                             {p.waste_type} Waste Pickup
                           </span>
@@ -1312,8 +1377,11 @@ export function UserDashboard() {
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                       <div>
                         <div className="flex items-center gap-2">
+                          <span className="text-xs font-mono font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-lg border border-slate-200">
+                            {formatPickupCode(p.id)}
+                          </span>
                           <span className="text-base font-black text-slate-900 capitalize">
-                            #{p.id} · {p.waste_type} Waste
+                            {p.waste_type} Waste Pickup
                           </span>
                           <span
                             className={`px-3 py-0.5 rounded-full text-xs font-bold border ${badge.color}`}
@@ -1464,6 +1532,13 @@ export function UserDashboard() {
             </form>
           </article>
         </div>
+      )}
+
+      {/* ─────────────────────────────────────────────────────────────── */}
+      {/* TAB 6: CIVIC PROFILE & MUNICIPAL ID                           */}
+      {/* ─────────────────────────────────────────────────────────────── */}
+      {activeTab === 'profile' && (
+        <CitizenProfilePanel currentUser={user} />
       )}
     </section>
   );
