@@ -15,22 +15,23 @@ def seed():
     try:
         now = datetime.now(timezone.utc)
 
-        # 1. Zones
+        # 1. Bhopal Municipal Corporation Zones
         zones_data = [
-            ("Indiranagar Ward", "BLR-W01"),
-            ("Koramangala Ward", "BLR-W02"),
-            ("Whitefield Ward", "BLR-W03"),
+            ("Ward 48 - Arera Colony", "BHP-W48", "Bhopal"),
+            ("Ward 25 - Kolar Road", "BHP-W25", "Bhopal"),
+            ("Ward 36 - MP Nagar", "BHP-W36", "Bhopal"),
+            ("Indiranagar Ward", "BLR-W01", "Bengaluru"),
         ]
         zones = {}
-        for name, code in zones_data:
+        for name, code, city in zones_data:
             z = session.query(Zone).filter_by(code=code).first()
             if not z:
-                z = Zone(name=name, code=code, city="Bengaluru", created_at=now)
+                z = Zone(name=name, code=code, city=city, created_at=now)
                 session.add(z)
                 session.flush()
             zones[code] = z
 
-        zone = zones["BLR-W01"]
+        zone = zones["BHP-W48"]
 
         # 2. Admin
         admin = session.query(User).filter_by(phone="+910000000001").first()
@@ -41,7 +42,7 @@ def seed():
                 email="admin@ecosync.org",
                 password_hash=hash_password("password123"),
                 role=UserRole.ADMIN,
-                address="Municipal Headquarters, Indiranagar",
+                address="BMC Headquarters, Harshvardhan Complex, Bhopal",
                 verified=True,
                 zone_id=zone.id,
                 created_at=now,
@@ -58,7 +59,7 @@ def seed():
                 email="aarav@citizen.org",
                 password_hash=hash_password("password123"),
                 role=UserRole.CITIZEN,
-                address="12, 100ft Road, Indiranagar",
+                address="E-4/204, Arera Colony, Bhopal",
                 verified=True,
                 zone_id=zone.id,
                 created_at=now,
@@ -75,7 +76,7 @@ def seed():
                 email="rajesh.driver@ecosync.org",
                 password_hash=hash_password("password123"),
                 role=UserRole.DRIVER,
-                address="Depot 4, Indiranagar Ward",
+                address="Depot 2, Kolar Road, Bhopal",
                 verified=True,
                 zone_id=zone.id,
                 created_at=now,
@@ -88,7 +89,7 @@ def seed():
             from app.models.enums import DriverAvailability
             driver = Driver(
                 user_id=driver_user.id,
-                vehicle_number="KA-04-EC-2024",
+                vehicle_number="MP-04-EC-2024",
                 availability=DriverAvailability.ON_ROUTE,
                 created_at=now,
                 updated_at=now,
@@ -138,7 +139,7 @@ def seed():
                     email=f"{rc['name'].lower().replace(' ', '.')}@recycler.org",
                     password_hash=hash_password("password123"),
                     role=UserRole.RECYCLER,
-                    address="Industrial Area, Phase 1",
+                    address="Govindpura Industrial Area, Bhopal",
                     verified=True,
                     zone_id=zone.id,
                     created_at=now,

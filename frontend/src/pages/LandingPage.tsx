@@ -5,8 +5,10 @@ import {
   CheckCircle2,
   ChevronRight,
   Coins,
+  Cpu,
   FileCheck,
   Globe2,
+  Layers,
   Leaf,
   MapPinned,
   Recycle,
@@ -21,8 +23,12 @@ import {
 import { Link } from 'react-router-dom';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
+import { useSessionStore } from '../store/session';
+import { dashboardPathForRole } from '../lib/navigation';
 
 export function LandingPage() {
+  const user = useSessionStore((state) => state.user);
+
   // Interactive Simulator State
   const [selectedCategory, setSelectedCategory] = useState<'wet' | 'dry' | 'hazardous' | 'e_waste'>('dry');
   const [weightKg, setWeightKg] = useState<number>(14.5);
@@ -33,7 +39,9 @@ export function LandingPage() {
   const basePoints = isSegregated ? 50 : 0;
   const weightBonus = isSegregated ? Math.min(Math.round(weightKg * 5), 50) : 0;
   const calculatedPoints = Math.round((basePoints + weightBonus) * 1.25);
-  const co2AvoidedKg = (weightKg * (selectedCategory === 'dry' ? 2.4 : selectedCategory === 'wet' ? 1.1 : 3.8)).toFixed(1);
+  const co2AvoidedKg = (weightKg * (selectedCategory === 'dry' ? 2.4 : selectedCategory === 'wet' ? 1.1 : selectedCategory === 'e_waste' ? 5.2 : 3.8)).toFixed(1);
+  const scrapRatePerKg = selectedCategory === 'dry' ? 14.0 : selectedCategory === 'e_waste' ? 88.0 : 0;
+  const estScrapPayout = (weightKg * scrapRatePerKg).toFixed(0);
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] text-[#1F2937] antialiased selection:bg-emerald-500 selection:text-white">
@@ -60,66 +68,106 @@ export function LandingPage() {
               <h1 className="text-4xl font-extrabold tracking-tight text-slate-950 sm:text-5xl lg:text-6xl leading-[1.12]">
                 Cleaner neighborhoods with{' '}
                 <span className="bg-gradient-to-r from-emerald-600 to-green-700 bg-clip-text text-transparent">
-                  intelligent pickup coordination.
+                  intelligent municipal waste coordination.
                 </span>
               </h1>
 
               <p className="max-w-2xl text-base sm:text-lg leading-relaxed text-slate-600">
-                EcoSync bridges households, municipal drivers, and certified recyclers into a unified, transparent operating network. Verified point-of-collection logging, automated route dispatching, and closed-loop civic rewards.
+                Connecting Bhopal households, municipal collection fleets, and CPCB-certified recycling facilities into a unified, transparent operating network. Featuring real-time GPS route sequencing, doorstep digital weighment logging, and Swachh Bharat circular rewards.
               </p>
 
               {/* Primary Call-to-Actions */}
-              <div className="flex flex-wrap items-center gap-4 pt-2">
-                <Link
-                  to="/login"
-                  className="inline-flex items-center gap-2.5 rounded-xl bg-emerald-600 px-6 py-3.5 font-bold text-white shadow-md shadow-emerald-600/20 transition hover:bg-emerald-700 hover:-translate-y-0.5"
-                >
-                  <span>Schedule First Pickup</span>
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
+              <div className="space-y-4 pt-1">
+                <div className="flex flex-wrap items-center gap-4">
+                  {user ? (
+                    <Link
+                      to={dashboardPathForRole(user.role)}
+                      className="inline-flex items-center gap-2.5 rounded-xl bg-emerald-600 px-6 py-3.5 font-bold text-white shadow-md shadow-emerald-600/20 transition hover:bg-emerald-700 hover:-translate-y-0.5"
+                    >
+                      <span>Open {user.role === 'citizen' ? 'Citizen Console' : `${user.role} Dashboard`}</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  ) : (
+                    <Link
+                      to="/login"
+                      className="inline-flex items-center gap-2.5 rounded-xl bg-emerald-600 px-6 py-3.5 font-bold text-white shadow-md shadow-emerald-600/20 transition hover:bg-emerald-700 hover:-translate-y-0.5"
+                    >
+                      <span>Schedule Doorstep Pickup</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  )}
 
-                <Link
-                  to="/rates"
-                  className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-3.5 font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 hover:text-slate-950"
-                >
-                  <Coins className="h-4 w-4 text-emerald-600" />
-                  <span>Live Scrap Price Board</span>
-                </Link>
+                  <Link
+                    to="/price-board"
+                    className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-3.5 font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 hover:text-slate-950"
+                  >
+                    <Coins className="h-4 w-4 text-emerald-600" />
+                    <span>Live Scrap Price Board</span>
+                  </Link>
+                </div>
+
+                {/* Trust Badges */}
+                <div className="flex flex-wrap items-center gap-y-2 gap-x-6 pt-1 text-xs font-semibold text-slate-500">
+                  <span className="flex items-center gap-1.5 text-slate-700">
+                    <ShieldCheck className="h-4 w-4 text-emerald-600" />
+                    CPCB Legal Metrology Calibrated
+                  </span>
+                  <span className="flex items-center gap-1.5 text-slate-700">
+                    <MapPinned className="h-4 w-4 text-emerald-600" />
+                    Sub-Second GPS Fleet Telemetry
+                  </span>
+                  <span className="flex items-center gap-1.5 text-slate-700">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                    Fast2SMS Driver Dispatch
+                  </span>
+                </div>
               </div>
 
               {/* Quick Role Portal Selectors */}
               <div className="border-t border-slate-200 pt-6">
                 <p className="text-xs font-bold uppercase tracking-wider text-slate-600 mb-3">
-                  Select your dedicated operational portal:
+                  Dedicated Municipal Operational Portals:
                 </p>
-                <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                   <Link
-                    to="/login/citizen"
-                    className="flex flex-col rounded-xl border border-slate-200 bg-white p-3 text-left transition hover:border-emerald-500 hover:shadow-md"
+                    to="/dashboard/user"
+                    className="flex flex-col rounded-2xl border border-slate-200 bg-white p-3.5 text-left transition hover:border-emerald-500 hover:shadow-md group"
                   >
-                    <span className="text-xs font-bold text-slate-900">Citizen</span>
-                    <span className="text-[11px] text-slate-600">Pickups & Rewards</span>
+                    <span className="text-xs font-black text-slate-900 group-hover:text-emerald-700 transition flex items-center justify-between">
+                      Citizen Hub
+                      <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                    </span>
+                    <span className="text-[11px] text-slate-500 mt-1">Pickups & Green Rewards</span>
                   </Link>
                   <Link
-                    to="/login/driver"
-                    className="flex flex-col rounded-xl border border-slate-200 bg-white p-3 text-left transition hover:border-emerald-500 hover:shadow-md"
+                    to="/dashboard/driver"
+                    className="flex flex-col rounded-2xl border border-slate-200 bg-white p-3.5 text-left transition hover:border-emerald-500 hover:shadow-md group"
                   >
-                    <span className="text-xs font-bold text-slate-900">Driver</span>
-                    <span className="text-[11px] text-slate-600">Routes & Offline PWA</span>
+                    <span className="text-xs font-black text-slate-900 group-hover:text-emerald-700 transition flex items-center justify-between">
+                      Driver PWA
+                      <span className="h-2 w-2 rounded-full bg-cyan-500" />
+                    </span>
+                    <span className="text-[11px] text-slate-500 mt-1">Routes & Offline Logging</span>
                   </Link>
                   <Link
-                    to="/login/admin"
-                    className="flex flex-col rounded-xl border border-slate-200 bg-white p-3 text-left transition hover:border-emerald-500 hover:shadow-md"
+                    to="/dashboard/admin"
+                    className="flex flex-col rounded-2xl border border-slate-200 bg-white p-3.5 text-left transition hover:border-emerald-500 hover:shadow-md group"
                   >
-                    <span className="text-xs font-bold text-slate-900">Municipal</span>
-                    <span className="text-[11px] text-slate-600">Fleet & Analytics</span>
+                    <span className="text-xs font-black text-slate-900 group-hover:text-emerald-700 transition flex items-center justify-between">
+                      Command Desk
+                      <span className="h-2 w-2 rounded-full bg-purple-500" />
+                    </span>
+                    <span className="text-[11px] text-slate-500 mt-1">Fleet Telemetry & Dispatch</span>
                   </Link>
                   <Link
-                    to="/rates"
-                    className="flex flex-col rounded-xl border border-slate-200 bg-white p-3 text-left transition hover:border-emerald-500 hover:shadow-md"
+                    to="/dashboard/recycler"
+                    className="flex flex-col rounded-2xl border border-slate-200 bg-white p-3.5 text-left transition hover:border-emerald-500 hover:shadow-md group"
                   >
-                    <span className="text-xs font-bold text-slate-900">Recycler</span>
-                    <span className="text-[11px] text-slate-600">Scrap & EPR Ledger</span>
+                    <span className="text-xs font-black text-slate-900 group-hover:text-emerald-700 transition flex items-center justify-between">
+                      Recycler MRF
+                      <span className="h-2 w-2 rounded-full bg-amber-500" />
+                    </span>
+                    <span className="text-[11px] text-slate-500 mt-1">Rate Cards & EPR Receipts</span>
                   </Link>
                 </div>
               </div>
@@ -132,12 +180,12 @@ export function LandingPage() {
                   <div className="flex items-center gap-2.5">
                     <span className="flex h-3 w-3 rounded-full bg-emerald-500 ring-4 ring-emerald-100 animate-pulse" />
                     <div>
-                      <h3 className="text-sm font-bold text-slate-900">Verified Collection Simulator</h3>
-                      <p className="text-[11px] text-slate-600">Real-time point-of-pickup verification</p>
+                      <h3 className="text-sm font-bold text-slate-900">Doorstep Collection Simulator</h3>
+                      <p className="text-[11px] text-slate-600">Simulate weight, rewards & circular impact</p>
                     </div>
                   </div>
-                  <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-600">
-                    Ward BLR-W01
+                  <span className="rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-bold text-emerald-800 border border-emerald-200">
+                    {user?.ward_number ? `${user.ward_number} · Bhopal` : 'Ward 48 · Arera Colony Node'}
                   </span>
                 </div>
 
@@ -149,10 +197,10 @@ export function LandingPage() {
                     </label>
                     <div className="grid grid-cols-2 gap-2">
                       {[
-                        { id: 'wet', label: 'Wet Organic', color: 'border-lime-500 bg-lime-50/50 text-lime-900' },
-                        { id: 'dry', label: 'Dry Recyclable', color: 'border-blue-500 bg-blue-50/50 text-blue-900' },
-                        { id: 'hazardous', label: 'Hazardous', color: 'border-rose-500 bg-rose-50/50 text-rose-900' },
-                        { id: 'e_waste', label: 'E-Waste', color: 'border-purple-500 bg-purple-50/50 text-purple-900' },
+                        { id: 'wet', label: 'Wet Organic', color: 'border-lime-500 bg-lime-50/60 text-lime-900' },
+                        { id: 'dry', label: 'Dry Recyclables', color: 'border-blue-500 bg-blue-50/60 text-blue-900' },
+                        { id: 'hazardous', label: 'Domestic Hazardous', color: 'border-rose-500 bg-rose-50/60 text-rose-900' },
+                        { id: 'e_waste', label: 'E-Waste', color: 'border-purple-500 bg-purple-50/60 text-purple-900' },
                       ].map((item) => (
                         <button
                           key={item.id}
@@ -188,13 +236,32 @@ export function LandingPage() {
                       onChange={(e) => setWeightKg(parseFloat(e.target.value))}
                       className="w-full accent-emerald-500 h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer"
                     />
+                    <div className="mt-2 flex gap-1.5">
+                      {[5, 10, 15, 25, 40].map((preset) => (
+                        <button
+                          key={preset}
+                          type="button"
+                          onClick={() => setWeightKg(preset)}
+                          className={`px-2 py-0.5 rounded-lg text-[10px] font-bold border transition ${
+                            weightKg === preset
+                              ? 'bg-slate-900 text-white border-slate-900'
+                              : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+                          }`}
+                        >
+                          {preset} kg
+                        </button>
+                      ))}
+                    </div>
                   </div>
 
                   {/* Verified Segregation Switch */}
                   <div className="flex items-center justify-between rounded-xl bg-slate-50 p-3 border border-slate-200">
                     <div className="flex items-center gap-2">
                       <ShieldCheck className={`h-5 w-5 ${isSegregated ? 'text-emerald-600' : 'text-slate-400'}`} />
-                      <span className="text-xs font-bold text-slate-800">Segregation Verified</span>
+                      <div>
+                        <span className="text-xs font-bold text-slate-800 block">Clean Source Segregation</span>
+                        <span className="text-[10px] text-slate-500">Unlocks 1.25x streak bonus multiplier</span>
+                      </div>
                     </div>
                     <button
                       type="button"
@@ -210,29 +277,36 @@ export function LandingPage() {
                   </div>
 
                   {/* Calculation Result Card */}
-                  <div className="rounded-2xl border border-emerald-200 bg-emerald-50/80 p-4">
+                  <div className="rounded-2xl border border-emerald-200 bg-emerald-50/90 p-4 space-y-3">
                     <div className="flex items-center justify-between">
                       <div>
-                        <span className="text-xs font-semibold text-emerald-800">Calculated Citizen Reward</span>
+                        <span className="text-xs font-bold text-emerald-800">Calculated Citizen Reward</span>
                         <div className="flex items-baseline gap-1 mt-0.5">
                           <span className="text-3xl font-black text-emerald-950 tabular-nums">+{calculatedPoints}</span>
                           <span className="text-xs font-bold text-emerald-700">Points</span>
                         </div>
                       </div>
                       <div className="text-right">
-                        <span className="text-[11px] font-semibold text-emerald-800">Carbon Offset</span>
+                        <span className="text-[11px] font-bold text-emerald-800">Carbon Offset</span>
                         <p className="text-lg font-black text-emerald-900 tabular-nums mt-0.5">
                           ~{co2AvoidedKg} kg <span className="text-xs font-normal">CO₂e</span>
                         </p>
                       </div>
                     </div>
+
+                    {scrapRatePerKg > 0 && (
+                      <div className="pt-2.5 border-t border-emerald-200/80 flex items-center justify-between text-xs">
+                        <span className="font-semibold text-emerald-800">Est. Cash Payout at Live Benchmark:</span>
+                        <span className="font-mono font-black text-emerald-950 text-sm">₹{estScrapPayout}</span>
+                      </div>
+                    )}
                   </div>
 
                   <Link
-                    to="/login"
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 py-3 text-xs font-bold text-white transition hover:bg-slate-800"
+                    to={user ? "/dashboard/user?tab=console" : "/login"}
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 py-3 text-xs font-bold text-white transition hover:bg-slate-800 shadow-md"
                   >
-                    <span>Register Household for Live Collection</span>
+                    <span>{user ? `Schedule Collection as ${user.name}` : 'Register Household for Live Collection'}</span>
                     <ChevronRight className="h-4 w-4" />
                   </Link>
                 </div>
@@ -250,31 +324,31 @@ export function LandingPage() {
               <p className="text-xs font-bold uppercase tracking-wider text-emerald-700">Verified Municipal Telemetry</p>
               <h2 className="text-2xl sm:text-3xl font-black text-slate-950 mt-1">Live Civic Performance Metrics</h2>
             </div>
-            <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
+            <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
               <span className="inline-block h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Synced with PostgreSQL database</span>
+              <span>Live Feed · Bhopal Integrated Command & Control Center (ICCC)</span>
             </div>
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <div className="rounded-2xl border border-slate-200 bg-[#F9FAFB] p-6 shadow-sm">
               <div className="flex items-center justify-between text-slate-500">
-                <span className="text-xs font-bold uppercase tracking-wider">Waste Processed</span>
+                <span className="text-xs font-bold uppercase tracking-wider">Waste Recovered & Diverted</span>
                 <Scale className="h-5 w-5 text-emerald-600" />
               </div>
               <p className="mt-4 text-3xl font-black text-slate-900 tracking-tight">128,450 kg</p>
               <p className="mt-1 text-xs text-emerald-600 font-semibold flex items-center gap-1">
-                <TrendingUp className="h-3.5 w-3.5" /> +18.4% segregation compliance
+                <TrendingUp className="h-3.5 w-3.5" /> +18.4% month-over-month
               </p>
             </div>
 
             <div className="rounded-2xl border border-slate-200 bg-[#F9FAFB] p-6 shadow-sm">
               <div className="flex items-center justify-between text-slate-500">
-                <span className="text-xs font-bold uppercase tracking-wider">City Compliance Rate</span>
+                <span className="text-xs font-bold uppercase tracking-wider">City Segregation Index</span>
                 <CheckCircle2 className="h-5 w-5 text-emerald-600" />
               </div>
               <p className="mt-4 text-3xl font-black text-slate-900 tracking-tight">89.4%</p>
-              <p className="mt-1 text-xs text-slate-500">90-day rolling ward average</p>
+              <p className="mt-1 text-xs text-slate-500">90-day rolling ward benchmark</p>
             </div>
 
             <div className="rounded-2xl border border-slate-200 bg-[#F9FAFB] p-6 shadow-sm">
@@ -292,7 +366,7 @@ export function LandingPage() {
                 <Users className="h-5 w-5 text-emerald-600" />
               </div>
               <p className="mt-4 text-3xl font-black text-slate-900 tracking-tight">14,200+</p>
-              <p className="mt-1 text-xs text-slate-500">Across 12 registered municipal wards</p>
+              <p className="mt-1 text-xs text-slate-500">Across 85 registered municipal wards</p>
             </div>
           </div>
         </div>
@@ -309,7 +383,7 @@ export function LandingPage() {
               Built for households, field drivers, and municipal commissioners.
             </h2>
             <p className="mt-4 text-slate-600 text-base">
-              A single unified architecture replacing fragmented paper registers with real-time digital accountability.
+              A single unified architecture replacing fragmented paper registers with real-time digital accountability and CPCB compliance.
             </p>
           </div>
 
@@ -319,9 +393,9 @@ export function LandingPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 mb-5">
                 <Scale className="h-6 w-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-950">Verified Point-of-Pickup Logging</h3>
+              <h3 className="text-lg font-bold text-slate-950">Verified Doorstep Weighment Logging</h3>
               <p className="mt-2 text-sm text-slate-600 leading-relaxed">
-                Drivers verify segregation at the doorstep, recording precise kilogram weights across wet, dry, hazardous, and e-waste with optional photo proof.
+                Collection drivers weigh segregated streams at the doorstep, logging kilogram weights with optional photo verification and instant digital receipting.
               </p>
             </div>
 
@@ -330,9 +404,9 @@ export function LandingPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 mb-5">
                 <Coins className="h-6 w-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-950">Closed-Loop Points & Tier Progression</h3>
+              <h3 className="text-lg font-bold text-slate-950">Closed-Loop Points & Civic Rebates</h3>
               <p className="mt-2 text-sm text-slate-600 leading-relaxed">
-                Deterministic rewards engine with 1.25x streak multipliers for consecutive clean weeks. Redeemable for municipal utility credits and local partner perks.
+                CPCB-aligned gamification engine awarding verified points for source segregation, driving civic participation and eligibility for municipal property tax rebates.
               </p>
             </div>
 
@@ -341,9 +415,9 @@ export function LandingPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 mb-5">
                 <Truck className="h-6 w-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-950">Fleet Dispatch & Route Optimization</h3>
+              <h3 className="text-lg font-bold text-slate-950">VRP Fleet Dispatch & Nearest-Neighbor Routing</h3>
               <p className="mt-2 text-sm text-slate-600 leading-relaxed">
-                Nearest-neighbor route planning algorithm reduces transit fuel burn. Monitors EV and CNG fleet health with automated service maintenance triggers.
+                Automated route sequencing algorithms reduce collection transit fuel burn, balancing vehicle load capacities and broadcasting sub-second live GPS telematics.
               </p>
             </div>
 
@@ -352,9 +426,9 @@ export function LandingPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 mb-5">
                 <FileCheck className="h-6 w-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-950">Recycler Marketplace & EPR Credits</h3>
+              <h3 className="text-lg font-bold text-slate-950">Recycler Marketplace & Audited EPR Tax Receipts</h3>
               <p className="mt-2 text-sm text-slate-600 leading-relaxed">
-                Direct citizen-to-recycler trading at live benchmark prices. Verified recycling receipts generate audited EPR credits for compliant corporate producers.
+                Direct citizen-to-recycler trading at live benchmark rates. Certified material recovery facilities issue official digital EPR weighment certificates for ESG audits.
               </p>
             </div>
 
@@ -363,9 +437,9 @@ export function LandingPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 mb-5">
                 <Users className="h-6 w-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-950">Housing Societies & Civic Upvoting</h3>
+              <h3 className="text-lg font-bold text-slate-950">Society RWAs & Civic Grievance Upvoting</h3>
               <p className="mt-2 text-sm text-slate-600 leading-relaxed">
-                Privacy-guaranteed society dashboards with k-anonymity (k≥3). Neighborhood complaint upvoting eliminates duplicate filings and accelerates resolution.
+                Dedicated residential association dashboards with aggregated compliance leaderboards. Neighborhood complaint upvoting prioritizes urgent municipal cleanups.
               </p>
             </div>
 
@@ -374,9 +448,9 @@ export function LandingPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 mb-5">
                 <Shield className="h-6 w-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-950">Offline Resilience & PWA Sync</h3>
+              <h3 className="text-lg font-bold text-slate-950">Rugged Handheld Sync & Offline PWA</h3>
               <p className="mt-2 text-sm text-slate-600 leading-relaxed">
-                Zero-drop IndexedDB offline queue on driver handhelds with automated background sync and SHA-256 cryptographic idempotency protection.
+                Zero-drop offline IndexedDB queuing ensures drivers operating in narrow alleyways can log collections without network drops, automatically syncing upon reconnection.
               </p>
             </div>
           </div>
@@ -391,10 +465,10 @@ export function LandingPage() {
               End-to-End Circular Loop
             </span>
             <h2 className="mt-4 text-3xl sm:text-4xl font-black tracking-tight text-white">
-              How EcoSync Closes the Waste Loop
+              How EcoSync Closes the Municipal Waste Loop
             </h2>
             <p className="mt-3 text-slate-400 text-sm sm:text-base">
-              From doorstep source-segregation to verifiable industrial recovery.
+              From doorstep source-segregation to verifiable industrial recovery under Swachh Bharat guidelines.
             </p>
           </div>
 
@@ -403,22 +477,22 @@ export function LandingPage() {
               {
                 step: '01',
                 title: 'Source Segregation',
-                desc: 'Households sort wet organics, clean dry recyclables, and hazardous waste into separate streams.',
+                desc: 'Households sort wet organics, clean dry recyclables, domestic hazardous, and e-waste into color-coded streams.',
               },
               {
                 step: '02',
-                title: 'Verified Point-of-Collection',
-                desc: 'Drivers weigh streams, record categories, and award immediate ledger points via mobile PWA.',
+                title: 'Point-of-Collection Verification',
+                desc: 'Municipal drivers weigh streams, inspect contamination, and log weighments via rugged dashboard handhelds.',
               },
               {
                 step: '03',
-                title: 'Municipal Processing',
-                desc: 'Organics route into monitored municipal compost batches; recyclables move to approved hubs.',
+                title: 'Municipal Recovery Hubs',
+                desc: 'Organics route into aerobic composting batches; dry fractions divert to certified Material Recovery Facilities (MRFs).',
               },
               {
                 step: '04',
-                title: 'EPR Credit Generation',
-                desc: 'Certified recyclers issue digital receipts, minting transparent EPR credits for brand producers.',
+                title: 'CPCB EPR Credit Minting',
+                desc: 'Licensed recyclers issue digital weighment receipts, minting transparent EPR audit credits for brand producers.',
               },
             ].map((item) => (
               <div key={item.step} className="rounded-2xl border border-slate-800 bg-slate-800/60 p-6 relative overflow-hidden">
@@ -444,7 +518,7 @@ export function LandingPage() {
               <span className="text-xs font-bold uppercase tracking-wider text-emerald-700">Marketplace Transparency</span>
               <h2 className="text-2xl sm:text-3xl font-black text-slate-950 mt-1">Live Benchmark Scrap Price Board</h2>
               <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                Verified posted rates from certified recyclers across major recyclable fractions.
+                Verified posted rates from certified recyclers across major recyclable fractions in Bhopal.
               </p>
             </div>
             <Link
@@ -458,16 +532,18 @@ export function LandingPage() {
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {[
-              { name: 'PET Plastic Bottles', rate: '₹18 - ₹24 / kg', trend: '+₹2.0 this week', tone: 'emerald' },
-              { name: 'Corrugated Cardboard', rate: '₹12 - ₹15 / kg', trend: 'Stable', tone: 'slate' },
-              { name: 'Aluminium Beverage Cans', rate: '₹95 - ₹115 / kg', trend: '+₹5.0 this week', tone: 'emerald' },
-              { name: 'Electronic Waste (E-Waste)', rate: '₹45 - ₹180 / kg', trend: 'High demand', tone: 'emerald' },
-              { name: 'Clear Glass Cullet', rate: '₹4 - ₹6 / kg', trend: 'Stable', tone: 'slate' },
+              { name: 'PET Plastic Bottles', rate: '₹18.50 / kg', trend: '+₹1.50 this week', tone: 'emerald' },
+              { name: 'Corrugated Cardboard', rate: '₹14.00 / kg', trend: 'Stable', tone: 'slate' },
+              { name: 'Aluminium Scrap & Cans', rate: '₹120.00 / kg', trend: '+₹4.00 this week', tone: 'emerald' },
+              { name: 'Consumer E-Waste', rate: '₹90.00 / kg', trend: '+₹5.00 this week', tone: 'emerald' },
+              { name: 'Flint Beverage Glass', rate: '₹4.50 / kg', trend: 'Stable', tone: 'slate' },
             ].map((p) => (
-              <div key={p.name} className="rounded-2xl border border-slate-200 bg-[#F9FAFB] p-4 text-center">
+              <div key={p.name} className="rounded-2xl border border-slate-200 bg-[#F9FAFB] p-5 text-center shadow-sm">
                 <p className="text-xs font-bold text-slate-700 truncate">{p.name}</p>
-                <p className="text-lg font-black text-slate-950 mt-2">{p.rate}</p>
-                <p className="text-[11px] font-semibold text-emerald-700 mt-1">{p.trend}</p>
+                <p className="text-xl font-black text-slate-950 mt-2">{p.rate}</p>
+                <p className="text-[11px] font-bold text-emerald-700 mt-1 flex items-center justify-center gap-1">
+                  <TrendingUp className="h-3 w-3" /> {p.trend}
+                </p>
               </div>
             ))}
           </div>

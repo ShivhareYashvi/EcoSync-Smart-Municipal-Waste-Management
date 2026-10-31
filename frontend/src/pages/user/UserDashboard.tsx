@@ -881,9 +881,7 @@ export function UserDashboard() {
         </button>
       </div>
 
-      {/* ─────────────────────────────────────────────────────────────── */}
       {/* TAB 1: OPERATIONS CONSOLE (Schedule Pickup & Live Tracking)    */}
-      {/* ─────────────────────────────────────────────────────────────── */}
       {activeTab === 'console' && (
         <div className="space-y-6">
           <div className="grid gap-6 lg:grid-cols-12 items-start">
@@ -1343,9 +1341,7 @@ export function UserDashboard() {
         </div>
       )}
 
-      {/* ─────────────────────────────────────────────────────────────── */}
       {/* TAB 2: MY PICKUPS & DISPUTES                                   */}
-      {/* ─────────────────────────────────────────────────────────────── */}
       {activeTab === 'history' && (
         <article className="glass-card rounded-[2.5rem] p-6 sm:p-8 shadow-sm space-y-6">
           <div className="flex items-center justify-between pb-4 border-b border-slate-100">
@@ -1436,9 +1432,7 @@ export function UserDashboard() {
         </article>
       )}
 
-      {/* ─────────────────────────────────────────────────────────────── */}
       {/* TAB 3: SELL SCRAP & RECYCLER MARKETPLACE                       */}
-      {/* ─────────────────────────────────────────────────────────────── */}
       {activeTab === 'marketplace' && (
         <div className="space-y-6">
           <div className="rounded-3xl bg-gradient-to-r from-emerald-600 to-teal-700 p-6 sm:p-8 text-white shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -1464,9 +1458,7 @@ export function UserDashboard() {
         </div>
       )}
 
-      {/* ─────────────────────────────────────────────────────────────── */}
       {/* TAB 4: REWARDS & COMPLIANCE                                    */}
-      {/* ─────────────────────────────────────────────────────────────── */}
       {activeTab === 'rewards' && (
         <div className="space-y-6">
           <div className="grid gap-6 lg:grid-cols-2">
@@ -1477,9 +1469,7 @@ export function UserDashboard() {
         </div>
       )}
 
-      {/* ─────────────────────────────────────────────────────────────── */}
       {/* TAB 5: COMMUNITY & GRIEVANCES                                  */}
-      {/* ─────────────────────────────────────────────────────────────── */}
       {activeTab === 'community' && (
         <div className="space-y-6">
           <CommunityHubPanel currentUser={user} />
@@ -1551,9 +1541,7 @@ export function UserDashboard() {
         </div>
       )}
 
-      {/* ─────────────────────────────────────────────────────────────── */}
       {/* TAB 6: CIVIC PROFILE & MUNICIPAL ID                           */}
-      {/* ─────────────────────────────────────────────────────────────── */}
       {activeTab === 'profile' && (
         <CitizenProfilePanel currentUser={user} />
       )}

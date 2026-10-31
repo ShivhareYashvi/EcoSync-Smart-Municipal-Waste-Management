@@ -7,14 +7,15 @@ on financial/points and audit ledgers.
 
 from datetime import datetime, timezone
 import os
+from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI
-from sqlalchemy import or_, select
+from sqlalchemy import func, or_, select
 from starlette.requests import Request
 from starlette.responses import RedirectResponse, Response
 from sqladmin import Admin, ModelView
-from sqladmin.authentication import AuthenticationBackend
+from sqladmin.authentication import AuthenticationBackend, login_required
 
 from app.core.config import get_settings
 from app.core.security import verify_password
@@ -741,19 +742,61 @@ class RecyclingTransactionAdmin(ModelView, model=RecyclingTransaction):
     can_delete = False
 
 
+class EcoSyncAdmin(Admin):
+    """Custom EcoSync Admin instance providing municipal operations dashboard metrics."""
+
+    @login_required
+    async def index(self, request: Request) -> Response:
+        """Render live municipal command center overview metrics."""
+        with SessionLocal() as db:
+            user_count = db.query(User).count()
+            pending_pickups = db.query(PickupRequest).filter(
+                PickupRequest.status.in_(["pending", "assigned", "in_progress"])
+            ).count()
+            open_complaints = db.query(Complaint).filter(
+                Complaint.status.in_(["submitted", "in_progress"])
+            ).count()
+            driver_count = db.query(Driver).count()
+            vehicle_count = db.query(Vehicle).count()
+            zone_count = db.query(Zone).count()
+            total_recycled_kg = db.query(
+                func.coalesce(func.sum(RecyclingReceipt.weight_kg), 0)
+            ).scalar() or 0.0
+
+            stats = {
+                "user_count": user_count,
+                "pending_pickups": pending_pickups,
+                "open_complaints": open_complaints,
+                "driver_count": driver_count,
+                "vehicle_count": vehicle_count,
+                "zone_count": zone_count,
+                "total_recycled_kg": round(float(total_recycled_kg), 1),
+            }
+
+        context = {
+            "request": request,
+            "stats": stats,
+            "title": "Municipal Command Center",
+            "subtitle": "Bhopal Smart City Operations Network",
+        }
+        return await self.templates.TemplateResponse(request, "sqladmin/index.html", context)
+
+
 # Admin Initialization Factory
 
 def init_admin(app: FastAPI) -> Admin:
     """Initialize SQLAdmin with custom authentication backend and all ModelViews."""
     secret_key = get_admin_session_secret()
     auth_backend = AdminAuth(secret_key=secret_key)
+    templates_dir = str(Path(__file__).parent / "templates")
 
-    admin = Admin(
+    admin = EcoSyncAdmin(
         app=app,
         engine=engine,
         authentication_backend=auth_backend,
         title="EcoSync Administration",
         base_url="/admin",
+        templates_dir=templates_dir,
     )
 
     # Register ModelViews

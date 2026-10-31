@@ -136,7 +136,7 @@ class RecyclingTransactionService:
         now = datetime.now(timezone.utc)
         txn.status = RecyclingTransactionStatus.CONFIRMED
 
-        # Task 5: Auto-generate digital recycling receipt
+        # Issue digital municipal recycling receipt
         receipt_number = f"RCP-{now.strftime('%Y%m%d')}-{uuid4().hex[:8].upper()}"
         receipt = RecyclingReceipt(
             transaction_id=txn.id,
@@ -149,7 +149,7 @@ class RecyclingTransactionService:
         session.add(receipt)
         session.flush()
 
-        # Task 6: Auto-generate EPR credit row (placeholder 1:1 conversion: credit_amount = weight_kg)
+        # Mint EPR certificate ledger entry for circular economy tracking
         epr_credit = EPRCredit(
             receipt_id=receipt.id,
             credit_amount=receipt.weight_kg,

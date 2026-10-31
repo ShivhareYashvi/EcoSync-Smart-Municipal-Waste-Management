@@ -10,7 +10,7 @@ interface ComplaintHeatmapMapProps {
   selectedZoneId?: number | null;
 }
 
-const DEFAULT_CENTER: [number, number] = [12.9716, 77.5946]; // Bengaluru
+const DEFAULT_CENTER: [number, number] = [23.2599, 77.4126]; // Bhopal Municipal Center
 const DEFAULT_ZOOM = 12;
 
 export const ComplaintHeatmapMap: React.FC<ComplaintHeatmapMapProps> = ({ selectedZoneId }) => {

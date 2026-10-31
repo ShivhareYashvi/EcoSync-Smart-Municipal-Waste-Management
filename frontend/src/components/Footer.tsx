@@ -30,9 +30,7 @@ export interface FooterProps {
 export function Footer({ mode = 'public' }: FooterProps) {
   const currentYear = new Date().getFullYear();
 
-  // ─────────────────────────────────────────────────────────────────────────────
   // 1. AUTH MODE: Discreet trust badge
-  // ─────────────────────────────────────────────────────────────────────────────
   if (mode === 'auth') {
     return (
       <footer className="w-full py-4 text-center text-xs text-slate-500">
@@ -47,9 +45,7 @@ export function Footer({ mode = 'public' }: FooterProps) {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────────
   // 2. DASHBOARD MODE: Compact operational status bar
-  // ─────────────────────────────────────────────────────────────────────────────
   if (mode === 'dashboard') {
     return (
       <footer className="mt-12 border-t border-slate-200/80 bg-white/60 py-3 backdrop-blur-sm text-xs text-slate-500">
@@ -94,9 +90,7 @@ export function Footer({ mode = 'public' }: FooterProps) {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────────
   // 3. PUBLIC MODE: Comprehensive Municipal & Circular Economy Footer
-  // ─────────────────────────────────────────────────────────────────────────────
   return (
     <footer className="bg-slate-950 text-slate-400 pt-16 pb-12 border-t border-slate-900">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

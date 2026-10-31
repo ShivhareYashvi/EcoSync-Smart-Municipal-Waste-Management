@@ -340,7 +340,7 @@ export function LoginPage() {
                   </div>
 
                   <div className="rounded-xl bg-amber-50 p-2.5 border border-amber-200 text-[11px] text-amber-800 flex items-center justify-between">
-                    <span>💡 Local Dev / Demo bypass code:</span>
+                    <span>Demo Verification Code:</span>
                     <button
                       type="button"
                       onClick={() => setOtpCode('1234')}

@@ -65,9 +65,7 @@ export function Navbar({ mode = 'public', title, subtitle }: NavbarProps) {
     setMobileMenuOpen(false);
   }
 
-  // ─────────────────────────────────────────────────────────────────────────────
   // 1. AUTH MODE: Minimal distraction-free header
-  // ─────────────────────────────────────────────────────────────────────────────
   if (mode === 'auth') {
     return (
       <header className="sticky top-0 z-50 w-full border-b border-slate-800/60 bg-slate-950/80 backdrop-blur-md">
@@ -106,9 +104,7 @@ export function Navbar({ mode = 'public', title, subtitle }: NavbarProps) {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────────
   // 2. DASHBOARD MODE: Always sticky, operational tabs, profile pill
-  // ─────────────────────────────────────────────────────────────────────────────
   if (mode === 'dashboard') {
     const userRoleLinks = DASHBOARD_LINKS.filter(
       (link) => !link.role || link.role === user?.role
@@ -283,9 +279,7 @@ export function Navbar({ mode = 'public', title, subtitle }: NavbarProps) {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────────
   // 3. PUBLIC MODE: Auto-hides on downward scroll, reveals on upward scroll
-  // ─────────────────────────────────────────────────────────────────────────────
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ${
@@ -305,8 +299,8 @@ export function Navbar({ mode = 'public', title, subtitle }: NavbarProps) {
           <div>
             <div className="flex items-center gap-1.5">
               <span className="text-xl font-black tracking-tight text-slate-950">EcoSync</span>
-              <span className="hidden sm:inline-block rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-700 border border-emerald-200">
-                Municipal SaaS
+              <span className="hidden sm:inline-block rounded-full bg-emerald-50 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-emerald-800 border border-emerald-200">
+                Bhopal Municipal Network
               </span>
             </div>
             <span className="block text-[10px] font-semibold text-slate-400 -mt-0.5">
@@ -316,24 +310,24 @@ export function Navbar({ mode = 'public', title, subtitle }: NavbarProps) {
         </Link>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden items-center gap-7 md:flex text-sm font-semibold text-slate-600">
-          <a
-            href="/#features"
-            className="transition hover:text-emerald-700 hover:underline decoration-emerald-500 decoration-2 underline-offset-8"
+        <nav className="hidden items-center gap-6 md:flex text-xs lg:text-sm font-bold text-slate-600">
+          <Link
+            to="/features"
+            className="transition hover:text-emerald-700"
           >
-            Features
-          </a>
+            Platform Capabilities
+          </Link>
           <a
             href="/#circular-loop"
-            className="transition hover:text-emerald-700 hover:underline decoration-emerald-500 decoration-2 underline-offset-8"
+            className="transition hover:text-emerald-700"
           >
             Circular Loop
           </a>
           <a
             href="/#telemetry"
-            className="transition hover:text-emerald-700 hover:underline decoration-emerald-500 decoration-2 underline-offset-8"
+            className="transition hover:text-emerald-700"
           >
-            Civic Impact
+            Civic Telemetry
           </a>
           <Link
             to="/price-board"
@@ -349,28 +343,56 @@ export function Navbar({ mode = 'public', title, subtitle }: NavbarProps) {
 
         {/* Right Action / Auth Button */}
         <div className="hidden sm:flex items-center gap-3">
+          <a
+            href="tel:155304"
+            className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-600 hover:text-emerald-700 text-xs font-semibold transition"
+            title="Bhopal Municipal Corporation 24/7 Helpline"
+          >
+            <Phone className="h-3.5 w-3.5 text-emerald-600" />
+            <span>BMC Helpline: 155304</span>
+          </a>
+
           {user ? (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 rounded-2xl bg-white p-1 border border-slate-200/90 shadow-sm">
               <Link
                 to={dashboardPathForRole(user.role)}
-                className="inline-flex items-center gap-2 rounded-xl bg-emerald-50 px-3.5 py-2 text-xs font-bold text-emerald-800 border border-emerald-200 hover:bg-emerald-100 transition"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-xl hover:bg-slate-50 transition"
+                title="Open Operational Dashboard"
               >
-                <div className="h-5 w-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px]">
-                  {user.name ? user.name[0].toUpperCase() : 'U'}
+                <div className="h-7 w-7 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-xs font-bold shadow-sm">
+                  {user.name ? user.name.slice(0, 2).toUpperCase() : 'U'}
                 </div>
-                <span>Dashboard ({user.role})</span>
+                <div className="text-left">
+                  <p className="text-xs font-black text-slate-900 leading-none truncate max-w-[120px]">
+                    {user.name || 'User'}
+                  </p>
+                  <span className="text-[10px] font-semibold text-emerald-700 capitalize">
+                    {user.role} Hub
+                  </span>
+                </div>
               </Link>
+
+              {user.role === 'citizen' && (
+                <Link
+                  to="/dashboard/user?tab=profile"
+                  className="px-2.5 py-1.5 text-xs font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-xl transition"
+                  title="Household Civic ID & Property Gate"
+                >
+                  Civic ID
+                </Link>
+              )}
+
               <button
                 type="button"
                 onClick={handleLogout}
-                className="rounded-xl border border-slate-200 p-2 text-slate-500 hover:bg-slate-100 transition"
-                title="Sign out"
+                className="rounded-xl p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition"
+                title="Sign out of EcoSync"
               >
                 <LogOut className="h-4 w-4" />
               </button>
             </div>
           ) : (
-            <>
+            <div className="flex items-center gap-2">
               <Link
                 to="/login"
                 className="rounded-xl px-4 py-2 text-xs font-bold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950"
@@ -381,10 +403,10 @@ export function Navbar({ mode = 'public', title, subtitle }: NavbarProps) {
                 to="/login"
                 className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-700 hover:shadow"
               >
-                <span>Get Started</span>
+                <span>Citizen Sign In</span>
                 <ArrowRight className="h-3.5 w-3.5" />
               </Link>
-            </>
+            </div>
           )}
         </div>
 

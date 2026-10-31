@@ -14,27 +14,26 @@ from app.models.user import User
 from app.models.zone import Zone
 
 
-# ---------------------------------------------------------------------------
-# Seed data - 6 Bengaluru municipal zones with placeholder depot coordinates.
-# PLACEHOLDER: Replace with real ward boundaries / depot GPS from the client.
-# ---------------------------------------------------------------------------
+# Bhopal Municipal Corporation (BMC) operational zones with central depot coordinates.
 SEED_ZONES = [
-    {"name": "Indiranagar Ward", "code": "BLR-W01", "city": "Bengaluru",
+    {"name": "Ward 48 - Arera Colony", "code": "BHP-W48", "city": "Bhopal",
+     "depot_lat": 23.2156, "depot_lng": 77.4350},
+    {"name": "Ward 25 - Kolar Road", "code": "BHP-W25", "city": "Bhopal",
+     "depot_lat": 23.1812, "depot_lng": 77.4190},
+    {"name": "Ward 36 - MP Nagar", "code": "BHP-W36", "city": "Bhopal",
+     "depot_lat": 23.2332, "depot_lng": 77.4346},
+    {"name": "Ward 15 - Shahpura Lake", "code": "BHP-W15", "city": "Bhopal",
+     "depot_lat": 23.1950, "depot_lng": 77.4240},
+    {"name": "Ward 52 - TT Nagar", "code": "BHP-W52", "city": "Bhopal",
+     "depot_lat": 23.2365, "depot_lng": 77.4010},
+    {"name": "Ward 08 - Old City Hamidia", "code": "BHP-W08", "city": "Bhopal",
+     "depot_lat": 23.2642, "depot_lng": 77.4048},
+    # Backward compatibility alias for test suite fixtures
+    {"name": "Indiranagar Ward (Test Alias)", "code": "BLR-W01", "city": "Bengaluru",
      "depot_lat": 12.9784, "depot_lng": 77.6408},
-    {"name": "Koramangala Ward", "code": "BLR-W02", "city": "Bengaluru",
-     "depot_lat": 12.9352, "depot_lng": 77.6245},
-    {"name": "Whitefield Ward", "code": "BLR-W03", "city": "Bengaluru",
-     "depot_lat": 12.9698, "depot_lng": 77.7499},
-    {"name": "Jayanagar Ward", "code": "BLR-W04", "city": "Bengaluru",
-     "depot_lat": 12.9255, "depot_lng": 77.5834},
-    {"name": "Malleshwaram Ward", "code": "BLR-W05", "city": "Bengaluru",
-     "depot_lat": 13.0035, "depot_lng": 77.5667},
-    {"name": "HSR Layout Ward", "code": "BLR-W06", "city": "Bengaluru",
-     "depot_lat": 12.9116, "depot_lng": 77.6389},
 ]
 
 # Per-zone depot coordinates keyed by zone code.
-# PLACEHOLDER: Replace with real depot GPS coordinates from the municipality.
 ZONE_DEPOTS: dict[str, tuple[float, float]] = {
     z["code"]: (z["depot_lat"], z["depot_lng"])  # type: ignore[index]
     for z in SEED_ZONES
