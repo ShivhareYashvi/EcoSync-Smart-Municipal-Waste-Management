@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { EmptyState } from '../../components/EmptyState';
 import { StatCard } from '../../components/StatCard';
 import { TrackingMap } from '../../components/TrackingMap';
+import { LocationPickerMap } from '../../components/LocationPickerMap';
 import { CitizenRecyclingMarketplace } from '../../components/user/CitizenRecyclingMarketplace';
 import { CommunityHubPanel } from '../../components/community/CommunityHubPanel';
 import { api, buildTrackingSocketUrl } from '../../lib/api';
@@ -19,14 +20,14 @@ import { useSessionStore } from '../../store/session';
 
 const activePickupStatuses: PickupStatus[] = ['assigned', 'in_progress'];
 
-const initialSchedule = {
+const getInitialSchedule = (userLat?: number | null, userLng?: number | null) => ({
   waste_type: 'wet' as WasteType,
-  scheduled_date: '',
-  scheduled_time: '',
-  latitude: '',
-  longitude: '',
+  scheduled_date: new Date().toISOString().slice(0, 10),
+  scheduled_time: '09:00',
+  latitude: userLat ? String(userLat) : '',
+  longitude: userLng ? String(userLng) : '',
   notes: ''
-};
+});
 
 //  Tier colour helper ─
 
@@ -298,7 +299,17 @@ function RedeemCard({ userId }: { userId: number }) {
 export function UserDashboard() {
   const queryClient = useQueryClient();
   const user = useSessionStore((state) => state.user);
-  const [schedule, setSchedule] = useState(initialSchedule);
+  const [schedule, setSchedule] = useState(() => getInitialSchedule(user?.latitude, user?.longitude));
+
+  useEffect(() => {
+    if (user?.latitude && user?.longitude && !schedule.latitude && !schedule.longitude) {
+      setSchedule((prev) => ({
+        ...prev,
+        latitude: String(user.latitude),
+        longitude: String(user.longitude),
+      }));
+    }
+  }, [user?.latitude, user?.longitude]);
   const [liveLocation, setLiveLocation] = useState<DriverLocation | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -396,21 +407,28 @@ export function UserDashboard() {
       if (!user) return;
       setError(null);
       setMessage(null);
-      await api.post('/pickups', {
+      const res = await api.post<Pickup>('/pickups', {
         user_id: user.id,
         waste_type: schedule.waste_type,
-        scheduled_date: schedule.scheduled_date,
-        scheduled_time: schedule.scheduled_time,
+        scheduled_date: schedule.scheduled_date || new Date().toISOString().slice(0, 10),
+        scheduled_time: schedule.scheduled_time || '09:00',
         coordinates: schedule.latitude && schedule.longitude ? {
           latitude: Number(schedule.latitude),
           longitude: Number(schedule.longitude)
-        } : null,
+        } : (user.latitude && user.longitude ? {
+          latitude: Number(user.latitude),
+          longitude: Number(user.longitude)
+        } : null),
         notes: schedule.notes || null
       });
+      return res.data;
     },
-    onSuccess: async () => {
+    onSuccess: async (data) => {
       setMessage('Pickup scheduled successfully.');
-      setSchedule(initialSchedule);
+      if (data?.id) {
+        setTrackedPickupId(data.id);
+      }
+      setSchedule(getInitialSchedule(user?.latitude, user?.longitude));
       await queryClient.invalidateQueries({ queryKey: ['pickups', user?.id] });
     },
     onError: (mutationError) => {
@@ -455,83 +473,18 @@ export function UserDashboard() {
             </select>
             <input className="rounded-2xl border border-slate-200 px-4 py-3" type="date" value={schedule.scheduled_date} onChange={(event) => setSchedule((current) => ({ ...current, scheduled_date: event.target.value }))} />
             <input className="rounded-2xl border border-slate-200 px-4 py-3" type="time" value={schedule.scheduled_time} onChange={(event) => setSchedule((current) => ({ ...current, scheduled_time: event.target.value }))} />
-            <div className="grid grid-cols-[1fr_1fr_auto] gap-2 sm:col-span-2">
-              <input className="rounded-2xl border border-slate-200 px-4 py-3" placeholder="Latitude" value={schedule.latitude} onChange={(event) => setSchedule((current) => ({ ...current, latitude: event.target.value }))} />
-              <input className="rounded-2xl border border-slate-200 px-4 py-3" placeholder="Longitude" value={schedule.longitude} onChange={(event) => setSchedule((current) => ({ ...current, longitude: event.target.value }))} />
-              <button
-                className="rounded-2xl bg-slate-200 px-4 py-3 font-bold text-slate-900 whitespace-nowrap"
-                type="button"
-                onClick={() => {
-                  setError(null);
-                  setMessage('Fetching your current GPS location...');
-
-                  if (!window.isSecureContext) {
-                    setError('Location access requires HTTPS or localhost.');
-                    setMessage(null);
-                    return;
-                  }
-
-                  if (!navigator.geolocation) {
-                    setError('Geolocation is not supported in this browser.');
-                    setMessage(null);
-                    return;
-                  }
-
-                  navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                      const latitude = position.coords.latitude.toFixed(6);
-                      const longitude = position.coords.longitude.toFixed(6);
-
-                      if (
-                        !latitude ||
-                        !longitude ||
-                        Number.isNaN(Number(latitude)) ||
-                        Number.isNaN(Number(longitude))
-                      ) {
-                        setError('Invalid GPS coordinates received.');
-                        setMessage(null);
-                        return;
-                      }
-
-                      setSchedule((current) => ({
-                        ...current,
-                        latitude,
-                        longitude
-                      }));
-
-                      setError(null);
-                      setMessage('Location captured successfully.');
-                    },
-                    (geoError) => {
-                      let msg = 'Unable to fetch your current location.';
-
-                      switch (geoError.code) {
-                        case geoError.PERMISSION_DENIED:
-                          msg = 'Location permission denied. Please allow GPS access.';
-                          break;
-                        case geoError.POSITION_UNAVAILABLE:
-                          msg = 'GPS signal unavailable. Try moving outdoors.';
-                          break;
-                        case geoError.TIMEOUT:
-                          msg = 'Location request timed out. Try again.';
-                          break;
-                      }
-
-                      setError(msg);
-                      setMessage(null);
-                    },
-                    {
-                      enableHighAccuracy: true,
-                      timeout: 15000,
-                      maximumAge: 10000
-                    }
-                  )
-                }}
-              >
-                <LocateFixed className="mr-2 inline h-4 w-4" />Use my location
-              </button>
-            </div>
-            <textarea className="rounded-2xl border border-slate-200 px-4 py-3 sm:col-span-2" placeholder="Pickup notes" rows={3} value={schedule.notes} onChange={(event) => setSchedule((current) => ({ ...current, notes: event.target.value }))} />
+            <LocationPickerMap
+              latitude={schedule.latitude}
+              longitude={schedule.longitude}
+              onLocationChange={(lat, lng) => {
+                setSchedule((current) => ({
+                  ...current,
+                  latitude: lat,
+                  longitude: lng,
+                }));
+              }}
+            />
+            <textarea className="rounded-2xl border border-slate-200 px-4 py-3 sm:col-span-2" placeholder="Pickup spot / Landmark instructions (e.g. Near Mother Dairy, blue gate, ground floor porch)" rows={3} value={schedule.notes} onChange={(event) => setSchedule((current) => ({ ...current, notes: event.target.value }))} />
             <button className="rounded-2xl bg-emerald-600 px-5 py-3 font-bold text-white sm:col-span-2" disabled={createPickup.isPending}>
               Schedule
             </button>
@@ -564,7 +517,7 @@ export function UserDashboard() {
             <TrackingMap
               pickupLocation={pickupLocation}
               driverLocation={latestDriverLocation ? { latitude: latestDriverLocation.latitude, longitude: latestDriverLocation.longitude } : null}
-              focusMode="driver"
+              focusMode="both"
             />
           </div>
           {trackedPickup && !trackedPickup.coordinates ? (

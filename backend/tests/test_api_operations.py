@@ -294,3 +294,54 @@ class TestComplaintHeatmap:
         data = resp.json()
         assert "points" in data
         assert isinstance(data["points"], list)
+
+#  Pickup request & map coordinate flow tests ─
+
+class TestPickupRequestFlow:
+    def test_create_pickup_inherits_user_coords_and_zone(self, client):
+        token = _login(client)
+        # Citizen (id=2) has zone_id=1. Update citizen to also have lat/lng in DB
+        import datetime
+        from tests.conftest import TestingSessionLocal
+        from app.models.user import User
+
+        with TestingSessionLocal() as session:
+            citizen = session.get(User, 2)
+            citizen.latitude = 23.2599
+            citizen.longitude = 77.4126
+            session.commit()
+
+        future_date = (datetime.date.today() + datetime.timedelta(days=1)).isoformat()
+        payload = {
+            "user_id": 2,
+            "waste_type": "wet",
+            "scheduled_date": future_date,
+            "scheduled_time": "09:30:00",
+            "notes": "Inherit test",
+        }
+        resp = client.post("/api/v1/pickups", json=payload, headers=_auth(token))
+        assert resp.status_code == 201
+        data = resp.json()
+        assert data["coordinates"] is not None
+        assert data["coordinates"]["latitude"] == 23.2599
+        assert data["coordinates"]["longitude"] == 77.4126
+        assert data["zone_id"] == 1
+
+    def test_create_pickup_preserves_custom_coordinates(self, client):
+        token = _login(client)
+        import datetime
+        future_date = (datetime.date.today() + datetime.timedelta(days=2)).isoformat()
+        payload = {
+            "user_id": 2,
+            "waste_type": "dry",
+            "scheduled_date": future_date,
+            "scheduled_time": "14:00:00",
+            "coordinates": {"latitude": 23.2100, "longitude": 77.4300},
+            "notes": "Custom GPS location",
+        }
+        resp = client.post("/api/v1/pickups", json=payload, headers=_auth(token))
+        assert resp.status_code == 201
+        data = resp.json()
+        assert data["coordinates"]["latitude"] == 23.2100
+        assert data["coordinates"]["longitude"] == 77.4300
+

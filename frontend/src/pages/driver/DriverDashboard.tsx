@@ -586,6 +586,11 @@ export function DriverDashboard() {
   const pickups = pickupsQuery.data ?? [];
   const history = trackingQuery.data ?? [];
   const latestLocation = history.at(-1);
+  const currentDriverLocation = latestLocation
+    ? { latitude: latestLocation.latitude, longitude: latestLocation.longitude }
+    : (latitude && longitude && Number.isFinite(Number(latitude)) && Number.isFinite(Number(longitude)))
+      ? { latitude: Number(latitude), longitude: Number(longitude) }
+      : null;
   const completed = pickups.filter((pickup) => pickup.status === 'completed').length;
 
   return (
@@ -710,6 +715,16 @@ export function DriverDashboard() {
           </div>
           {selectedPickup ? (
             <div className="mt-6 grid gap-3">
+              {selectedPickup.coordinates ? (
+                <a
+                  href={`https://www.google.com/maps/dir/?api=1&destination=${selectedPickup.coordinates.latitude},${selectedPickup.coordinates.longitude}&travelmode=driving`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-4 py-3 text-sm font-bold text-white shadow-sm hover:bg-blue-700 transition-colors"
+                >
+                  <Navigation className="h-4 w-4" /> Start Turn-by-Turn Navigation (Google Maps)
+                </a>
+              ) : null}
               <div className="grid gap-3 sm:grid-cols-2">
                 <input className="rounded-2xl border border-slate-200 px-4 py-3" placeholder="Latitude" value={latitude} onChange={(event) => setLatitude(event.target.value)} />
                 <input className="rounded-2xl border border-slate-200 px-4 py-3" placeholder="Longitude" value={longitude} onChange={(event) => setLongitude(event.target.value)} />
@@ -786,7 +801,7 @@ export function DriverDashboard() {
           <div className="mt-6">
             <TrackingMap
               pickupLocation={selectedPickup?.coordinates ?? null}
-              driverLocation={latestLocation ? { latitude: latestLocation.latitude, longitude: latestLocation.longitude } : null}
+              driverLocation={currentDriverLocation}
               focusMode="both"
             />
           </div>

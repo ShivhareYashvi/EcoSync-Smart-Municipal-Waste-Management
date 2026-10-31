@@ -21,6 +21,7 @@ class PickupRequestBase(BaseModel):
 
 class PickupRequestCreate(PickupRequestBase):
     user_id: int
+    zone_id: int | None = None
 
 
 class PickupAssignment(BaseModel):
@@ -51,6 +52,9 @@ class PickupRequestRead(PickupRequestBase):
     user_id: int
     driver_id: int | None
     status: PickupStatus
+    zone_id: int | None = None
+    route_id: int | None = None
+    is_bulk_generator: bool = False
     # Collection verification fields - nullable until driver logs them
     weight_kg: float | None = None
     waste_category: WasteCategory | None = None

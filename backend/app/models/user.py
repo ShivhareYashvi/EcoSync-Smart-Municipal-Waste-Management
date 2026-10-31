@@ -91,5 +91,15 @@ class User(TimestampMixin, Base):
     complaint_upvotes = relationship("ComplaintUpvote", back_populates="user")
     referrals_sent = relationship("Referral", back_populates="referrer", foreign_keys="Referral.referrer_id")
     referrals_received = relationship("Referral", back_populates="referred_user", foreign_keys="Referral.referred_user_id")
+    @property
+    def driver_id(self) -> int | None:
+        return self.driver_profile.id if self.driver_profile else None
 
+    @property
+    def vehicle_number(self) -> str | None:
+        return self.driver_profile.vehicle_number if self.driver_profile else None
+
+    @property
+    def recycler_id(self) -> int | None:
+        return self.recycler_profile.id if self.recycler_profile else None
 

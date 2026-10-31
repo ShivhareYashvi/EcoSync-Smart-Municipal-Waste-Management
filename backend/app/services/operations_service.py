@@ -50,12 +50,23 @@ class OperationsService:
 
     def create_pickup(self, session: Session, payload: PickupRequestCreate) -> PickupRequestRead:
         self._ensure_user_exists(session, payload.user_id)
+        user = session.scalar(select(User).where(User.id == payload.user_id))
+
+        coords = payload.coordinates.model_dump() if hasattr(payload.coordinates, "model_dump") else payload.coordinates
+        if not coords and user and user.latitude is not None and user.longitude is not None:
+            coords = {"latitude": user.latitude, "longitude": user.longitude}
+
+        zone_id = getattr(payload, "zone_id", None)
+        if zone_id is None and user and user.zone_id is not None:
+            zone_id = user.zone_id
+
         pickup = PickupRequest(
             user_id=payload.user_id,
+            zone_id=zone_id,
             waste_type=payload.waste_type,
             scheduled_date=payload.scheduled_date,
             scheduled_time=payload.scheduled_time,
-            coordinates=payload.coordinates.model_dump() if hasattr(payload.coordinates, "model_dump") else payload.coordinates,
+            coordinates=coords,
             notes=payload.notes,
             status=PickupStatus.PENDING,
         )
