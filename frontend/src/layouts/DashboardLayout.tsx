@@ -1,8 +1,16 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { Footer } from '../components/Footer';
 import { Navbar } from '../components/Navbar';
 
 export function DashboardLayout() {
+  const location = useLocation();
+  const isCitizenHub = location.pathname === '/dashboard/user' || location.pathname.startsWith('/dashboard/user');
+
+  // Citizen Hub uses its own dedicated accessible Top Header + Sidebar layout
+  if (isCitizenHub) {
+    return <Outlet />;
+  }
+
   return (
     <div className="min-h-screen bg-slate-100 flex flex-col justify-between">
       <div>
