@@ -747,9 +747,15 @@ export function PriceBoardPage() {
                             >
                               {config.category}
                             </span>
-                            <h3 className="font-black text-slate-900 text-base mt-0.5">
-                              {config.label}
-                            </h3>
+                            <div className="flex flex-wrap items-center gap-2 mt-0.5">
+                              <h3 className="font-black text-slate-900 text-base">
+                                {config.label}
+                              </h3>
+                              <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
+                                <TrendingUp className="h-3 w-3 text-emerald-600" />
+                                {MUNICIPAL_BENCHMARKS.find((b) => b.material === rate.material)?.trend || 'Stable'}
+                              </span>
+                            </div>
                           </div>
                         </div>
 

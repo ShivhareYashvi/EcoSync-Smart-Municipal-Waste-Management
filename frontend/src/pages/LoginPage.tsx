@@ -1,7 +1,7 @@
 import React, { FormEvent, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import { CheckCircle2, ChevronRight, KeyRound, Mail, MapPin, Phone, ShieldCheck, Smartphone, Sparkles } from 'lucide-react';
+import { CheckCircle2, ChevronRight, KeyRound, Mail, MapPin, Phone, ShieldCheck, Smartphone, Sparkles, Truck, Recycle, Shield } from 'lucide-react';
 import { api } from '../lib/api';
 import { dashboardPathForRole } from '../lib/navigation';
 import type { LoginResponse } from '../lib/types';
@@ -11,6 +11,12 @@ import { Footer } from '../components/Footer';
 
 type AuthMethod = 'phone' | 'email';
 type EmailMode = 'login' | 'signup';
+
+const ROLE_BADGES: Record<string, { label: string; icon: typeof Truck }> = {
+  driver: { label: 'Driver Operations Portal', icon: Truck },
+  recycler: { label: 'Certified Recycler Partner', icon: Recycle },
+  admin: { label: 'Municipal Command & Dispatch', icon: Shield },
+};
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -157,7 +163,7 @@ export function LoginPage() {
           email,
           password,
           confirm_password: confirmPassword,
-          role: 'citizen'
+          role: role || 'citizen'
         });
         setStatusMessage(res.data.message);
         if (res.data.verification_link) {
@@ -192,6 +198,8 @@ export function LoginPage() {
     }
   }
 
+  const roleMeta = role && ROLE_BADGES[role] ? ROLE_BADGES[role] : null;
+
   return (
     <div className="min-h-screen bg-slate-900 flex flex-col justify-between relative overflow-hidden">
       <Navbar mode="auth" />
@@ -204,11 +212,21 @@ export function LoginPage() {
         <section className="w-full max-w-md bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden">
         {/* Header Banner */}
         <div className="bg-gradient-to-r from-emerald-600 to-teal-700 p-7 text-white">
-          <div className="flex items-center gap-2 text-emerald-200 text-xs font-bold uppercase tracking-widest">
-            <Sparkles className="w-4 h-4 text-emerald-300" />
-            EcoSync Municipal Network
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-emerald-200 text-xs font-bold uppercase tracking-widest">
+              <Sparkles className="w-4 h-4 text-emerald-300" />
+              EcoSync Municipal Network
+            </div>
+            {roleMeta && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white/20 text-white text-[10px] font-bold">
+                <roleMeta.icon className="h-3 w-3" />
+                {roleMeta.label}
+              </span>
+            )}
           </div>
-          <h1 className="mt-2 text-2xl font-black tracking-tight">Smart Civic Sign-In</h1>
+          <h1 className="mt-2 text-2xl font-black tracking-tight">
+            {roleMeta ? roleMeta.label : 'Smart Civic Sign-In'}
+          </h1>
           <p className="mt-1 text-emerald-100 text-xs leading-relaxed">
             One account for household pickups, tracking, and Bhopal municipal services.
           </p>
@@ -313,14 +331,23 @@ export function LoginPage() {
                       placeholder="123456"
                       autoFocus
                       value={otpCode}
-                      onChange={(e) => setOtpCode(e.target.value.trim())}
+                      onChange={(e) => {
+                        const val = e.target.value.trim();
+                        setOtpCode(val);
+                      }}
                       className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-center text-xl font-mono font-bold tracking-widest text-slate-900 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none"
                     />
                   </div>
 
                   <div className="rounded-xl bg-amber-50 p-2.5 border border-amber-200 text-[11px] text-amber-800 flex items-center justify-between">
-                    <span>💡 Local Dev / Hackathon bypass code:</span>
-                    <span className="font-mono font-black text-xs bg-amber-200 px-2 py-0.5 rounded">1234</span>
+                    <span>💡 Local Dev / Demo bypass code:</span>
+                    <button
+                      type="button"
+                      onClick={() => setOtpCode('1234')}
+                      className="font-mono font-black text-xs bg-amber-200 hover:bg-amber-300 px-2.5 py-0.5 rounded transition"
+                    >
+                      Use 1234
+                    </button>
                   </div>
 
                   <button
@@ -449,13 +476,15 @@ export function LoginPage() {
               <div className="flex-1">
                 <p className="font-semibold">{statusMessage}</p>
                 {devVerifyLink && (
-                  <div className="mt-2 p-2 bg-emerald-100 rounded-lg">
-                    <p className="text-[11px] font-bold text-emerald-900">Demo Instant Verification Link:</p>
+                  <div className="mt-2.5 p-3 bg-emerald-100/90 rounded-xl border border-emerald-300">
+                    <p className="text-[11px] font-bold text-emerald-950 mb-1.5">
+                      Local Development Verification Shortcut:
+                    </p>
                     <a
                       href={devVerifyLink}
-                      className="text-[11px] text-emerald-700 underline break-all font-mono"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-sm transition"
                     >
-                      {devVerifyLink}
+                      Verify Account Instantly <ChevronRight className="w-3.5 h-3.5" />
                     </a>
                   </div>
                 )}

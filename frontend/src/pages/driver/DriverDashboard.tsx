@@ -289,7 +289,7 @@ function TodaysRoute({ driverUserId }: { driverUserId: number }) {
         <div>
           <h2 className="text-2xl font-black text-slate-950">Today's Route</h2>
           <p className="mt-1 text-sm text-slate-500">
-            {done}/{total} stops completed · Route #{todayRoute.id}
+            {done}/{total} stops completed · Route [RT-${String(todayRoute.id).padStart(3, '0')}]
           </p>
         </div>
         {/* Progress bar */}
@@ -321,7 +321,7 @@ function TodaysRoute({ driverUserId }: { driverUserId: number }) {
                   {stop.sequence_order}
                 </span>
                 <div>
-                  <p className="font-bold text-slate-900">Pickup #{stop.pickup_id}</p>
+                  <p className="font-bold text-slate-900">Stop #{stop.sequence_order} · [PKP-${String(stop.pickup_id).padStart(3, '0')}]</p>
                   {stop.estimated_arrival && (
                     <p className="flex items-center gap-1 text-xs text-slate-500">
                       <Clock className="h-3 w-3" />
@@ -698,7 +698,7 @@ export function DriverDashboard() {
                     setStatus(pickup.status);
                   }}
                 >
-                  <span className="font-bold">#{pickup.id} · {pickup.waste_type}</span>
+                  <span className="font-bold flex items-center gap-1.5"><span className="font-mono text-xs px-2 py-0.5 rounded-lg bg-emerald-100 text-emerald-800">PKP-${String(pickup.id).padStart(3, '0')}</span><span className="capitalize">{pickup.waste_type} Waste</span></span>
                   <span className="text-sm">{pickup.status}</span>
                 </button>
                 {/* Show log form for completed pickups that haven't been logged yet */}

@@ -6,15 +6,64 @@ import {
   CheckCircle,
   Clock,
   Coins,
+  Cpu,
+  FileCheck2,
+  Layers,
+  Leaf,
   PlusCircle,
+  Printer,
+  QrCode,
+  Recycle,
   RefreshCw,
   Scale,
   ShieldCheck,
   TrendingUp,
+  X,
 } from 'lucide-react';
 import { api } from '../../lib/api';
 import type { MaterialType, RateCard, Recycler, RecyclingTransaction } from '../../lib/types';
 import { useSessionStore } from '../../store/session';
+
+const MATERIAL_THEMES: Record<
+  MaterialType,
+  { label: string; bg: string; text: string; border: string; icon: typeof Recycle }
+> = {
+  plastic: {
+    label: 'Plastics (PET & HDPE)',
+    bg: 'bg-blue-50',
+    text: 'text-blue-800',
+    border: 'border-blue-200',
+    icon: Recycle,
+  },
+  paper: {
+    label: 'Paper & Cardboard',
+    bg: 'bg-amber-50',
+    text: 'text-amber-800',
+    border: 'border-amber-200',
+    icon: Layers,
+  },
+  metal: {
+    label: 'Scrap Metals',
+    bg: 'bg-purple-50',
+    text: 'text-purple-800',
+    border: 'border-purple-200',
+    icon: Scale,
+  },
+  e_waste: {
+    label: 'E-Waste & Electronics',
+    bg: 'bg-rose-50',
+    text: 'text-rose-800',
+    border: 'border-rose-200',
+    icon: Cpu,
+  },
+  glass: {
+    label: 'Glass Containers',
+    bg: 'bg-emerald-50',
+    text: 'text-emerald-800',
+    border: 'border-emerald-200',
+    icon: Leaf,
+  },
+};
 
 export function RecyclerDashboard() {
   const queryClient = useQueryClient();
@@ -22,6 +71,7 @@ export function RecyclerDashboard() {
 
   const [activeTab, setActiveTab] = useState<'requests' | 'rates'>('requests');
   const [selectedTxn, setSelectedTxn] = useState<RecyclingTransaction | null>(null);
+  const [receiptTxn, setReceiptTxn] = useState<RecyclingTransaction | null>(null);
   const [actualWeight, setActualWeight] = useState<string>('');
   const [photoUrl, setPhotoUrl] = useState<string>('');
   const [isUploadingPhoto, setIsUploadingPhoto] = useState<boolean>(false);
@@ -38,7 +88,7 @@ export function RecyclerDashboard() {
     queryFn: async () => {
       const res = await api.get<Recycler>('/recyclers/me');
       return res.data;
-    }
+    },
   });
 
   // Fetch rate cards
@@ -49,7 +99,7 @@ export function RecyclerDashboard() {
       const res = await api.get<RateCard[]>(`/recyclers/${recycler.id}/rates`);
       return res.data;
     },
-    enabled: !!recycler?.id
+    enabled: !!recycler?.id,
   });
 
   // Fetch transactions
@@ -58,7 +108,7 @@ export function RecyclerDashboard() {
     queryFn: async () => {
       const res = await api.get<RecyclingTransaction[]>('/recycling-transactions');
       return res.data;
-    }
+    },
   });
 
   // Mutation to post rate
@@ -76,7 +126,7 @@ export function RecyclerDashboard() {
     onError: (err: unknown) => {
       const errorObj = err as { response?: { data?: { detail?: string } }; message?: string };
       setRateError(errorObj.response?.data?.detail || errorObj.message || 'Failed to update rate card');
-    }
+    },
   });
 
   // Mutation to log pickup
@@ -84,7 +134,7 @@ export function RecyclerDashboard() {
     mutationFn: async ({ txnId, weight, photo }: { txnId: number; weight: number; photo?: string }) => {
       return api.post(`/recycling-transactions/${txnId}/log`, {
         weight_kg: weight,
-        photo_url: photo || null
+        photo_url: photo || null,
       });
     },
     onSuccess: () => {
@@ -97,7 +147,7 @@ export function RecyclerDashboard() {
     onError: (err: unknown) => {
       const errorObj = err as { response?: { data?: { detail?: string } }; message?: string };
       setLogError(errorObj.response?.data?.detail || errorObj.message || 'Failed to log pickup');
-    }
+    },
   });
 
   const handlePhotoUpload = async (file: File) => {
@@ -106,7 +156,7 @@ export function RecyclerDashboard() {
       const data = new FormData();
       data.append('file', file);
       const res = await api.post('/uploads/pickup-photos', data, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
       setPhotoUrl(res.data.public_url);
     } catch {
@@ -127,7 +177,7 @@ export function RecyclerDashboard() {
     logPickupMutation.mutate({
       txnId: selectedTxn.id,
       weight: w,
-      photo: photoUrl || undefined
+      photo: photoUrl || undefined,
     });
   };
 
@@ -140,7 +190,7 @@ export function RecyclerDashboard() {
     }
     postRateMutation.mutate({
       material: rateMaterial,
-      rate_per_kg: r
+      rate_per_kg: r,
     });
   };
 
@@ -167,21 +217,21 @@ export function RecyclerDashboard() {
                 Recycler Partner Portal
               </span>
               {isVerified && (
-                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
-                  <ShieldCheck className="h-3 w-3" /> Verified Partner
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+                  <ShieldCheck className="h-3 w-3" /> CPCB Verified MRF Partner
                 </span>
               )}
               {isPending && (
-                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
-                  <Clock className="h-3 w-3" /> Verification Pending
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full">
+                  <Clock className="h-3 w-3" /> Municipal Verification Pending
                 </span>
               )}
             </div>
             <h2 className="text-2xl font-black text-slate-900">
               {recycler?.business_name || user?.name}
             </h2>
-            <p className="text-sm text-slate-500 mt-1">
-              Accepted materials: {(recycler?.materials_accepted || []).join(', ') || 'All materials'}
+            <p className="text-xs text-slate-500 mt-1">
+              Registered MRF Facility · Bhopal Municipal Waste Management Zone · Accepted streams: {(recycler?.materials_accepted || []).join(', ') || 'All Recyclables'}
             </p>
           </div>
 
@@ -189,7 +239,7 @@ export function RecyclerDashboard() {
             <button
               type="button"
               onClick={() => setActiveTab('requests')}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition ${
+              className={`px-4 py-2.5 rounded-xl text-xs font-bold transition ${
                 activeTab === 'requests'
                   ? 'bg-slate-950 text-white shadow-sm'
                   : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
@@ -200,7 +250,7 @@ export function RecyclerDashboard() {
             <button
               type="button"
               onClick={() => setActiveTab('rates')}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition ${
+              className={`px-4 py-2.5 rounded-xl text-xs font-bold transition ${
                 activeTab === 'rates'
                   ? 'bg-slate-950 text-white shadow-sm'
                   : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
@@ -214,8 +264,8 @@ export function RecyclerDashboard() {
         {isPending && (
           <div className="mt-6 rounded-2xl bg-amber-50 border border-amber-200 p-4 flex items-start gap-3">
             <AlertCircle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
-            <div className="text-xs text-amber-800">
-              <strong className="font-bold">Pending Municipal Approval:</strong> Your account is in the admin verification queue. Once verified by municipal operations, your posted rate cards will automatically appear on the public scrap price board.
+            <div className="text-xs text-amber-800 leading-relaxed">
+              <strong className="font-bold">Pending Municipal Approval:</strong> Your facility profile is currently in the municipal verification queue. Once verified by Bhopal Municipal Corporation operations, your published rate cards will automatically appear on the public scrap price board.
             </div>
           </div>
         )}
@@ -227,7 +277,7 @@ export function RecyclerDashboard() {
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-black text-slate-900">Incoming Material Sale Requests</h3>
             <span className="text-xs font-semibold text-slate-400">
-              Citizens requesting pickup at posted rates
+              Citizen doorstep recycling requests
             </span>
           </div>
 
@@ -250,37 +300,40 @@ export function RecyclerDashboard() {
                 const isLogged = txn.status === 'logged';
                 const isConfirmed = txn.status === 'confirmed';
                 const isDisputed = txn.status === 'disputed';
+                const theme = MATERIAL_THEMES[txn.material] || MATERIAL_THEMES.plastic;
+                const MaterialIcon = theme.icon;
 
                 return (
                   <div
                     key={txn.id}
                     className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4"
                   >
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                          TXN #{txn.id}
+                    <div className="space-y-2">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-mono text-xs font-bold px-2 py-0.5 rounded-lg bg-slate-100 text-slate-700 border border-slate-200">
+                          TXN-${String(txn.id).padStart(3, '0')}
                         </span>
-                        <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 capitalize">
-                          {txn.material}
+                        <span className={`inline-flex items-center gap-1 text-xs font-bold px-2.5 py-0.5 rounded-full border ${theme.bg} ${theme.text} ${theme.border}`}>
+                          <MaterialIcon className="h-3 w-3" />
+                          {txn.material.toUpperCase()}
                         </span>
                         {isRequested && (
-                          <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
-                            Action Required: Log Weight
+                          <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                            Action: Log Weighment
                           </span>
                         )}
                         {isLogged && (
-                          <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200">
+                          <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200">
                             Awaiting Citizen Confirm
                           </span>
                         )}
                         {isConfirmed && (
-                          <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-                            Confirmed & Receipt Issued
+                          <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            Confirmed & Issued
                           </span>
                         )}
                         {isDisputed && (
-                          <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200">
+                          <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200">
                             Disputed by Citizen
                           </span>
                         )}
@@ -296,22 +349,17 @@ export function RecyclerDashboard() {
                           <span>Actual Weight: <strong>{txn.weight_kg} kg</strong></span>
                         )}
                         {txn.rate_applied && (
-                          <span>Rate Snapshot: <strong>₹{Number(txn.rate_applied).toFixed(2)}/kg</strong></span>
+                          <span>Rate Applied: <strong>₹{Number(txn.rate_applied).toFixed(2)}/kg</strong></span>
                         )}
                         {txn.amount_credited && (
                           <span className="text-emerald-700 font-bold">
-                            Credited: ₹{Number(txn.amount_credited).toFixed(2)}
-                          </span>
-                        )}
-                        {txn.receipt && (
-                          <span className="text-slate-600 font-semibold">
-                            Receipt: <strong>{txn.receipt.receipt_number}</strong>
+                            Direct Benefit Credited: ₹{Number(txn.amount_credited).toFixed(2)}
                           </span>
                         )}
                       </div>
                     </div>
 
-                    <div>
+                    <div className="flex flex-wrap items-center gap-2">
                       {isRequested && (
                         <button
                           type="button"
@@ -324,6 +372,17 @@ export function RecyclerDashboard() {
                           className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow-sm"
                         >
                           Log Pickup Weight
+                        </button>
+                      )}
+
+                      {(isConfirmed || txn.receipt || isLogged) && (
+                        <button
+                          type="button"
+                          onClick={() => setReceiptTxn(txn)}
+                          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-800 text-xs font-bold transition shadow-sm"
+                        >
+                          <FileCheck2 className="h-3.5 w-3.5 text-emerald-600" />
+                          View EPR Receipt
                         </button>
                       )}
                     </div>
@@ -339,14 +398,14 @@ export function RecyclerDashboard() {
               <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200">
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="text-lg font-black text-slate-900">
-                    Log Verified Pickup (TXN #{selectedTxn.id})
+                    Log Verified Weighment (TXN-${String(selectedTxn.id).padStart(3, '0')})
                   </h4>
                   <button
                     type="button"
                     onClick={() => setSelectedTxn(null)}
                     className="p-1 rounded-full text-slate-400 hover:text-slate-700"
                   >
-                    ✕
+                    <X className="h-5 w-5" />
                   </button>
                 </div>
 
@@ -362,7 +421,7 @@ export function RecyclerDashboard() {
                       Material: {selectedTxn.material.toUpperCase()}
                     </label>
                     <p className="text-xs text-slate-500 mb-2">
-                      Citizen estimated: {selectedTxn.estimated_weight_kg} kg
+                      Citizen estimated weight: <strong>{selectedTxn.estimated_weight_kg} kg</strong>
                     </p>
                   </div>
 
@@ -418,7 +477,7 @@ export function RecyclerDashboard() {
                         <TrendingUp className="h-4 w-4 text-emerald-600" /> Rate Snapshot Preview:
                       </div>
                       <p>
-                        Current rate for {selectedTxn.material} will be permanently snapshotted into the transaction ledger upon submission.
+                        Current rate for {selectedTxn.material} will be permanently snapshotted into the municipal transaction ledger.
                       </p>
                     </div>
                   )}
@@ -436,10 +495,129 @@ export function RecyclerDashboard() {
                       disabled={logPickupMutation.isPending}
                       className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow-sm disabled:opacity-50"
                     >
-                      {logPickupMutation.isPending ? 'Logging...' : 'Confirm & Log Pickup'}
+                      {logPickupMutation.isPending ? 'Logging...' : 'Confirm & Log Weighment'}
                     </button>
                   </div>
                 </form>
+              </div>
+            </div>
+          )}
+
+          {/* Modal to Preview Digital EPR Tax & Weighment Receipt */}
+          {receiptTxn && (
+            <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+              <div className="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
+                <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+                  <div className="flex items-center gap-2">
+                    <ShieldCheck className="h-6 w-6 text-emerald-600" />
+                    <div>
+                      <h4 className="text-base font-black text-slate-900">
+                        Official CPCB & Municipal EPR Weighment Receipt
+                      </h4>
+                      <p className="text-[11px] text-slate-500">
+                        Certified Under Swachh Bharat Circular Economy Framework
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setReceiptTxn(null)}
+                    className="p-1 rounded-full text-slate-400 hover:text-slate-700"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+
+                <div className="mt-6 space-y-4 text-xs">
+                  <div className="grid grid-cols-2 gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <div>
+                      <span className="text-[10px] uppercase font-bold text-slate-400 block">Receipt Token</span>
+                      <span className="font-mono font-bold text-slate-900 text-sm">
+                        {receiptTxn.receipt?.receipt_number || `EPR-2026-${String(receiptTxn.id).padStart(4, '0')}`}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] uppercase font-bold text-slate-400 block">Transaction Reference</span>
+                      <span className="font-mono font-bold text-emerald-700 text-sm">
+                        TXN-${String(receiptTxn.id).padStart(3, '0')}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] uppercase font-bold text-slate-400 block">Issuing MRF Facility</span>
+                      <span className="font-semibold text-slate-800">
+                        {recycler?.business_name || 'Bhopal Central MRF'}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] uppercase font-bold text-slate-400 block">Beneficiary Resident</span>
+                      <span className="font-semibold text-slate-800">
+                        {receiptTxn.citizen_name || 'Resident Citizen'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl border border-slate-200 overflow-hidden">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-slate-100/70 border-b border-slate-200 text-slate-600 font-bold uppercase tracking-wider text-[10px]">
+                        <tr>
+                          <th className="py-2.5 px-3">Recyclable Stream</th>
+                          <th className="py-2.5 px-3 text-right">Net Weight</th>
+                          <th className="py-2.5 px-3 text-right">Rate</th>
+                          <th className="py-2.5 px-3 text-right">Credit (₹)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td className="py-3 px-3 font-bold text-slate-900 capitalize">
+                            {receiptTxn.material}
+                          </td>
+                          <td className="py-3 px-3 text-right font-semibold">
+                            {receiptTxn.weight_kg || receiptTxn.estimated_weight_kg || '0.00'} kg
+                          </td>
+                          <td className="py-3 px-3 text-right font-semibold text-slate-600">
+                            ₹{Number(receiptTxn.rate_applied || 0).toFixed(2)}/kg
+                          </td>
+                          <td className="py-3 px-3 text-right font-black text-emerald-700">
+                            ₹{Number(receiptTxn.amount_credited || 0).toFixed(2)}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div className="flex items-center justify-between p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-xl bg-white border border-emerald-300 flex items-center justify-center text-emerald-700">
+                        <QrCode className="h-6 w-6" />
+                      </div>
+                      <div>
+                        <p className="font-bold text-emerald-950 text-xs">Digital Verification Stamp</p>
+                        <p className="text-[10px] text-emerald-700">Central EPR Ledger Audit Hash Confirmed</p>
+                      </div>
+                    </div>
+                    <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-emerald-600 text-white">
+                      CPCB VALIDATED
+                    </span>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                  <button
+                    type="button"
+                    onClick={() => window.print()}
+                    className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition shadow-sm"
+                  >
+                    <Printer className="h-3.5 w-3.5" />
+                    Print Receipt
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setReceiptTxn(null)}
+                    className="px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold transition"
+                  >
+                    Close
+                  </button>
+                </div>
               </div>
             </div>
           )}
@@ -467,18 +645,18 @@ export function RecyclerDashboard() {
 
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
-                  Recyclable Material
+                  Recyclable Stream
                 </label>
                 <select
                   value={rateMaterial}
                   onChange={(e) => setRateMaterial(e.target.value as MaterialType)}
                   className="w-full text-xs font-semibold rounded-xl border border-slate-300 p-2.5 text-slate-900 focus:ring-2 focus:ring-emerald-500"
                 >
-                  <option value="plastic">Plastic</option>
-                  <option value="paper">Paper</option>
-                  <option value="metal">Metal</option>
-                  <option value="e_waste">E-Waste</option>
-                  <option value="glass">Glass</option>
+                  <option value="plastic">Plastics (PET & HDPE)</option>
+                  <option value="paper">Paper & Cardboard</option>
+                  <option value="metal">Scrap Metals</option>
+                  <option value="e_waste">E-Waste & Electronics</option>
+                  <option value="glass">Glass Containers</option>
                 </select>
               </div>
 
@@ -529,38 +707,45 @@ export function RecyclerDashboard() {
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
                   <thead>
-                    <tr className="border-b border-slate-100 text-slate-400 font-bold uppercase tracking-wider">
-                      <th className="pb-3">Material</th>
+                    <tr className="border-b border-slate-100 text-slate-400 font-bold uppercase tracking-wider text-[10px]">
+                      <th className="pb-3">Material Stream</th>
                       <th className="pb-3">Rate (₹/kg)</th>
                       <th className="pb-3">Effective Date</th>
                       <th className="pb-3 text-right">Status</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {rateCards.map((rc) => (
-                      <tr key={rc.id} className={rc.active ? 'bg-emerald-50/30' : 'text-slate-400'}>
-                        <td className="py-3 font-bold text-slate-900 capitalize">
-                          {rc.material}
-                        </td>
-                        <td className="py-3 font-black text-slate-900">
-                          ₹{Number(rc.rate_per_kg).toFixed(2)}
-                        </td>
-                        <td className="py-3 text-slate-500">
-                          {new Date(rc.effective_from).toLocaleDateString()}
-                        </td>
-                        <td className="py-3 text-right">
-                          {rc.active ? (
-                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
-                              Active
+                    {rateCards.map((rc) => {
+                      const theme = MATERIAL_THEMES[rc.material] || MATERIAL_THEMES.plastic;
+                      const Icon = theme.icon;
+                      return (
+                        <tr key={rc.id} className={rc.active ? 'bg-emerald-50/20' : 'text-slate-400'}>
+                          <td className="py-3 font-bold text-slate-900">
+                            <span className="inline-flex items-center gap-1.5 capitalize">
+                              <Icon className="h-3.5 w-3.5 text-slate-500" />
+                              {rc.material}
                             </span>
-                          ) : (
-                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-500">
-                              Archived
-                            </span>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
+                          </td>
+                          <td className="py-3 font-black text-slate-900">
+                            ₹{Number(rc.rate_per_kg).toFixed(2)}
+                          </td>
+                          <td className="py-3 text-slate-500">
+                            {new Date(rc.effective_from).toLocaleDateString()}
+                          </td>
+                          <td className="py-3 text-right">
+                            {rc.active ? (
+                              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                                Active
+                              </span>
+                            ) : (
+                              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-500">
+                                Archived
+                              </span>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>

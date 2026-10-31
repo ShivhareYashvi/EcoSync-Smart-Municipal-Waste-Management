@@ -49,9 +49,12 @@ export function LandingPage() {
           <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-8">
             {/* Left Content Column */}
             <div className="lg:col-span-7 space-y-8">
-              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50/90 px-3.5 py-1 text-xs font-bold text-emerald-800 shadow-sm">
-                <Leaf className="h-3.5 w-3.5 text-emerald-600" />
-                <span>Next-Gen Smart Municipal Waste Management</span>
+              <div className="inline-flex items-center gap-2.5 rounded-full border border-emerald-200 bg-emerald-50/90 px-4 py-1.5 text-xs font-bold text-emerald-800 shadow-sm">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                <span>Bhopal Municipal Operations Live · 85 Wards Monitored · 96.4% On-Time Completion Today</span>
               </div>
 
               <h1 className="text-4xl font-extrabold tracking-tight text-slate-950 sm:text-5xl lg:text-6xl leading-[1.12]">

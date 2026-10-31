@@ -544,6 +544,7 @@ export function UserDashboard() {
   const [error, setError] = useState<string | null>(null);
   const [trackedPickupId, setTrackedPickupId] = useState<number | null>(null);
   const trackingPanelRef = useRef<HTMLElement | null>(null);
+  const [smsFeedback, setSmsFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   // Queries
   const pickupsQuery = useQuery({
@@ -1504,10 +1505,12 @@ export function UserDashboard() {
                 const msg = (target.elements.namedItem('message') as HTMLInputElement).value;
                 try {
                   await api.post('/chat/send', { phone, message: msg, user_id: user.id });
-                  alert('SMS Message Sent successfully!');
+                  setSmsFeedback({ type: 'success', message: 'SMS grievance dispatched via Fast2SMS gateway successfully!' });
                   target.reset();
+                  setTimeout(() => setSmsFeedback(null), 5000);
                 } catch {
-                  alert('Failed to send SMS message.');
+                  setSmsFeedback({ type: 'error', message: 'Failed to dispatch SMS gateway message. Please check connection.' });
+                  setTimeout(() => setSmsFeedback(null), 5000);
                 }
               }}
             >
@@ -1530,6 +1533,20 @@ export function UserDashboard() {
                 Send SMS
               </button>
             </form>
+            {smsFeedback && (
+              <div className={`mt-3 p-3 rounded-xl border text-xs font-semibold flex items-center gap-2 animate-in fade-in ${
+                smsFeedback.type === 'success'
+                  ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                  : 'bg-rose-50 text-rose-800 border-rose-200'
+              }`}>
+                {smsFeedback.type === 'success' ? (
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                ) : (
+                  <AlertCircle className="h-4 w-4 text-rose-600 shrink-0" />
+                )}
+                <span>{smsFeedback.message}</span>
+              </div>
+            )}
           </article>
         </div>
       )}
