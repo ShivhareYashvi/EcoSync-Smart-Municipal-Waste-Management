@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     environment: Literal["local", "staging", "production"] = "local"
     api_v1_prefix: str = "/api/v1"
     database_url: str = Field(default="postgresql://ecosync:ecosync@localhost:5432/ecosync")
+    admin_session_secret: str | None = Field(default=None)
     jwt_secret_key: str = Field(default="change-me-in-production")
     jwt_algorithm: str = "HS256"
     access_token_expire_minutes: int = 30

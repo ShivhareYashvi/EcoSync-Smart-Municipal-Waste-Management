@@ -9,17 +9,10 @@ import os
 os.environ.setdefault("DATABASE_URL", "sqlite://")
 
 import pytest
-from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.pool import StaticPool
 
-SQLITE_URL = "sqlite://"
+from app.db import engine as test_engine
 
-test_engine = create_engine(
-    SQLITE_URL,
-    connect_args={"check_same_thread": False},
-    poolclass=StaticPool,
-)
 TestingSessionLocal = sessionmaker(bind=test_engine, expire_on_commit=False)
 
 

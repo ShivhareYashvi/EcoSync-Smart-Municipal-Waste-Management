@@ -71,3 +71,8 @@ def health_check() -> dict[str, str]:
 
 
 app.include_router(api_v1_router, prefix=settings.api_v1_prefix)
+
+from app.admin import init_admin
+
+# Initialize SQLAdmin Django-style admin dashboard at /admin
+admin = init_admin(app)

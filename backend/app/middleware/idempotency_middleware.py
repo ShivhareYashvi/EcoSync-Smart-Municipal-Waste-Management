@@ -55,6 +55,10 @@ class IdempotencyMiddleware(BaseHTTPMiddleware):
     """
 
     async def dispatch(self, request: Request, call_next: Callable) -> Response:
+        # Exempt SQLAdmin dashboard and admin endpoints from idempotency processing
+        if request.url.path.startswith("/admin"):
+            return await call_next(request)
+
         idempotency_key = request.headers.get("Idempotency-Key") or request.headers.get("X-Idempotency-Key")
 
         # Only apply to mutating methods and matching endpoints if key is present
