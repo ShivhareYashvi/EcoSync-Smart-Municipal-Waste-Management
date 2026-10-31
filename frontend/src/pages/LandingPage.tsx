@@ -5,11 +5,6 @@ import {
   ShieldCheck,
   MapPinned,
   CheckCircle2,
-  Sparkles,
-  Truck,
-  Recycle,
-  Coins,
-  ChevronRight,
   Compass,
 } from 'lucide-react';
 import { EcoNav } from '../components/EcoNav';
@@ -22,12 +17,8 @@ import { ScrapPriceBoardSection } from '../components/home/ScrapPriceBoardSectio
 import { AboutSection } from '../components/home/AboutSection';
 import { InsightsSection } from '../components/home/InsightsSection';
 import { EcoFooter } from '../components/home/EcoFooter';
-import { useSessionStore } from '../store/session';
-import { dashboardPathForRole } from '../lib/navigation';
 
 export function LandingPage() {
-  const user = useSessionStore((state) => state.user);
-
   return (
     <div className="min-h-screen bg-[#F7F9FC] text-[#101828] antialiased selection:bg-[#009B70] selection:text-white">
       {/* ── EcoNav: Premium Desktop & Mobile Navigation ─────────────── */}

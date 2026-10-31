@@ -4,11 +4,9 @@ import {
   Building2,
   Cpu,
   Target,
-  Sparkles,
   CheckCircle2,
   Users,
   Leaf,
-  Globe2,
 } from 'lucide-react';
 
 export const AboutSection: React.FC = () => {

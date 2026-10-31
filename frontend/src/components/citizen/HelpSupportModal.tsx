@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, HelpCircle, Phone, BookOpen, Keyboard, ShieldCheck } from 'lucide-react';
+import { X, HelpCircle, Phone, BookOpen, Keyboard } from 'lucide-react';
 
 interface HelpSupportModalProps {
   isOpen: boolean;

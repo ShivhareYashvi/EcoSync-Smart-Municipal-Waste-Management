@@ -1,12 +1,10 @@
 import React from 'react';
 import {
-  MapPin,
   Truck,
   CheckCircle2,
   Clock,
   Radio,
   TrendingUp,
-  ShieldCheck,
   Building2,
 } from 'lucide-react';
 import { BhopalOperationsMap } from './BhopalOperationsMap';

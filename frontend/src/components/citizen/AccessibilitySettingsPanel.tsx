@@ -8,7 +8,6 @@ import {
   Maximize2,
   Volume2,
   RotateCcw,
-  CheckCircle2,
   Eye,
 } from 'lucide-react';
 import { useAccessibilityStore, type TextScale } from '../../store/accessibilityStore';
@@ -29,18 +28,6 @@ export const AccessibilitySettingsPanel: React.FC = () => {
     setScreenReaderAssistance,
     resetToDefaults,
   } = useAccessibilityStore();
-
-  const handleNextTextSize = () => {
-    if (textScale === 'sm') setTextScale('base');
-    else if (textScale === 'base') setTextScale('lg');
-    else if (textScale === 'lg') setTextScale('xl');
-  };
-
-  const handlePrevTextSize = () => {
-    if (textScale === 'xl') setTextScale('lg');
-    else if (textScale === 'lg') setTextScale('base');
-    else if (textScale === 'base') setTextScale('sm');
-  };
 
   const scaleLabels: Record<TextScale, string> = {
     sm: 'Small (14px)',

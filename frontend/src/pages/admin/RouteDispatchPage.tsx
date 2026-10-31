@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '../../lib/api';
 import type { Route, Zone, Vehicle, Driver, Pickup } from '../../lib/types';
-import { Navigation, Plus, CheckCircle2, SkipForward, Clock, MapPin, Truck, Calendar, Layers } from 'lucide-react';
+import { Navigation, Plus, CheckCircle2, Clock, MapPin } from 'lucide-react';
 import { MapContainer, Marker, Polyline, Popup, TileLayer, useMap } from 'react-leaflet';
 import { divIcon } from 'leaflet';
 
@@ -227,7 +227,7 @@ export function RouteDispatchPage() {
   const vehicles = vehiclesQuery.data ?? [];
   const drivers = driversQuery.data ?? [];
   const pickups = pickupsQuery.data ?? [];
-  const routes = routesQuery.data ?? [];
+  const routes = useMemo(() => routesQuery.data ?? [], [routesQuery.data]);
 
   // Default active route selection
   const activeRoute = useMemo(() => {

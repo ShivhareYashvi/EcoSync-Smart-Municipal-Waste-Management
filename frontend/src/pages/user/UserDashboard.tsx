@@ -6,14 +6,10 @@ import {
   ArrowRight,
   Award,
   Calendar,
-  Check,
   CheckCircle2,
-  ChevronRight,
-  Clock,
   Coins,
   Cpu,
   Gift,
-  Info,
   Layers,
   Leaf,
   LocateFixed,
@@ -22,17 +18,12 @@ import {
   MessageSquareWarning,
   Navigation,
   Package,
-  Phone,
   Recycle,
   Scale,
-  Send,
   ShieldCheck,
   ShoppingBag,
-  Sparkles,
   TrendingUp,
   Truck,
-  UserCheck,
-  Users,
   XCircle,
 } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -554,7 +545,7 @@ export function UserDashboard() {
         longitude: String(user.longitude),
       }));
     }
-  }, [user?.latitude, user?.longitude]);
+  }, [user?.latitude, user?.longitude, schedule.latitude, schedule.longitude]);
 
   const [liveLocation, setLiveLocation] = useState<DriverLocation | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -702,15 +693,6 @@ export function UserDashboard() {
     },
   });
 
-  if (!user) {
-    return (
-      <EmptyState
-        title="Login required"
-        description="Sign in to schedule pickups, track collection vehicles, and view your points."
-      />
-    );
-  }
-
   const rewards = rewardsQuery.data ?? [];
   const complaints = complaintsQuery.data ?? [];
   const pickups = pickupsQuery.data ?? [];
@@ -748,6 +730,15 @@ export function UserDashboard() {
 
   const upcomingCount = pickups.filter((p) => p.status !== 'completed' && p.status !== 'cancelled').length;
   const openComplaintsCount = complaints.filter((c) => c.status !== 'resolved' && c.status !== 'rejected').length;
+
+  if (!user) {
+    return (
+      <EmptyState
+        title="Login required"
+        description="Sign in to schedule pickups, track collection vehicles, and view your points."
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans">

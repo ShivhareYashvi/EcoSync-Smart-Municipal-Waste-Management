@@ -9,7 +9,6 @@ import {
   ArrowRight,
   ShieldCheck,
   ChevronRight,
-  User as UserIcon,
 } from 'lucide-react';
 import { useSessionStore } from '../store/session';
 import { dashboardPathForRole } from '../lib/navigation';

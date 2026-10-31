@@ -1,5 +1,5 @@
 import React from 'react';
-import { Truck, Gift, Navigation, AlertCircle, CheckCircle2, Clock } from 'lucide-react';
+import { Truck, Gift, Navigation, AlertCircle, Clock } from 'lucide-react';
 
 interface ServiceOverviewProps {
   upcomingCount: number;

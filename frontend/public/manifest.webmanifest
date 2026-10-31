@@ -1,11 +1,11 @@
 {
-  "name": "EcoSync Municipal Platform",
+  "name": "EcoSync · Smart Waste & Circular Economy",
   "short_name": "EcoSync",
-  "description": "Smart municipal waste management, verified collection, and route optimization platform",
+  "description": "Smart Waste & Circular Economy Platform for Bhopal Municipal Operations Network",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#059669",
+  "theme_color": "#009B70",
   "orientation": "portrait-primary",
   "icons": [
     {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { divIcon } from 'leaflet';
 import { MapContainer, Marker, Popup, TileLayer, Tooltip } from 'react-leaflet';
-import { Truck, Building2, MapPin, Layers, Radio, CheckCircle2, RefreshCw } from 'lucide-react';
+import { Layers, Radio, CheckCircle2 } from 'lucide-react';
 
 export interface WardNode {
   id: string;
@@ -110,15 +110,15 @@ export const BhopalOperationsMap: React.FC = () => {
           </span>
           <div className="flex flex-wrap gap-1" role="group" aria-label="Map layer filter">
             {[
-              { id: 'all', label: 'All Layers' },
-              { id: 'vehicles', label: 'Fleet GPS' },
-              { id: 'wards', label: 'Ward Hubs' },
-              { id: 'facilities', label: 'MRF Plants' },
+              { id: 'all' as const, label: 'All Layers' },
+              { id: 'vehicles' as const, label: 'Fleet GPS' },
+              { id: 'wards' as const, label: 'Ward Hubs' },
+              { id: 'facilities' as const, label: 'MRF Plants' },
             ].map((layer) => (
               <button
                 key={layer.id}
                 type="button"
-                onClick={() => setActiveLayer(layer.id as any)}
+                onClick={() => setActiveLayer(layer.id)}
                 aria-pressed={activeLayer === layer.id}
                 className={`rounded-lg px-2.5 py-1 text-[11px] font-bold border transition ${
                   activeLayer === layer.id
