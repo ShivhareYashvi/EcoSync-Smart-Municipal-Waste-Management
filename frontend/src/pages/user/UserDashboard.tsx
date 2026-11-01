@@ -40,6 +40,8 @@ import { RecentActivityTimeline } from '../../components/citizen/RecentActivityT
 import { AccessibilitySettingsPanel } from '../../components/citizen/AccessibilitySettingsPanel';
 import { MissedPickupModal } from '../../components/citizen/MissedPickupModal';
 import { HelpSupportModal } from '../../components/citizen/HelpSupportModal';
+import { SkipSweepModal } from '../../components/citizen/SkipSweepModal';
+import { MorningAlarmModal } from '../../components/citizen/MorningAlarmModal';
 
 import { api, buildTrackingSocketUrl } from '../../lib/api';
 import type {
@@ -272,6 +274,9 @@ export function UserDashboard() {
   const [sidebarOpenMobile, setSidebarOpenMobile] = useState(false);
   const [missedPickupOpen, setMissedPickupOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [skipSweepOpen, setSkipSweepOpen] = useState(false);
+  const [morningAlarmOpen, setMorningAlarmOpen] = useState(false);
+  const [skippedTodayReason, setSkippedTodayReason] = useState<string | null>(null);
 
   // Schedule Pickup state
   const [schedule, setSchedule] = useState(() => getInitialSchedule(user?.latitude, user?.longitude));
@@ -584,7 +589,33 @@ export function UserDashboard() {
                 etaMinutes={etaMinutes}
               />
 
-              {/* Section 4: Quick Actions (6 Accessible Large Target Buttons) */}
+              {/* Skip Sweep Alert Pill if marked */}
+              {skippedTodayReason && (
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl bg-amber-50 border border-amber-200 p-4 text-amber-900 animate-in fade-in">
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-100 text-amber-800 shrink-0">
+                      <ShieldCheck className="h-5 w-5" />
+                    </span>
+                    <div>
+                      <p className="text-xs font-bold">
+                        Today's Collection Marked as SKIPPED ({skippedTodayReason})
+                      </p>
+                      <p className="text-[11px] text-amber-700 mt-0.5">
+                        Driver notified to bypass your gate. Your EcoPoints 1.2x streak remains protected!
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setSkippedTodayReason(null)}
+                    className="rounded-xl border border-amber-300 bg-white px-3 py-1.5 text-xs font-bold text-amber-900 hover:bg-amber-100 transition shrink-0 self-start sm:self-center"
+                  >
+                    Resume Collection
+                  </button>
+                </div>
+              )}
+
+              {/* Section 4: Quick Actions (8 Accessible Large Target Buttons) */}
               <QuickActionsSection
                 onScheduleClick={() => {
                   const el = document.getElementById('schedule-form-section');
@@ -592,6 +623,8 @@ export function UserDashboard() {
                 }}
                 onOpenMissedPickup={() => setMissedPickupOpen(true)}
                 onNavigateTab={handleTabChange}
+                onOpenSkipModal={() => setSkipSweepOpen(true)}
+                onOpenAlarmModal={() => setMorningAlarmOpen(true)}
               />
 
               {/* Section 5: Recent Municipal Activity Timeline */}
@@ -1162,6 +1195,23 @@ export function UserDashboard() {
       <HelpSupportModal
         isOpen={helpOpen}
         onClose={() => setHelpOpen(false)}
+      />
+
+      {/* Skip Today's Sweep Modal */}
+      <SkipSweepModal
+        isOpen={skipSweepOpen}
+        onClose={() => setSkipSweepOpen(false)}
+        wardNumber={user?.ward_number ? `Ward ${user.ward_number}` : 'Ward 48'}
+        onConfirmSkip={(reason) => {
+          setSkippedTodayReason(reason);
+        }}
+      />
+
+      {/* Morning Collection Alarm Modal */}
+      <MorningAlarmModal
+        isOpen={morningAlarmOpen}
+        onClose={() => setMorningAlarmOpen(false)}
+        wardNumber={user?.ward_number ? `Ward ${user.ward_number}` : 'Ward 48'}
       />
     </div>
   );

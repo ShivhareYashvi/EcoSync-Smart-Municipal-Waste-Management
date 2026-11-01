@@ -6,6 +6,8 @@ import {
   Sparkles,
   TrendingUp,
   MessageSquarePlus,
+  Plane,
+  Bell,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,12 +15,16 @@ interface QuickActionsProps {
   onScheduleClick: () => void;
   onOpenMissedPickup: () => void;
   onNavigateTab: (tab: string, subOption?: string) => void;
+  onOpenSkipModal?: () => void;
+  onOpenAlarmModal?: () => void;
 }
 
 export const QuickActionsSection: React.FC<QuickActionsProps> = ({
   onScheduleClick,
   onOpenMissedPickup,
   onNavigateTab,
+  onOpenSkipModal,
+  onOpenAlarmModal,
 }) => {
   const navigate = useNavigate();
 
@@ -31,6 +37,28 @@ export const QuickActionsSection: React.FC<QuickActionsProps> = ({
       color: 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100',
       iconColor: 'text-emerald-700',
       onClick: onScheduleClick,
+    },
+    {
+      id: 'alarm',
+      label: 'Morning Collection Alarm',
+      description: 'Alert 15 mins before vehicle arrives at gate',
+      icon: Bell,
+      color: 'bg-cyan-50 text-cyan-800 border-cyan-200 hover:bg-cyan-100',
+      iconColor: 'text-cyan-700',
+      onClick: () => {
+        if (onOpenAlarmModal) onOpenAlarmModal();
+      },
+    },
+    {
+      id: 'skip',
+      label: "Skip Today's Sweep",
+      description: 'Zero waste or traveling (streak protected)',
+      icon: Plane,
+      color: 'bg-orange-50 text-orange-800 border-orange-200 hover:bg-orange-100',
+      iconColor: 'text-orange-700',
+      onClick: () => {
+        if (onOpenSkipModal) onOpenSkipModal();
+      },
     },
     {
       id: 'track',

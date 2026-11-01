@@ -11,6 +11,7 @@ class UserRole(StrEnum):
 class WasteType(StrEnum):
     WET = "wet"
     DRY = "dry"
+    HAZARDOUS = "hazardous"
     E_WASTE = "e-waste"
     BULKY = "bulky"
 

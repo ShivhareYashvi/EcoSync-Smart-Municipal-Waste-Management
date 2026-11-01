@@ -25,7 +25,7 @@ from app.services.zone_service import ZONE_DEPOTS
 
 # Configurable threshold for hotspot flagging
 HOTSPOT_COMPLAINT_THRESHOLD: int = 3
-OVERDUE_DAYS: int = 7
+OVERDUE_DAYS: int = 1  # 24-hour statutory municipal grievance SLA
 HOTSPOT_WINDOW_DAYS: int = 30
 
 
@@ -44,45 +44,49 @@ class HotspotService:
     def get_heatmap(self, session: Session) -> HeatmapResponse:
         """
         Return one heatmap point per complaint that has location data.
-        Coordinates are sourced (in priority order):
-          1. The associated pickup_request's coordinates
-          2. The zone's depot coordinates (if the complaint has a zone_id)
-          3. Default India center (20.59, 78.96)
+        Optimized with batched SQL queries to scale cleanly across thousands of complaints.
         """
         complaints = session.scalars(select(Complaint)).all()
-        points: list[HeatmapPoint] = []
+        if not complaints:
+            return HeatmapResponse(points=[])
 
-        for complaint in complaints:
-            lat: float | None = None
-            lng: float | None = None
-            zone_name: str | None = None
+        # Pre-fetch zones into memory map (avoids N queries)
+        zones_map: dict[int, Zone] = {
+            z.id: z for z in session.scalars(select(Zone)).all()
+        }
 
-            # Try to get coords from a recent pickup of the same user
-            pickup = session.scalar(
+        # Pre-fetch latest coordinates for all complaint authors (avoids N queries)
+        user_ids = {c.user_id for c in complaints if c.user_id}
+        latest_coords: dict[int, tuple[float, float]] = {}
+        if user_ids:
+            recent_pickups = session.scalars(
                 select(PickupRequest)
                 .where(
-                    PickupRequest.user_id == complaint.user_id,
+                    PickupRequest.user_id.in_(user_ids),
                     PickupRequest.coordinates.is_not(None),
                 )
                 .order_by(PickupRequest.created_at.desc())
-                .limit(1)
-            )
-            if pickup and pickup.coordinates:
-                lat = pickup.coordinates.get("latitude")
-                lng = pickup.coordinates.get("longitude")
+            ).all()
+            for p in recent_pickups:
+                if p.user_id not in latest_coords and p.coordinates:
+                    p_lat = p.coordinates.get("latitude")
+                    p_lng = p.coordinates.get("longitude")
+                    if p_lat is not None and p_lng is not None:
+                        latest_coords[p.user_id] = (float(p_lat), float(p_lng))
 
-            if lat is None or lng is None:
-                # Fall back to zone depot
-                zone: Zone | None = None
-                if complaint.zone_id:
-                    zone = session.scalar(select(Zone).where(Zone.id == complaint.zone_id))
-                fallback = _depot_coords_for_zone(zone)
-                lat, lng = fallback
-                zone_name = zone.name if zone else None
+        points: list[HeatmapPoint] = []
+        for complaint in complaints:
+            lat: float | None = None
+            lng: float | None = None
+            zone = zones_map.get(complaint.zone_id) if complaint.zone_id else None
+            zone_name = zone.name if zone else None
+
+            # Priority 1: User's latest pickup GPS coordinates
+            if complaint.user_id and complaint.user_id in latest_coords:
+                lat, lng = latest_coords[complaint.user_id]
             else:
-                if complaint.zone_id:
-                    zone = session.scalar(select(Zone).where(Zone.id == complaint.zone_id))
-                    zone_name = zone.name if zone else None
+                # Priority 2: Zone depot fallback
+                lat, lng = _depot_coords_for_zone(zone)
 
             if lat is not None and lng is not None:
                 points.append(

@@ -103,6 +103,14 @@ stateDiagram-v2
 * **Adampur Chhawani Bio-CNG Credits:** Converting household wet organic waste into direct discounts on piped gas and cooking cylinders.
 * **RWA Community Green Pools:** Society-level point aggregation unlocking matching municipal park development grants.
 
+### 10. 🎯 Smart Civic Delight & Field Optimization Features
+* **WhatsApp "Alert My Colony" Link:** 1-click sharing of real-time collection vehicle arrival ETA directly to neighborhood and RWA WhatsApp groups.
+* **Swachh Bharat & Swachh Bhopal Municipal Slogan Showcase:** Prominent landing page civic banner showcasing official BMC slogans with tricolor accents.
+* **"Skip Today's Sweep" Advance Notice:** Households out of town or generating zero waste notify drivers in advance, saving vehicle route fuel and idling while preserving their $1.2\times$ EcoPoints streak.
+* **Client-Side Photo Compression:** Native in-browser canvas compression reducing 4–12 MB field camera photos to ~150 KB (95% bandwidth saved), ensuring instant upload over 2G/3G connections.
+* **Morning Collection Alarm & Web Audio Chime:** Scheduled daily morning alert (07:15 AM) with pleasant 2-tone melodic chime and desktop/phone notification.
+* **🌙 Dark Mode / Night Shift Theme:** Full class-based dark theme toggle integrated into the navbar and citizen header for evening and night market sanitation shifts.
+
 ---
 
 ## 👥 Multi-Role Portals

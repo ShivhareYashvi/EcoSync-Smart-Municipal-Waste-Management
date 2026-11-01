@@ -21,6 +21,7 @@ import { EmptyState } from '../../components/EmptyState';
 import { DriverRewardsSection } from '../../components/driver/DriverRewardsSection';
 import { StatCard } from '../../components/StatCard';
 import { TrackingMap } from '../../components/TrackingMap';
+import { compressFieldPhoto, formatBytes } from '../../lib/imageCompression';
 import { api } from '../../lib/api';
 import type { DriverLocation, Pickup, PickupStatus, Route, WasteCategory } from '../../lib/types';
 import {
@@ -51,6 +52,8 @@ function LogPickupForm({ pickup, onSuccess }: LogFormProps) {
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | null>(pickup.photo_url ?? null);
   const [uploading, setUploading] = useState(false);
+  const [compressing, setCompressing] = useState(false);
+  const [compressionInfo, setCompressionInfo] = useState<{ orig: string; comp: string; savings: number } | null>(null);
   const [logMsg, setLogMsg] = useState<string | null>(null);
   const [logErr, setLogErr] = useState<string | null>(null);
 
@@ -202,12 +205,43 @@ function LogPickupForm({ pickup, onSuccess }: LogFormProps) {
           type="file"
           accept="image/jpeg,image/png,image/webp"
           className="w-full text-xs text-slate-700"
-          onChange={(e) => {
+          onChange={async (e) => {
             const f = e.target.files?.[0] ?? null;
-            setPhotoFile(f);
-            if (f) setPhotoUrl(null); // will be uploaded on submit
+            if (!f) {
+              setPhotoFile(null);
+              setCompressionInfo(null);
+              return;
+            }
+            setCompressing(true);
+            try {
+              const res = await compressFieldPhoto(f);
+              setPhotoFile(res.file);
+              setPhotoUrl(null);
+              setCompressionInfo({
+                orig: formatBytes(res.originalBytes),
+                comp: formatBytes(res.compressedBytes),
+                savings: res.savingsPercent,
+              });
+            } catch {
+              setPhotoFile(f);
+            } finally {
+              setCompressing(false);
+            }
           }}
         />
+        {compressionInfo && (
+          <div className="mt-2 flex items-center gap-2 rounded-xl bg-emerald-50 border border-emerald-200 px-3 py-1.5 text-[11px] font-semibold text-emerald-800">
+            <CheckCircle className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+            <span>
+              Optimized: <strong>{compressionInfo.orig}</strong> → <strong>{compressionInfo.comp}</strong> ({compressionInfo.savings}% bandwidth saved · Instant field sync)
+            </span>
+          </div>
+        )}
+        {compressing && (
+          <p className="mt-1 text-[11px] text-slate-500 animate-pulse">
+            🗜️ Compressing photo for instant upload...
+          </p>
+        )}
       </div>
       <button
         type="button"

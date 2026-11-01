@@ -1,8 +1,9 @@
-from fastapi import APIRouter, Depends, Query, Response, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
 from sqlalchemy.orm import Session
 
 from app.core.security import get_current_user
 from app.db import get_db
+from app.models.enums import UserRole
 from app.models.user import User
 from app.schemas.analytics import AnalyticsSummary
 from app.schemas.complaint import (
@@ -21,7 +22,14 @@ router = APIRouter(tags=["operations"])
 
 
 @router.post("/pickups", response_model=PickupRequestRead, status_code=status.HTTP_201_CREATED)
-def create_pickup(payload: PickupRequestCreate, session: Session = Depends(get_db)) -> PickupRequestRead:
+def create_pickup(
+    payload: PickupRequestCreate,
+    current_user: User = Depends(get_current_user),
+    session: Session = Depends(get_db),
+) -> PickupRequestRead:
+    # Non-admin citizens cannot book pickups for other user IDs
+    if current_user.role != UserRole.ADMIN and current_user.id != payload.user_id:
+        payload.user_id = current_user.id
     return operations_service.create_pickup(session, payload)
 
 
@@ -29,8 +37,12 @@ def create_pickup(payload: PickupRequestCreate, session: Session = Depends(get_d
 def list_pickups(
     user_id: int | None = Query(default=None),
     driver_id: int | None = Query(default=None),
+    current_user: User = Depends(get_current_user),
     session: Session = Depends(get_db),
 ) -> list[PickupRequestRead]:
+    # Scope query by role: citizens may only access their own pickups
+    if current_user.role == UserRole.CITIZEN:
+        user_id = current_user.id
     return operations_service.list_pickups(session, user_id=user_id, driver_id=driver_id)
 
 
@@ -38,8 +50,14 @@ def list_pickups(
 def assign_pickup(
     pickup_id: int,
     payload: PickupAssignment,
+    current_user: User = Depends(get_current_user),
     session: Session = Depends(get_db),
 ) -> PickupRequestRead:
+    if current_user.role != UserRole.ADMIN:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin privileges required to assign pickups.",
+        )
     return operations_service.assign_pickup(session, pickup_id, payload)
 
 
@@ -47,13 +65,26 @@ def assign_pickup(
 def update_pickup_status(
     pickup_id: int,
     payload: PickupStatusUpdate,
+    current_user: User = Depends(get_current_user),
     session: Session = Depends(get_db),
 ) -> PickupRequestRead:
+    # Only assigned drivers or administrators may alter collection status
+    if current_user.role not in (UserRole.ADMIN, UserRole.DRIVER):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only drivers and administrators can update pickup operational status.",
+        )
     return operations_service.update_pickup_status(session, pickup_id, payload)
 
 
 @router.post("/complaints", response_model=ComplaintRead, status_code=status.HTTP_201_CREATED)
-def create_complaint(payload: ComplaintCreate, session: Session = Depends(get_db)) -> ComplaintRead:
+def create_complaint(
+    payload: ComplaintCreate,
+    current_user: User = Depends(get_current_user),
+    session: Session = Depends(get_db),
+) -> ComplaintRead:
+    if current_user.role != UserRole.ADMIN and current_user.id != payload.user_id:
+        payload.user_id = current_user.id
     return operations_service.create_complaint(session, payload)
 
 
@@ -92,43 +123,97 @@ def upvote_complaint(
 def update_complaint_status(
     complaint_id: int,
     payload: ComplaintStatusUpdate,
+    current_user: User = Depends(get_current_user),
     session: Session = Depends(get_db),
 ) -> ComplaintRead:
+    if current_user.role != UserRole.ADMIN:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin privileges required to resolve or update complaint status.",
+        )
     return operations_service.update_complaint_status(session, complaint_id, payload)
 
 
 @router.post("/rewards", response_model=RewardRead, status_code=status.HTTP_201_CREATED)
-def create_reward(payload: RewardCreate, session: Session = Depends(get_db)) -> RewardRead:
+def create_reward(
+    payload: RewardCreate,
+    current_user: User = Depends(get_current_user),
+    session: Session = Depends(get_db),
+) -> RewardRead:
+    if current_user.role != UserRole.ADMIN:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin privileges required to mint rewards.",
+        )
     return operations_service.create_reward(session, payload)
 
 
 @router.get("/rewards", response_model=list[RewardRead])
-def list_rewards(user_id: int | None = Query(default=None), session: Session = Depends(get_db)) -> list[RewardRead]:
+def list_rewards(
+    user_id: int | None = Query(default=None),
+    current_user: User = Depends(get_current_user),
+    session: Session = Depends(get_db),
+) -> list[RewardRead]:
+    if current_user.role == UserRole.CITIZEN:
+        user_id = current_user.id
     return operations_service.list_rewards(session, user_id=user_id)
 
 
 @router.patch("/rewards/{reward_id}/redeem", response_model=RewardRead)
-def redeem_reward(reward_id: int, payload: RewardRedeem, session: Session = Depends(get_db)) -> RewardRead:
+def redeem_reward(
+    reward_id: int,
+    payload: RewardRedeem,
+    current_user: User = Depends(get_current_user),
+    session: Session = Depends(get_db),
+) -> RewardRead:
     return operations_service.redeem_reward(session, reward_id, payload)
 
 
 @router.post("/notifications", response_model=NotificationRead, status_code=status.HTTP_201_CREATED)
-def create_notification(payload: NotificationCreate, session: Session = Depends(get_db)) -> NotificationRead:
+def create_notification(
+    payload: NotificationCreate,
+    current_user: User = Depends(get_current_user),
+    session: Session = Depends(get_db),
+) -> NotificationRead:
+    if current_user.role != UserRole.ADMIN:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin privileges required to dispatch notifications.",
+        )
     return operations_service.create_notification(session, payload)
 
 
 @router.get("/drivers", response_model=list[DriverRead])
-def list_drivers(session: Session = Depends(get_db)) -> list[DriverRead]:
+def list_drivers(
+    current_user: User = Depends(get_current_user),
+    session: Session = Depends(get_db),
+) -> list[DriverRead]:
     return operations_service.list_drivers(session)
 
 
 @router.get("/analytics/summary", response_model=AnalyticsSummary)
-def analytics_summary(session: Session = Depends(get_db)) -> AnalyticsSummary:
+def analytics_summary(
+    current_user: User = Depends(get_current_user),
+    session: Session = Depends(get_db),
+) -> AnalyticsSummary:
+    if current_user.role != UserRole.ADMIN:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin privileges required to view municipal analytics summary.",
+        )
     return operations_service.analytics_summary(session)
 
 
 @router.get("/analytics/export.csv")
-def analytics_export_csv(session: Session = Depends(get_db)) -> Response:
+def analytics_export_csv(
+    current_user: User = Depends(get_current_user),
+    session: Session = Depends(get_db),
+) -> Response:
+    if current_user.role != UserRole.ADMIN:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin privileges required to export municipal operational data.",
+        )
     csv_content = operations_service.analytics_export_csv(session)
     return Response(
         content=csv_content,

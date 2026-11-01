@@ -12,6 +12,7 @@ import {
   Calendar,
   UserCheck,
   MapPin,
+  Share2,
 } from 'lucide-react';
 import { TrackingMap } from '../TrackingMap';
 import type { DriverLocation, Pickup } from '../../lib/types';
@@ -98,8 +99,24 @@ export const LiveVehicleStatusSection: React.FC<LiveVehicleStatusSectionProps> =
           </h2>
         </div>
 
-        {/* Accessible Text Mode vs Visual Map Toggle */}
-        <div className="flex items-center gap-2">
+        {/* Actions: WhatsApp Share + Accessible View Toggle */}
+        <div className="flex flex-wrap items-center gap-2">
+          {/* WhatsApp Colony Alert Button */}
+          <a
+            href={`https://wa.me/?text=${encodeURIComponent(
+              `📢 *EcoSync Municipal Alert (Bhopal)*\nGarbage collection vehicle *${vehicleReg}* (${driverName}) is en-route in *${wardName}*.\nEstimated Arrival: *${etaMinutes ? `~${etaMinutes} mins` : 'Arriving soon'}*.\n\nPlease keep your Green (Wet) & Blue (Dry) segregated bins ready outside!`
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Share collection vehicle arrival with neighbors on WhatsApp"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-[#25D366] hover:bg-[#1ebd59] px-3.5 py-2 text-xs font-bold text-white shadow-xs transition focus-visible:ring-2 focus-visible:ring-emerald-600"
+            title="Share Arrival with Colony on WhatsApp"
+          >
+            <Share2 className="h-3.5 w-3.5" aria-hidden="true" />
+            <span>Alert Colony (WhatsApp)</span>
+          </a>
+
+          {/* Accessible Text Mode vs Visual Map Toggle */}
           <button
             type="button"
             onClick={() => setShowTextAlternative(!showTextAlternative)}

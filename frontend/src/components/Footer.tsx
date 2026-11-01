@@ -255,8 +255,7 @@ export function Footer({ mode = 'public' }: FooterProps) {
         {/* Bottom Bar: Copyright & Standards */}
         <div className="mt-12 border-t border-slate-900 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
           <p>
-            © {currentYear} EcoSync Municipal Platform · Bhopal Municipal Corporation (BMC) & Swachh
-            Bharat Mission.
+            © {currentYear} EcoSync Smart Municipal Platform · Academic civic-tech research & demonstration prototype designed for Bhopal Municipal Corporation (BMC) & Swachh Bharat Mission workflows.
           </p>
           <div className="flex items-center gap-4 text-[11px]">
             <a href="#features" className="hover:text-slate-400 transition">Privacy Policy</a>

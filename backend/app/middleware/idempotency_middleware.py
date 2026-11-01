@@ -15,9 +15,18 @@ from app.models.idempotency_key import IdempotencyKey
 # Regex matching targets:
 # - POST /api/v1/pickups/{id}/log
 # - PATCH /api/v1/routes/{id}/stops/{stop_id}/status
+# - POST /api/v1/pickups (and /api/v1/operations/pickups)
+# - POST /api/v1/redemptions/claim
+# - PATCH /api/v1/operations/rewards/{id}/redeem
+# - POST /api/v1/recycling/transactions/{id}/confirm
 _IDEMPOTENT_TARGET_PATTERNS = [
     re.compile(r"^/api/v1/pickups/\d+/log$"),
     re.compile(r"^/api/v1/routes/\d+/stops/\d+/status$"),
+    re.compile(r"^/api/v1/pickups$"),
+    re.compile(r"^/api/v1/operations/pickups$"),
+    re.compile(r"^/api/v1/redemptions/claim$"),
+    re.compile(r"^/api/v1/operations/rewards/\d+/redeem$"),
+    re.compile(r"^/api/v1/recycling/transactions/\d+/confirm$"),
 ]
 
 
@@ -124,11 +133,24 @@ class IdempotencyMiddleware(BaseHTTPMiddleware):
             full_res_body = b"".join(res_body_chunks)
             res_text = full_res_body.decode("utf-8", errors="replace")
 
+            # Extract calling user_id if Bearer token present
+            caller_user_id = None
+            auth_header = request.headers.get("Authorization")
+            if auth_header and auth_header.startswith("Bearer "):
+                try:
+                    from jose import jwt
+                    from app.core.config import get_settings
+                    jwt_st = get_settings()
+                    claims = jwt.decode(auth_header[7:], jwt_st.jwt_secret_key, algorithms=[jwt_st.jwt_algorithm])
+                    caller_user_id = int(claims.get("sub", 0)) or None
+                except Exception:
+                    pass
+
             with _get_db_session(request) as session:
                 try:
                     record = IdempotencyKey(
                         key=key,
-                        user_id=None,
+                        user_id=caller_user_id,
                         endpoint=path,
                         request_hash=request_hash,
                         response_status=response.status_code,

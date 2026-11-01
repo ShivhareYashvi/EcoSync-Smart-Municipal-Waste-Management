@@ -143,7 +143,7 @@ class PointsService:
         tx.status = PointsTransactionStatus.FLAGGED
 
         tier = session.scalar(
-            select(UserTierRecord).where(UserTierRecord.user_id == tx.user_id)
+            select(UserTierRecord).where(UserTierRecord.user_id == tx.user_id).with_for_update()
         )
         if tier is not None:
             tier.flags_count += 1
@@ -232,7 +232,7 @@ class PointsService:
 
     def _update_tier(self, session: Session, user_id: int, delta: int) -> None:
         """Upsert user_tiers and promote tier if thresholds are crossed."""
-        tier = session.scalar(select(UserTierRecord).where(UserTierRecord.user_id == user_id))
+        tier = session.scalar(select(UserTierRecord).where(UserTierRecord.user_id == user_id).with_for_update())
         now = datetime.now(timezone.utc)
         if tier is None:
             tier = UserTierRecord(

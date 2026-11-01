@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from sqlalchemy import Boolean, DateTime, Enum, ForeignKey, Integer, String
+from sqlalchemy import Boolean, DateTime, Enum, ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db_base import Base
@@ -18,6 +18,9 @@ class Referral(Base):
     """
 
     __tablename__ = "referrals"
+    __table_args__ = (
+        UniqueConstraint("referred_user_id", name="uq_referral_referred_user"),
+    )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     referrer_id: Mapped[int] = mapped_column(

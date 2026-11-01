@@ -40,7 +40,9 @@ class RedemptionService:
                 detail="Catalog item not found or inactive",
             )
 
-        tier = session.scalar(select(UserTierRecord).where(UserTierRecord.user_id == user_id))
+        tier = session.scalar(
+            select(UserTierRecord).where(UserTierRecord.user_id == user_id).with_for_update()
+        )
         if tier is None or tier.points_balance < item.points_cost:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,

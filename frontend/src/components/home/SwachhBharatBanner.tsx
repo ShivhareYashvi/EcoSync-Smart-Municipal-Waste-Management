@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, CheckCircle2, Award, Heart, ShieldCheck } from 'lucide-react';
+import { CheckCircle2, Award } from 'lucide-react';
 
 export interface SloganItem {
   id: string;
