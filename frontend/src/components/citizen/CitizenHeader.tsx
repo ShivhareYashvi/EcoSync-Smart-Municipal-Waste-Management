@@ -10,8 +10,11 @@ import {
   Truck,
   Recycle,
   Sparkles,
+  Moon,
+  Sun,
 } from 'lucide-react';
 import { useSessionStore } from '../../store/session';
+import { useAccessibilityStore } from '../../store/accessibilityStore';
 import NotificationInbox from '../NotificationInbox';
 import type { User } from '../../lib/types';
 
@@ -29,6 +32,8 @@ export const CitizenHeader: React.FC<CitizenHeaderProps> = ({
   const navigate = useNavigate();
   const clearSession = useSessionStore((s) => s.clearSession);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const darkMode = useAccessibilityStore((s) => s.darkMode);
+  const toggleDarkMode = useAccessibilityStore((s) => s.toggleDarkMode);
 
   const handleLogout = () => {
     clearSession();
@@ -84,6 +89,17 @@ export const CitizenHeader: React.FC<CitizenHeaderProps> = ({
 
         {/* Right: Notification Inbox, Accessibility Shortcut, Profile Menu & Logout */}
         <div className="flex items-center gap-2 sm:gap-3">
+          {/* Night Shift / Dark Theme Quick Toggle */}
+          <button
+            type="button"
+            onClick={toggleDarkMode}
+            aria-label={darkMode ? 'Switch to Light Theme' : 'Switch to Night Shift Theme'}
+            title={darkMode ? 'Switch to Light Theme' : 'Switch to Night Shift Theme'}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:text-amber-500 focus-visible:ring-2 focus-visible:ring-emerald-600 transition"
+          >
+            {darkMode ? <Sun className="h-4 w-4" aria-hidden="true" /> : <Moon className="h-4 w-4" aria-hidden="true" />}
+          </button>
+
           {/* Accessibility Quick Settings Shortcut */}
           <Link
             to="/dashboard/user?tab=accessibility"

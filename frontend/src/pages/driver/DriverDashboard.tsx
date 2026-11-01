@@ -2,6 +2,7 @@ import { useEffect, useRef, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   AlertTriangle,
+  Award,
   Camera,
   CheckCircle,
   CheckCircle2,
@@ -17,6 +18,7 @@ import {
   WifiOff,
 } from 'lucide-react';
 import { EmptyState } from '../../components/EmptyState';
+import { DriverRewardsSection } from '../../components/driver/DriverRewardsSection';
 import { StatCard } from '../../components/StatCard';
 import { TrackingMap } from '../../components/TrackingMap';
 import { api } from '../../lib/api';
@@ -382,6 +384,7 @@ export function DriverDashboard() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [trackingActive, setTrackingActive] = useState(false);
+  const [activeDriverTab, setActiveDriverTab] = useState<'routes' | 'rewards'>('routes');
   const [isOnline, setIsOnline] = useState(typeof navigator !== 'undefined' ? navigator.onLine : true);
   const [queueCount, setQueueCount] = useState(0);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -669,149 +672,194 @@ export function DriverDashboard() {
         </div>
       )}
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Assigned pickups" value={String(pickups.length)} icon={Truck} />
         <StatCard label="Completed today" value={String(completed)} icon={PackageCheck} tone="blue" />
         <StatCard label="Route efficiency" value={pickups.length ? `${Math.round((completed / pickups.length) * 100)}%` : '0%'} icon={Navigation} tone="amber" />
+        <StatCard label="Driver Incentive" value="₹3,850" icon={Award} tone="green" />
       </div>
 
-      {/* Today's route stop tracking */}
-      <TodaysRoute driverUserId={user.id} />
+      {/* Driver View Switcher: Routes vs Performance & Welfare */}
+      <div className="flex flex-wrap items-center gap-3 border-b border-slate-200/80 pb-3">
+        <button
+          type="button"
+          onClick={() => setActiveDriverTab('routes')}
+          className={`flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-bold transition ${
+            activeDriverTab === 'routes'
+              ? 'bg-[#101828] text-white shadow-xs'
+              : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
+          }`}
+        >
+          <Navigation className="h-4 w-4" />
+          <span>Active Route &amp; Stop Management</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveDriverTab('rewards')}
+          className={`flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-bold transition ${
+            activeDriverTab === 'rewards'
+              ? 'bg-[#009B70] text-white shadow-xs'
+              : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
+          }`}
+        >
+          <Award className="h-4 w-4 text-amber-300" />
+          <span>Swachhata Mitra Incentives &amp; Welfare</span>
+          <span className="rounded-full bg-emerald-100 text-emerald-800 px-2 py-0.5 text-xs font-black">
+            ₹3,850
+          </span>
+        </button>
+      </div>
 
-      <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-        <article className="glass-card rounded-[2rem] p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-black text-slate-950">Route Management</h2>
-              <p className="text-slate-600">Push live coordinates and update pickup status in real time.</p>
-            </div>
-            <MapPinned className="h-10 w-10 text-emerald-600" />
-          </div>
-          <div className="mt-6 grid gap-3">
-            {pickups.map((pickup) => (
-              <div key={pickup.id}>
-                <button
-                  className={`flex w-full items-center justify-between rounded-2xl p-4 text-left ${selectedPickup?.id === pickup.id ? 'bg-slate-950 text-white' : 'bg-white/80 text-slate-800'}`}
-                  type="button"
-                  onClick={() => {
-                    setSelectedPickupId(pickup.id);
-                    setStatus(pickup.status);
-                  }}
-                >
-                  <span className="font-bold flex items-center gap-1.5"><span className="font-mono text-xs px-2 py-0.5 rounded-lg bg-emerald-100 text-emerald-800">PKP-${String(pickup.id).padStart(3, '0')}</span><span className="capitalize">{pickup.waste_type} Waste</span></span>
-                  <span className="text-sm">{pickup.status}</span>
-                </button>
-                {/* Show log form for completed pickups that haven't been logged yet */}
-                {selectedPickup?.id === pickup.id && pickup.status === 'completed' && (
-                  <LogPickupForm
-                    pickup={pickup}
-                    onSuccess={() => {
-                      void queryClient.invalidateQueries({ queryKey: ['driver-pickups', user?.driver_id] });
-                    }}
-                  />
-                )}
+      {activeDriverTab === 'rewards' ? (
+        <DriverRewardsSection
+          driverName={user.name || 'Dileep Ahirwar'}
+          driverCode={`BMC-DRV-${String(user.id).padStart(3, '0')}`}
+          vehiclePlate={user.vehicle_number || 'MP-04-GB-2184'}
+          wardNumber={user.ward_number ? `Ward ${user.ward_number} (Bhopal)` : 'Ward 48 (Arera Colony)'}
+          completedStopsToday={completed}
+          totalAssignedStops={pickups.length}
+        />
+      ) : (
+        <>
+          {/* Today's route stop tracking */}
+          <TodaysRoute driverUserId={user.id} />
+
+          <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+            <article className="glass-card rounded-[2rem] p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-2xl font-black text-slate-950">Route Management</h2>
+                  <p className="text-slate-600">Push live coordinates and update pickup status in real time.</p>
+                </div>
+                <MapPinned className="h-10 w-10 text-emerald-600" />
               </div>
-            ))}
-          </div>
-          {selectedPickup ? (
-            <div className="mt-6 grid gap-3">
-              {selectedPickup.coordinates ? (
-                <a
-                  href={`https://www.google.com/maps/dir/?api=1&destination=${selectedPickup.coordinates.latitude},${selectedPickup.coordinates.longitude}&travelmode=driving`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-4 py-3 text-sm font-bold text-white shadow-sm hover:bg-blue-700 transition-colors"
-                >
-                  <Navigation className="h-4 w-4" /> Start Turn-by-Turn Navigation (Google Maps)
-                </a>
+              <div className="mt-6 grid gap-3">
+                {pickups.map((pickup) => (
+                  <div key={pickup.id}>
+                    <button
+                      className={`flex w-full items-center justify-between rounded-2xl p-4 text-left ${selectedPickup?.id === pickup.id ? 'bg-slate-950 text-white' : 'bg-white/80 text-slate-800'}`}
+                      type="button"
+                      onClick={() => {
+                        setSelectedPickupId(pickup.id);
+                        setStatus(pickup.status);
+                      }}
+                    >
+                      <span className="font-bold flex items-center gap-1.5"><span className="font-mono text-xs px-2 py-0.5 rounded-lg bg-emerald-100 text-emerald-800">PKP-${String(pickup.id).padStart(3, '0')}</span><span className="capitalize">{pickup.waste_type} Waste</span></span>
+                      <span className="text-sm">{pickup.status}</span>
+                    </button>
+                    {/* Show log form for completed pickups that haven't been logged yet */}
+                    {selectedPickup?.id === pickup.id && pickup.status === 'completed' && (
+                      <LogPickupForm
+                        pickup={pickup}
+                        onSuccess={() => {
+                          void queryClient.invalidateQueries({ queryKey: ['driver-pickups', user?.driver_id] });
+                        }}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+              {selectedPickup ? (
+                <div className="mt-6 grid gap-3">
+                  {selectedPickup.coordinates ? (
+                    <a
+                      href={`https://www.google.com/maps/dir/?api=1&destination=${selectedPickup.coordinates.latitude},${selectedPickup.coordinates.longitude}&travelmode=driving`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-4 py-3 text-sm font-bold text-white shadow-sm hover:bg-blue-700 transition-colors"
+                    >
+                      <Navigation className="h-4 w-4" /> Start Turn-by-Turn Navigation (Google Maps)
+                    </a>
+                  ) : null}
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <input className="rounded-2xl border border-slate-200 px-4 py-3" placeholder="Latitude" value={latitude} onChange={(event) => setLatitude(event.target.value)} />
+                    <input className="rounded-2xl border border-slate-200 px-4 py-3" placeholder="Longitude" value={longitude} onChange={(event) => setLongitude(event.target.value)} />
+                  </div>
+                  <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
+                    <select className="rounded-2xl border border-slate-200 px-4 py-3" value={status} onChange={(event) => setStatus(event.target.value as PickupStatus)}>
+                      <option value="assigned">Assigned</option>
+                      <option value="in_progress">In progress</option>
+                      <option value="completed">Completed</option>
+                      <option value="cancelled">Cancelled</option>
+                    </select>
+                    <button
+                      className="rounded-2xl bg-slate-200 px-5 py-3 font-bold text-slate-900"
+                      type="button"
+                      onClick={() => {
+                        setError(null);
+                        setMessage('Fetching your current GPS location...');
+                        if (!window.isSecureContext) { setError('Location access requires HTTPS or localhost.'); setMessage(null); return; }
+                        if (!navigator.geolocation) { setError('Geolocation is not supported in this browser.'); setMessage(null); return; }
+                        navigator.geolocation.getCurrentPosition(
+                          (position) => {
+                            const lat = position.coords.latitude.toFixed(6);
+                            const lng = position.coords.longitude.toFixed(6);
+                            if (!lat || !lng || Number.isNaN(Number(lat)) || Number.isNaN(Number(lng))) { setError('Invalid GPS coordinates received.'); setMessage(null); return; }
+                            setLatitude(lat); setLongitude(lng); latRef.current = lat; lngRef.current = lng;
+                            setError(null); setMessage('Location captured successfully.');
+                          },
+                          (geoError) => {
+                            let msg = 'Unable to fetch your current location.';
+                            switch (geoError.code) {
+                              case geoError.PERMISSION_DENIED: msg = 'Location permission denied. Please allow GPS access.'; break;
+                              case geoError.POSITION_UNAVAILABLE: msg = 'GPS signal unavailable. Try moving outdoors.'; break;
+                              case geoError.TIMEOUT: msg = 'Location request timed out. Try again.'; break;
+                            }
+                            setError(msg); setMessage(null);
+                          },
+                          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+                        );
+                      }}
+                    >
+                      <LocateFixed className="mr-2 inline h-4 w-4" />Use my location
+                    </button>
+                  </div>
+                  <textarea className="rounded-2xl border border-slate-200 px-4 py-3" rows={3} placeholder="Status note" value={note} onChange={(event) => setNote(event.target.value)} />
+                  <div className="grid gap-3 md:grid-cols-2">
+                    <button
+                      className={`rounded-2xl px-5 py-3 font-bold text-white ${trackingActive ? 'bg-rose-600' : 'bg-emerald-600'}`}
+                      type="button"
+                      onClick={() => {
+                        setTrackingActive((prev) => {
+                          if (!prev) setMessage('Auto-tracking started. Location is pushed every 10 s.');
+                          else setMessage('Auto-tracking stopped.');
+                          return !prev;
+                        });
+                      }}
+                    >
+                      {trackingActive ? 'Stop auto-tracking' : 'Start auto-tracking'}
+                    </button>
+                    <button className="rounded-2xl bg-slate-200 px-5 py-3 font-bold text-slate-900" type="button" onClick={() => void sendLocation.mutateAsync()}>
+                      Send once
+                    </button>
+                  </div>
+                  <button className="rounded-2xl bg-slate-950 px-5 py-3 font-bold text-white" type="button" onClick={() => void updateStatus.mutateAsync(status)}>
+                    Save status
+                  </button>
+                </div>
               ) : null}
-              <div className="grid gap-3 sm:grid-cols-2">
-                <input className="rounded-2xl border border-slate-200 px-4 py-3" placeholder="Latitude" value={latitude} onChange={(event) => setLatitude(event.target.value)} />
-                <input className="rounded-2xl border border-slate-200 px-4 py-3" placeholder="Longitude" value={longitude} onChange={(event) => setLongitude(event.target.value)} />
+              {message ? <p className="mt-4 rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{message}</p> : null}
+              {error ? <p className="mt-4 rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-700">{error}</p> : null}
+            </article>
+            <article className="glass-card rounded-[2rem] p-6">
+              <h2 className="text-2xl font-black text-slate-950">Live map</h2>
+              <p className="text-slate-600">Driver route renders on OpenStreetMap with streamed coordinates.</p>
+              <div className="mt-6">
+                <TrackingMap
+                  pickupLocation={selectedPickup?.coordinates ?? null}
+                  driverLocation={currentDriverLocation}
+                  focusMode="both"
+                />
               </div>
-              <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
-                <select className="rounded-2xl border border-slate-200 px-4 py-3" value={status} onChange={(event) => setStatus(event.target.value as PickupStatus)}>
-                  <option value="assigned">Assigned</option>
-                  <option value="in_progress">In progress</option>
-                  <option value="completed">Completed</option>
-                  <option value="cancelled">Cancelled</option>
-                </select>
-                <button
-                  className="rounded-2xl bg-slate-200 px-5 py-3 font-bold text-slate-900"
-                  type="button"
-                  onClick={() => {
-                    setError(null);
-                    setMessage('Fetching your current GPS location...');
-                    if (!window.isSecureContext) { setError('Location access requires HTTPS or localhost.'); setMessage(null); return; }
-                    if (!navigator.geolocation) { setError('Geolocation is not supported in this browser.'); setMessage(null); return; }
-                    navigator.geolocation.getCurrentPosition(
-                      (position) => {
-                        const lat = position.coords.latitude.toFixed(6);
-                        const lng = position.coords.longitude.toFixed(6);
-                        if (!lat || !lng || Number.isNaN(Number(lat)) || Number.isNaN(Number(lng))) { setError('Invalid GPS coordinates received.'); setMessage(null); return; }
-                        setLatitude(lat); setLongitude(lng); latRef.current = lat; lngRef.current = lng;
-                        setError(null); setMessage('Location captured successfully.');
-                      },
-                      (geoError) => {
-                        let msg = 'Unable to fetch your current location.';
-                        switch (geoError.code) {
-                          case geoError.PERMISSION_DENIED: msg = 'Location permission denied. Please allow GPS access.'; break;
-                          case geoError.POSITION_UNAVAILABLE: msg = 'GPS signal unavailable. Try moving outdoors.'; break;
-                          case geoError.TIMEOUT: msg = 'Location request timed out. Try again.'; break;
-                        }
-                        setError(msg); setMessage(null);
-                      },
-                      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-                    );
-                  }}
-                >
-                  <LocateFixed className="mr-2 inline h-4 w-4" />Use my location
-                </button>
-              </div>
-              <textarea className="rounded-2xl border border-slate-200 px-4 py-3" rows={3} placeholder="Status note" value={note} onChange={(event) => setNote(event.target.value)} />
-              <div className="grid gap-3 md:grid-cols-2">
-                <button
-                  className={`rounded-2xl px-5 py-3 font-bold text-white ${trackingActive ? 'bg-rose-600' : 'bg-emerald-600'}`}
-                  type="button"
-                  onClick={() => {
-                    setTrackingActive((prev) => {
-                      if (!prev) setMessage('Auto-tracking started. Location is pushed every 10 s.');
-                      else setMessage('Auto-tracking stopped.');
-                      return !prev;
-                    });
-                  }}
-                >
-                  {trackingActive ? 'Stop auto-tracking' : 'Start auto-tracking'}
-                </button>
-                <button className="rounded-2xl bg-slate-200 px-5 py-3 font-bold text-slate-900" type="button" onClick={() => void sendLocation.mutateAsync()}>
-                  Send once
-                </button>
-              </div>
-              <button className="rounded-2xl bg-slate-950 px-5 py-3 font-bold text-white" type="button" onClick={() => void updateStatus.mutateAsync(status)}>
-                Save status
-              </button>
-            </div>
-          ) : null}
-          {message ? <p className="mt-4 rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{message}</p> : null}
-          {error ? <p className="mt-4 rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-700">{error}</p> : null}
-        </article>
-        <article className="glass-card rounded-[2rem] p-6">
-          <h2 className="text-2xl font-black text-slate-950">Live map</h2>
-          <p className="text-slate-600">Driver route renders on OpenStreetMap with streamed coordinates.</p>
-          <div className="mt-6">
-            <TrackingMap
-              pickupLocation={selectedPickup?.coordinates ?? null}
-              driverLocation={currentDriverLocation}
-              focusMode="both"
-            />
+              {selectedPickup && !selectedPickup.coordinates ? (
+                <p className="mt-3 rounded-2xl bg-amber-50 px-4 py-3 text-xs font-semibold text-amber-900">
+                  Pickup coordinates are missing for this request. Ask the citizen to schedule with location so routing can lock onto the waste pickup point.
+                </p>
+              ) : null}
+            </article>
           </div>
-          {selectedPickup && !selectedPickup.coordinates ? (
-            <p className="mt-3 rounded-2xl bg-amber-50 px-4 py-3 text-xs font-semibold text-amber-900">
-              Pickup coordinates are missing for this request. Ask the citizen to schedule with location so routing can lock onto the waste pickup point.
-            </p>
-          ) : null}
-        </article>
-      </div>
+        </>
+      )}
     </section>
   );
 }

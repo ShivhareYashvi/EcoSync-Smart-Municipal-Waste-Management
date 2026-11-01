@@ -9,8 +9,11 @@ import {
   ArrowRight,
   ShieldCheck,
   ChevronRight,
+  Moon,
+  Sun,
 } from 'lucide-react';
 import { useSessionStore } from '../store/session';
+import { useAccessibilityStore } from '../store/accessibilityStore';
 import { dashboardPathForRole } from '../lib/navigation';
 import { AccessibilityQuickModal } from './AccessibilityQuickModal';
 
@@ -27,7 +30,8 @@ export const ECO_NAV_ITEMS: EcoNavItem[] = [
   { label: 'Recycling', href: '/#recycling' },
   { label: 'Scrap', href: '/#scrap' },
   { label: 'About', href: '/#about' },
-  { label: 'Insights', href: '/#insights' },
+  { label: 'Blog', href: '/#blog' },
+  { label: 'FAQ', href: '/#faq' },
 ];
 
 export const EcoNav: React.FC = () => {
@@ -39,13 +43,15 @@ export const EcoNav: React.FC = () => {
   const [a11yModalOpen, setA11yModalOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [isScrolled, setIsScrolled] = useState(false);
+  const darkMode = useAccessibilityStore((s) => s.darkMode);
+  const toggleDarkMode = useAccessibilityStore((s) => s.toggleDarkMode);
 
   // Scrollspy to automatically highlight the current visible section
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 16);
 
-      const sectionIds = ['home', 'solutions', 'operations', 'recycling', 'scrap', 'about', 'insights'];
+      const sectionIds = ['home', 'solutions', 'operations', 'recycling', 'scrap', 'about', 'blog', 'faq'];
       const scrollPosition = window.scrollY + 140;
 
       for (let i = sectionIds.length - 1; i >= 0; i--) {
@@ -169,6 +175,17 @@ export const EcoNav: React.FC = () => {
 
           {/* Right: User Actions */}
           <div className="flex items-center gap-2 sm:gap-2.5">
+            {/* Night Shift / Dark Theme Quick Toggle */}
+            <button
+              type="button"
+              onClick={toggleDarkMode}
+              aria-label={darkMode ? 'Switch to Light Theme' : 'Switch to Night Shift Theme'}
+              title={darkMode ? 'Switch to Light Theme' : 'Switch to Night Shift Theme'}
+              className="flex items-center justify-center h-8 w-8 sm:h-9 sm:w-9 rounded-xl border border-[#E4E7EC] dark:border-slate-700 bg-white dark:bg-slate-900 text-[#475467] dark:text-amber-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition shadow-2xs focus-visible:ring-2 focus-visible:ring-[#009B70]"
+            >
+              {darkMode ? <Sun className="h-4 w-4" aria-hidden="true" /> : <Moon className="h-4 w-4" aria-hidden="true" />}
+            </button>
+
             {/* Accessibility Quick Toggle Button */}
             <button
               type="button"

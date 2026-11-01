@@ -10,12 +10,14 @@ import {
 import { EcoNav } from '../components/EcoNav';
 import { CircularRewardsCalculator } from '../components/home/CircularRewardsCalculator';
 import { HowItWorksSection } from '../components/home/HowItWorksSection';
+import { SwachhBharatBanner } from '../components/home/SwachhBharatBanner';
 import { BhopalOperationsSection } from '../components/home/BhopalOperationsSection';
 import { SolutionsSection } from '../components/home/SolutionsSection';
 import { RecyclingSection } from '../components/home/RecyclingSection';
 import { ScrapPriceBoardSection } from '../components/home/ScrapPriceBoardSection';
 import { AboutSection } from '../components/home/AboutSection';
-import { InsightsSection } from '../components/home/InsightsSection';
+import { BlogSection } from '../components/home/BlogSection';
+import { FAQSection } from '../components/home/FAQSection';
 import { EcoFooter } from '../components/home/EcoFooter';
 
 export function LandingPage() {
@@ -166,6 +168,9 @@ export function LandingPage() {
           </div>
         </section>
 
+        {/* ── Swachh Bharat & Swachh Bhopal Slogan Showcase ───────────── */}
+        <SwachhBharatBanner />
+
         {/* ── How EcoSync Works: 3-Stage Process Stepper ─────────────── */}
         <HowItWorksSection />
 
@@ -184,8 +189,11 @@ export function LandingPage() {
         {/* ── About: Mission, Civic Network & Problems Solved ────────── */}
         <AboutSection />
 
-        {/* ── Insights: Articles, Segregation Guides & Updates ───────── */}
-        <InsightsSection />
+        {/* ── Blog: Civic Articles, Segregation Guides & Updates ─────── */}
+        <BlogSection />
+
+        {/* ── FAQ: Mission, Citizen/Driver Rewards & Future Roadmap ─── */}
+        <FAQSection />
       </main>
 
       {/* ── EcoFooter: Smart-City Municipal Footer ─────────────────── */}

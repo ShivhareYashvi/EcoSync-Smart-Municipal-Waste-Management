@@ -4,6 +4,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 export type TextScale = 'sm' | 'base' | 'lg' | 'xl';
 
 export type AccessibilityState = {
+  darkMode: boolean;
   highContrast: boolean;
   textScale: TextScale;
   underlinedLinks: boolean;
@@ -11,6 +12,8 @@ export type AccessibilityState = {
   increasedSpacing: boolean;
   screenReaderAssistance: boolean;
 
+  setDarkMode: (enabled: boolean) => void;
+  toggleDarkMode: () => void;
   setHighContrast: (enabled: boolean) => void;
   setTextScale: (scale: TextScale) => void;
   setUnderlinedLinks: (enabled: boolean) => void;
@@ -21,6 +24,7 @@ export type AccessibilityState = {
 };
 
 const DEFAULT_STATE = {
+  darkMode: false,
   highContrast: false,
   textScale: 'base' as TextScale,
   underlinedLinks: false,
@@ -31,8 +35,19 @@ const DEFAULT_STATE = {
 
 export const useAccessibilityStore = create<AccessibilityState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       ...DEFAULT_STATE,
+
+      setDarkMode: (darkMode) => {
+        set({ darkMode });
+        syncDomClasses({ darkMode });
+      },
+
+      toggleDarkMode: () => {
+        const next = !get().darkMode;
+        set({ darkMode: next });
+        syncDomClasses({ darkMode: next });
+      },
 
       setHighContrast: (highContrast) => {
         set({ highContrast });
@@ -81,13 +96,17 @@ export const useAccessibilityStore = create<AccessibilityState>()(
 );
 
 /**
- * Synchronize accessibility classes to <html> element
+ * Synchronize accessibility & dark mode classes to <html> element
  */
 export function syncDomClasses(
-  partialState: Partial<Pick<AccessibilityState, 'highContrast' | 'textScale' | 'underlinedLinks' | 'reducedMotion' | 'increasedSpacing'>>
+  partialState: Partial<Pick<AccessibilityState, 'darkMode' | 'highContrast' | 'textScale' | 'underlinedLinks' | 'reducedMotion' | 'increasedSpacing'>>
 ) {
   if (typeof document === 'undefined') return;
   const root = document.documentElement;
+
+  if (partialState.darkMode !== undefined) {
+    root.classList.toggle('dark', partialState.darkMode);
+  }
 
   if (partialState.highContrast !== undefined) {
     root.classList.toggle('high-contrast', partialState.highContrast);
@@ -110,4 +129,3 @@ export function syncDomClasses(
     root.classList.toggle('increased-spacing', partialState.increasedSpacing);
   }
 }
-

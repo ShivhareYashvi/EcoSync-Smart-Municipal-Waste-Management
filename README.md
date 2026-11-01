@@ -83,6 +83,26 @@ stateDiagram-v2
 * Driver application runs as a **Progressive Web App (PWA)** backed by an **IndexedDB** queue.
 * Drivers navigating Bhopal's narrow, signal-dead alleyways log collections without interruption; all actions queue client-side and synchronize automatically upon reconnect with SHA-256 server idempotency.
 
+### 7. 🎁 Dual Closed-Loop Rewards (Citizen Perks & Swachhata Mitra Incentives)
+* **Citizen Hub Rewards:**
+  * **4-Tier Progression:** Bronze ($0-499\text{ pts}$), Silver ($500-1,999\text{ pts}$), Gold ($2,000-4,999\text{ pts}$), and Platinum Swachhata Champion ($5,000+\text{ pts}$).
+  * **Municipal Public Rebates:** Verified redemption for **$5\% - 10\%$ BMC Annual Property Tax Rebates**, Bhopal Metro (Bhoj Metro) ₹250 travel passes, free $10\text{ kg}$ decentralized organic compost bags, and MPPKVVCL green electricity bill credits.
+  * **Streak Protection:** $1.2\times$ clean segregation multiplier with automated 72-hour dispute appeal buffers.
+* **Driver Performance Pay & Welfare:**
+  * Performance-linked civic bonuses: **₹50 on-time morning sweep bonus**, **₹10 per verified digital scale log**, **₹150 weekly green speed / VRP fuel efficiency bonus**, and **₹500 monthly Ward Cleanliness Champion award**.
+  * Integrated with **Direct Benefit Transfer (DBT)** to driver bank accounts and **Swachhata Mitra Suraksha Bima** (₹5,00,000 cashless healthcare coverage at AIIMS Bhopal).
+
+### 8. 📰 Civic Knowledge Blog & 13-Point Smart-City FAQ Engine
+* **Blog & Municipal Updates:** Educational articles on 4-stream kitchen sorting, Bhopal's 45 new zero-emission electric tippers, Arera Colony compost diversion case studies, and CPCB EPR regulatory guidelines.
+* **Accessible FAQ Section:** WCAG 2.2 AA compliant accordion addressing municipal partnership (BSCDCL & BMC), Legal Metrology scale calibration, citizen tax rebates, driver safety, and public helpline access.
+
+### 9. 🚀 Smart-City Innovation Roadmap (Coming Soon Features)
+* **AI Contamination Camera Pre-Scan:** 3-second on-device computer vision check validating household bins before collection.
+* **Bhopal Metro NFC Tap-to-Ride:** Direct contactless conversion of EcoPoints into Bhoj Metro transit balances.
+* **IoT Ultrasonic Smart Bin Sensors:** Real-time solar-assisted community bin fill-level alerts sent to nearest collection tippers.
+* **Adampur Chhawani Bio-CNG Credits:** Converting household wet organic waste into direct discounts on piped gas and cooking cylinders.
+* **RWA Community Green Pools:** Society-level point aggregation unlocking matching municipal park development grants.
+
 ---
 
 ## 👥 Multi-Role Portals
@@ -113,7 +133,7 @@ stateDiagram-v2
 ```mermaid
 flowchart TD
     subgraph UI["Frontend Layer (React 19 · Vite · TypeScript · Tailwind CSS)"]
-        A["Public Platform (EcoNav · Calculator · Price Board · Insights)"]
+        A["Public Platform (EcoNav · Calculator · Price Board · Blog · FAQ)"]
         B["Citizen Hub (Sidebar · 6-Stage Tracking · Green Wallet)"]
         C["Driver PWA (Offline IndexedDB · Weighment Scales)"]
         D["Recycler MRF Desk (Price Board · EPR Ledger)"]

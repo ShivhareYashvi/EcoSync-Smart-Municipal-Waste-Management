@@ -2,14 +2,11 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   AlertCircle,
-  AlertTriangle,
   ArrowRight,
-  Award,
   Calendar,
   CheckCircle2,
   Coins,
   Cpu,
-  Gift,
   Layers,
   Leaf,
   LocateFixed,
@@ -21,8 +18,6 @@ import {
   Recycle,
   Scale,
   ShieldCheck,
-  ShoppingBag,
-  TrendingUp,
   Truck,
   XCircle,
 } from 'lucide-react';
@@ -32,6 +27,7 @@ import { LocationPickerMap } from '../../components/LocationPickerMap';
 import { CitizenRecyclingMarketplace } from '../../components/user/CitizenRecyclingMarketplace';
 import { CommunityHubPanel } from '../../components/community/CommunityHubPanel';
 import { CitizenProfilePanel } from '../../components/user/CitizenProfilePanel';
+import { CitizenRewardsHub } from '../../components/user/CitizenRewardsHub';
 import { calculateHaversineMeters } from '../../components/TrackingMap';
 
 // New Accessible Citizen Hub Components
@@ -47,15 +43,11 @@ import { HelpSupportModal } from '../../components/citizen/HelpSupportModal';
 
 import { api, buildTrackingSocketUrl } from '../../lib/api';
 import type {
-  CatalogItem,
-  ComplianceScore,
   Complaint,
   DriverLocation,
   Pickup,
   PickupStatus,
-  Redemption,
   Reward,
-  UserTierInfo,
   WasteType,
 } from '../../lib/types';
 import { useSessionStore } from '../../store/session';
@@ -133,12 +125,6 @@ const getInitialSchedule = (userLat?: number | null, userLng?: number | null) =>
   longitude: userLng ? String(userLng) : '',
   notes: '',
 });
-
-function tierColour(tier: string) {
-  if (tier === 'gold') return 'text-yellow-700 bg-yellow-50 border-yellow-200';
-  if (tier === 'silver') return 'text-slate-700 bg-slate-100 border-slate-200';
-  return 'text-amber-800 bg-amber-50 border-amber-200';
-}
 
 function getStatusBadge(status: PickupStatus) {
   switch (status) {
@@ -267,253 +253,6 @@ function PickupConfirmDispute({ pickup, onDone }: PickupActionsProps) {
       {msg && <p className="text-xs font-bold text-emerald-700">{msg}</p>}
       {err && <p className="text-xs font-bold text-rose-700">{err}</p>}
     </div>
-  );
-}
-
-// ── Points & Tier Card ────────────────────────────────────────────────────────
-function PointsTierCard({ userId }: { userId: number }) {
-  const { data, isLoading } = useQuery({
-    queryKey: ['user-points', userId],
-    queryFn: async () => {
-      const resp = await api.get<UserTierInfo>(`/users/${userId}/points`);
-      return resp.data;
-    },
-    retry: false,
-  });
-
-  if (isLoading) return <div className="glass-card rounded-[2rem] p-6 animate-pulse h-48" />;
-  if (!data) return null;
-
-  return (
-    <article className="glass-card rounded-[2rem] p-6 sm:p-7 shadow-sm">
-      <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-        <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 flex items-center gap-1.5">
-            <Award className="h-4 w-4" /> EcoSync Points Ledger
-          </span>
-          <h2 className="text-xl sm:text-2xl font-black text-slate-950 mt-0.5">
-            Reward Balance & Civic Tier
-          </h2>
-        </div>
-        <div className="h-11 w-11 rounded-2xl bg-amber-50 text-amber-600 border border-amber-200 flex items-center justify-center">
-          <Coins className="h-6 w-6" />
-        </div>
-      </div>
-
-      <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="rounded-2xl bg-emerald-50/60 border border-emerald-200 p-4 text-center">
-          <span className="text-3xl font-black text-emerald-700 leading-none">
-            {data.points_balance}
-          </span>
-          <p className="text-xs font-bold text-slate-600 mt-1">Available Points</p>
-        </div>
-        <div className="rounded-2xl bg-slate-50 border border-slate-200 p-4 text-center">
-          <span className="text-3xl font-black text-slate-800 leading-none">
-            {data.points_lifetime}
-          </span>
-          <p className="text-xs font-bold text-slate-500 mt-1">Lifetime Earned</p>
-        </div>
-        <div className={`rounded-2xl border p-4 text-center capitalize ${tierColour(data.current_tier)}`}>
-          <span className="text-2xl font-black leading-none block">{data.current_tier}</span>
-          <p className="text-xs font-bold mt-1">Citizen Tier</p>
-        </div>
-        <div className="rounded-2xl bg-slate-50 border border-slate-200 p-4 text-center">
-          <span className="text-2xl font-black text-slate-700 leading-none">
-            {data.flags_count}
-          </span>
-          <p className="text-xs font-bold text-slate-500 mt-1">Disputes Logged</p>
-        </div>
-      </div>
-
-      {data.recent_transactions.length > 0 && (
-        <div className="mt-5">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-400">
-            Recent Points Activity
-          </p>
-          <div className="grid gap-2 max-h-48 overflow-y-auto pr-1">
-            {data.recent_transactions.map((tx) => (
-              <div
-                key={tx.id}
-                className="flex items-center justify-between rounded-xl bg-slate-50 px-3.5 py-2 text-xs border border-slate-200/60"
-              >
-                <span className="text-slate-700 truncate flex-1 mr-2 font-medium">{tx.reason}</span>
-                <span
-                  className={`font-black shrink-0 ${
-                    tx.status === 'flagged'
-                      ? 'text-rose-600'
-                      : tx.status === 'pending'
-                      ? 'text-amber-600'
-                      : 'text-emerald-700'
-                  }`}
-                >
-                  +{tx.points} pts {tx.status !== 'approved' ? `(${tx.status})` : ''}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </article>
-  );
-}
-
-// ── Compliance Score Card ────────────────────────────────────────────────────
-function ComplianceCard({ userId }: { userId: number }) {
-  const { data, isLoading } = useQuery({
-    queryKey: ['compliance', userId],
-    queryFn: async () => {
-      const resp = await api.get<ComplianceScore>(`/users/${userId}/compliance`);
-      return resp.data;
-    },
-    retry: false,
-  });
-
-  if (isLoading) return <div className="glass-card rounded-[2rem] p-6 animate-pulse h-48" />;
-  if (!data) return null;
-
-  const score = data.rolling_score;
-  const colour = score >= 80 ? 'text-emerald-700' : score >= 50 ? 'text-amber-700' : 'text-rose-700';
-  const bg =
-    score >= 80
-      ? 'bg-emerald-50 border-emerald-200'
-      : score >= 50
-      ? 'bg-amber-50 border-amber-200'
-      : 'bg-rose-50 border-rose-200';
-
-  return (
-    <article className="glass-card rounded-[2rem] p-6 sm:p-7 shadow-sm">
-      <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-        <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 flex items-center gap-1.5">
-            <TrendingUp className="h-4 w-4" /> Swachhata Segregation Index
-          </span>
-          <h2 className="text-xl sm:text-2xl font-black text-slate-950 mt-0.5">
-            Compliance Score
-          </h2>
-        </div>
-        <div className="h-11 w-11 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center">
-          <ShieldCheck className="h-6 w-6" />
-        </div>
-      </div>
-
-      <div className="mt-5 flex items-center gap-6">
-        <div className={`flex h-24 w-24 shrink-0 flex-col items-center justify-center rounded-2xl border ${bg}`}>
-          <span className={`text-3xl font-black leading-none ${colour}`}>{score.toFixed(0)}%</span>
-          <span className="text-[10px] font-bold text-slate-500 uppercase mt-1">Rating</span>
-        </div>
-        <div className="space-y-1.5 text-xs">
-          <p className="text-slate-800 font-semibold">
-            <strong>{data.verified_pickups}</strong> verified clean segregations out of{' '}
-            <strong>{data.total_pickups}</strong> household pickups.
-          </p>
-          <p className="text-slate-500 text-[11px]">
-            Bhopal Municipal Ward 48 Benchmark: <strong>78%</strong> · Rolling 90-day window
-          </p>
-          {score < 50 ? (
-            <p className="flex items-center gap-1 text-[11px] text-rose-600 font-bold mt-1">
-              <AlertTriangle className="h-3.5 w-3.5" /> High contamination rate. Please keep wet and dry bins separate.
-            </p>
-          ) : (
-            <p className="flex items-center gap-1 text-[11px] text-emerald-700 font-bold mt-1">
-              <CheckCircle2 className="h-3.5 w-3.5" /> Excellent! Eligible for municipal property tax rebates.
-            </p>
-          )}
-        </div>
-      </div>
-    </article>
-  );
-}
-
-// ── Redeem Rewards Card ───────────────────────────────────────────────────────
-function RedeemCard({ userId }: { userId: number }) {
-  const queryClient = useQueryClient();
-  const [redeemMsg, setRedeemMsg] = useState<Record<number, string>>({});
-
-  const catalogQuery = useQuery({
-    queryKey: ['catalog'],
-    queryFn: async () => {
-      const resp = await api.get<CatalogItem[]>('/redemptions/catalog');
-      return resp.data;
-    },
-  });
-
-  const redeem = useMutation({
-    mutationFn: (catalogItemId: number) =>
-      api.post<Redemption>('/redemptions', { catalog_item_id: catalogItemId }),
-    onSuccess: (_, catalogItemId) => {
-      setRedeemMsg((prev) => ({ ...prev, [catalogItemId]: '✅ Redeemed! Status: approved.' }));
-      void queryClient.invalidateQueries({ queryKey: ['user-points', userId] });
-    },
-    onError: (err, catalogItemId) => {
-      const msg =
-        err instanceof Error
-          ? err.message.includes('Insufficient')
-            ? '❌ Insufficient points.'
-            : '❌ Redemption failed.'
-          : '❌ Redemption failed.';
-      setRedeemMsg((prev) => ({ ...prev, [catalogItemId]: msg }));
-    },
-  });
-
-  if (catalogQuery.isLoading) return <div className="glass-card rounded-[2rem] p-6 animate-pulse h-48" />;
-  const items = catalogQuery.data ?? [];
-  if (items.length === 0) return null;
-
-  return (
-    <article className="glass-card rounded-[2rem] p-6 sm:p-7 shadow-sm">
-      <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-        <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 flex items-center gap-1.5">
-            <ShoppingBag className="h-4 w-4" /> Civic Reward Catalog
-          </span>
-          <h2 className="text-xl sm:text-2xl font-black text-slate-950 mt-0.5">
-            Redeem EcoSync Points
-          </h2>
-          <p className="text-xs text-slate-500">
-            Convert clean segregation habits into real utility vouchers and municipal benefits.
-          </p>
-        </div>
-        <div className="h-11 w-11 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center">
-          <Gift className="h-6 w-6" />
-        </div>
-      </div>
-
-      <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((item) => (
-          <div
-            key={item.id}
-            className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm transition hover:shadow-md hover:border-emerald-200 flex flex-col justify-between"
-          >
-            <div>
-              <div className="flex items-start justify-between gap-2 mb-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-                  {item.category.replace('_', ' ')}
-                </span>
-                <span className="text-base font-black text-emerald-700">
-                  {item.points_cost} pts
-                </span>
-              </div>
-              <h4 className="text-sm font-bold text-slate-900 leading-snug">{item.item_name}</h4>
-            </div>
-
-            <div className="mt-4 pt-3 border-t border-slate-100">
-              {redeemMsg[item.id] ? (
-                <p className="text-xs font-bold text-emerald-700">{redeemMsg[item.id]}</p>
-              ) : (
-                <button
-                  type="button"
-                  disabled={redeem.isPending}
-                  onClick={() => void redeem.mutateAsync(item.id)}
-                  className="w-full rounded-xl bg-emerald-600 py-2 text-xs font-bold text-white shadow-sm hover:bg-emerald-700 transition disabled:opacity-60"
-                >
-                  Redeem Reward
-                </button>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-    </article>
   );
 }
 
@@ -1320,11 +1059,7 @@ export function UserDashboard() {
           {/* TAB 5: REWARDS & COMPLIANCE */}
           {activeTab === 'rewards' && (
             <div className="space-y-6 animate-in fade-in duration-150">
-              <div className="grid gap-6 lg:grid-cols-2">
-                <PointsTierCard userId={user.id} />
-                <ComplianceCard userId={user.id} />
-              </div>
-              <RedeemCard userId={user.id} />
+              <CitizenRewardsHub userId={user.id} />
             </div>
           )}
 

@@ -29,6 +29,34 @@ body {
 }
 
 /* -------------------------------------------------------------------------- */
+/* NIGHT SHIFT / DARK THEME SYSTEM                                            */
+/* -------------------------------------------------------------------------- */
+html.dark {
+  color-scheme: dark;
+  background-color: #0b111e;
+  color: #f1f5f9;
+}
+
+html.dark body {
+  background-color: #0b111e;
+  color: #f1f5f9;
+}
+
+html.dark .glass-card {
+  border-color: rgba(255, 255, 255, 0.12);
+  background-color: rgba(16, 24, 40, 0.92);
+  color: #f1f5f9;
+}
+
+html.dark input,
+html.dark select,
+html.dark textarea {
+  background-color: #161f30;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+/* -------------------------------------------------------------------------- */
 /* ACCESSIBILITY & WCAG 2.2 LEVEL AA STYLES                                   */
 /* -------------------------------------------------------------------------- */
 
