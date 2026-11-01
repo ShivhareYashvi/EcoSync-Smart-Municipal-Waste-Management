@@ -186,12 +186,38 @@ class OperationsService:
 
     def assign_pickup(self, session: Session, pickup_id: int, payload: PickupAssignment) -> PickupRequestRead:
         pickup = self._get_pickup_entity(session, pickup_id)
-        driver = session.scalar(select(Driver).where(Driver.id == payload.driver_id))
+        # Match driver flexibly by either Driver.id or User.id
+        driver = session.scalar(
+            select(Driver).where(or_(Driver.id == payload.driver_id, Driver.user_id == payload.driver_id))
+        )
         if driver is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Driver not found")
-        pickup.driver_id = payload.driver_id
+        pickup.driver_id = driver.id
         pickup.status = PickupStatus.ASSIGNED
         driver.availability = DriverAvailability.ON_ROUTE
+
+        # Check if an active route exists today for this driver, and link pickup stop
+        active_route = session.scalar(
+            select(Route).where(
+                Route.driver_id == driver.user_id,
+                Route.route_date == pickup.scheduled_date,
+            )
+        )
+        if active_route:
+            pickup.route_id = active_route.id
+            existing_stops = session.scalars(
+                select(RouteStop).where(RouteStop.route_id == active_route.id)
+            ).all()
+            if not any(s.pickup_id == pickup.id for s in existing_stops):
+                max_order = max([s.sequence_order for s in existing_stops], default=0)
+                new_stop = RouteStop(
+                    route_id=active_route.id,
+                    pickup_id=pickup.id,
+                    sequence_order=max_order + 1,
+                    status=RouteStopStatus.PENDING,
+                )
+                session.add(new_stop)
+
         session.commit()
         return self._load_pickup(session, pickup_id)
 
@@ -211,7 +237,11 @@ class OperationsService:
         if user_id is not None:
             query = query.where(PickupRequest.user_id == user_id)
         if driver_id is not None:
-            query = query.where(PickupRequest.driver_id == driver_id)
+            matched_driver = session.scalar(
+                select(Driver).where(or_(Driver.id == driver_id, Driver.user_id == driver_id))
+            )
+            target_driver_id = matched_driver.id if matched_driver else driver_id
+            query = query.where(PickupRequest.driver_id == target_driver_id)
         result = session.scalars(query)
         return [PickupRequestRead.model_validate(item) for item in result.all()]
 
@@ -393,15 +423,19 @@ class OperationsService:
         payload: DriverLocationCreate,
     ) -> DriverLocationRead:
         pickup = self._get_pickup_entity(session, pickup_id)
-        if pickup.driver_id is not None and pickup.driver_id != payload.driver_id:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Location update driver does not match assigned pickup driver")
-        driver = session.scalar(select(Driver).where(Driver.id == payload.driver_id))
+        driver = session.scalar(
+            select(Driver).where(or_(Driver.id == payload.driver_id, Driver.user_id == payload.driver_id))
+        )
         if driver is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Driver not found")
-        pickup.driver_id = payload.driver_id
+        if pickup.driver_id is not None and pickup.driver_id != driver.id:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Location update driver does not match assigned pickup driver")
+        pickup.driver_id = driver.id
         pickup.status = payload.status
         driver.availability = DriverAvailability.ON_ROUTE if payload.status not in {PickupStatus.COMPLETED, PickupStatus.CANCELLED} else DriverAvailability.AVAILABLE
-        location = DriverLocation(pickup_id=pickup_id, **payload.model_dump())
+        loc_data = payload.model_dump()
+        loc_data["driver_id"] = driver.id
+        location = DriverLocation(pickup_id=pickup_id, **loc_data)
         session.add(location)
         session.commit()
         session.refresh(location)

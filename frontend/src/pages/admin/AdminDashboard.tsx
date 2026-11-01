@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { BarChart3, CircleAlert, Download, Truck, UsersRound } from 'lucide-react';
+import { BarChart3, CircleAlert, Database, Download, ExternalLink, Truck, UsersRound } from 'lucide-react';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { StatCard } from '../../components/StatCard';
 import { CompostBatchPanel } from '../../components/admin/CompostBatchPanel';
@@ -84,9 +84,25 @@ export function AdminDashboard() {
               <h2 className="text-2xl font-black text-slate-950">Ward-Level Waste Analytics</h2>
               <p className="text-xs text-slate-500 mt-0.5">Aggregated collection volumes and citizen grievance resolution summary.</p>
             </div>
-            <a className="self-start sm:self-center inline-flex items-center gap-1.5 rounded-2xl bg-slate-950 px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-slate-800 transition" href={`${API_BASE_URL}/analytics/export.csv`} target="_blank" rel="noreferrer">
-              <Download className="h-4 w-4" /> Export CSV Report
-            </a>
+            <div className="flex flex-wrap items-center gap-2">
+              <a
+                className="self-start sm:self-center inline-flex items-center gap-1.5 rounded-2xl bg-indigo-950 px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-indigo-900 transition"
+                href="http://localhost:8000/admin"
+                target="_blank"
+                rel="noreferrer"
+                title="Direct SQLAdmin ORM Database Panel (admin@ecosync.org / password123)"
+              >
+                <Database className="h-4 w-4 text-indigo-400" /> SQLAdmin DB <ExternalLink className="h-3 w-3 opacity-60" />
+              </a>
+              <a
+                className="self-start sm:self-center inline-flex items-center gap-1.5 rounded-2xl bg-slate-950 px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-slate-800 transition"
+                href={`${API_BASE_URL}/analytics/export.csv`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Download className="h-4 w-4" /> Export CSV Report
+              </a>
+            </div>
           </div>
           <div className="mt-4 h-80">
             <ResponsiveContainer width="100%" height="100%">

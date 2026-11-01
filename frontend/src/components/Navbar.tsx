@@ -44,6 +44,7 @@ const DASHBOARD_LINKS: Array<{ to: string; label: string; role?: string }> = [
   { to: '/dashboard/admin/fleet', label: 'Fleet & IoT', role: 'admin' },
   { to: '/dashboard/admin/bulk-generators', label: 'Bulk Generators', role: 'admin' },
   { to: '/dashboard/admin/routes', label: 'Route Dispatch', role: 'admin' },
+  { to: 'http://localhost:8000/admin', label: 'SQLAdmin Portal ↗', role: 'admin' },
   { to: '/price-board', label: 'Scrap Rates' },
   { to: '/features', label: 'Platform Features' }
 ];
@@ -205,19 +206,31 @@ export function Navbar({ mode = 'public', title, subtitle }: NavbarProps) {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <nav className="flex items-center gap-1.5 overflow-x-auto py-2 no-scrollbar">
               {userRoleLinks.map((link) => (
-                <NavLink
-                  key={link.to}
-                  to={link.to}
-                  className={({ isActive }) =>
-                    `whitespace-nowrap rounded-xl px-3.5 py-1.5 text-xs font-bold transition ${
-                      isActive
-                        ? 'bg-slate-900 text-white shadow-sm'
-                        : 'text-slate-600 hover:bg-white hover:text-slate-900'
-                    }`
-                  }
-                >
-                  {link.label}
-                </NavLink>
+                link.to.startsWith('http') ? (
+                  <a
+                    key={link.to}
+                    href={link.to}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="whitespace-nowrap rounded-xl px-3.5 py-1.5 text-xs font-bold transition text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200/60"
+                  >
+                    {link.label}
+                  </a>
+                ) : (
+                  <NavLink
+                    key={link.to}
+                    to={link.to}
+                    className={({ isActive }) =>
+                      `whitespace-nowrap rounded-xl px-3.5 py-1.5 text-xs font-bold transition ${
+                        isActive
+                          ? 'bg-slate-900 text-white shadow-sm'
+                          : 'text-slate-600 hover:bg-white hover:text-slate-900'
+                      }`
+                    }
+                  >
+                    {link.label}
+                  </NavLink>
+                )
               ))}
             </nav>
           </div>
@@ -250,18 +263,31 @@ export function Navbar({ mode = 'public', title, subtitle }: NavbarProps) {
             <div className="space-y-1">
               <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-2">Navigation</p>
               {userRoleLinks.map((link) => (
-                <NavLink
-                  key={link.to}
-                  to={link.to}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={({ isActive }) =>
-                    `block rounded-xl px-3 py-2 text-sm font-bold transition ${
-                      isActive ? 'bg-emerald-50 text-emerald-900' : 'text-slate-700 hover:bg-slate-50'
-                    }`
-                  }
-                >
-                  {link.label}
-                </NavLink>
+                link.to.startsWith('http') ? (
+                  <a
+                    key={link.to}
+                    href={link.to}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block rounded-xl px-3 py-2 text-sm font-bold transition text-indigo-700 bg-indigo-50 hover:bg-indigo-100"
+                  >
+                    {link.label}
+                  </a>
+                ) : (
+                  <NavLink
+                    key={link.to}
+                    to={link.to}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={({ isActive }) =>
+                      `block rounded-xl px-3 py-2 text-sm font-bold transition ${
+                        isActive ? 'bg-emerald-50 text-emerald-900' : 'text-slate-700 hover:bg-slate-50'
+                      }`
+                    }
+                  >
+                    {link.label}
+                  </NavLink>
+                )
               ))}
             </div>
 

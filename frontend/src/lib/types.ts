@@ -1,5 +1,5 @@
 export type UserRole = 'citizen' | 'driver' | 'admin' | 'recycler';
-export type PickupStatus = 'pending' | 'assigned' | 'in_progress' | 'completed' | 'cancelled';
+export type PickupStatus = 'pending' | 'assigned' | 'in_progress' | 'near_your_door' | 'arrived' | 'completed' | 'cancelled';
 export type WasteType = 'wet' | 'dry' | 'e-waste' | 'bulky';
 export type WasteCategory = 'wet' | 'dry' | 'hazardous' | 'e_waste' | 'mixed';
 export type ComplaintStatus = 'open' | 'in_review' | 'resolved' | 'rejected';
@@ -69,6 +69,7 @@ export interface ProfileAddressPayload {
   pincode: string;
   latitude?: number | null;
   longitude?: number | null;
+  vehicle_number?: string | null;
 }
 
 export interface Pickup {

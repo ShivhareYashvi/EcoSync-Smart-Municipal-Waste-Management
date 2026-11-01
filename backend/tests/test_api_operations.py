@@ -345,3 +345,29 @@ class TestPickupRequestFlow:
         assert data["coordinates"]["latitude"] == 23.2100
         assert data["coordinates"]["longitude"] == 77.4300
 
+
+    def test_assign_pickup_with_flexible_driver_id(self, client):
+        admin_token = _login(client, phone="+910000000001")
+        # Pickup 1 exists. Driver 1 has user_id = 3, driver.id = 1.
+        # Assign using user_id 3
+        resp = client.patch(
+            "/api/v1/pickups/1/assign",
+            json={"driver_id": 3},
+            headers=_auth(admin_token),
+        )
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["driver_id"] == 1
+        assert data["status"] == "assigned"
+
+    def test_driver_profile_setup_endpoint(self, client):
+        driver_token = _login(client, phone="+910000000003")
+        resp = client.post(
+            "/api/v1/auth/driver-profile",
+            json={"vehicle_number": "MP-04-EV-9999"},
+            headers=_auth(driver_token),
+        )
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["vehicle_number"] == "MP-04-EV-9999"
+        assert data["driver_id"] is not None

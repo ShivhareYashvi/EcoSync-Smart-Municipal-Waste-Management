@@ -36,7 +36,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     tags: ['Segregation', 'Doorstep Collection', 'EcoPoints'],
     fullContent: [
       'Proper waste segregation at the doorstep is the single most critical factor determining whether waste is converted into valuable compost and recycled commodities or left to generate methane in landfills.',
-      '1. Green Stream (Wet Organic): Keep a dedicated ventilated kitchen bin for all food scraps, vegetable peels, tea leaves, and garden trim. Never use plastic liners—use newspaper or biodegradable cornstarch bags.',
+      '1. Green Stream (Wet Organic): Keep a dedicated ventilated kitchen bin for all food scraps, vegetable peels, tea leaves, and garden trim. Never use plastic liners-use newspaper or biodegradable cornstarch bags.',
       '2. Blue Stream (Dry Recyclables): Rinse milk pouches, plastic bottles, and tin cans to prevent insect infestation. Keep cardboard boxes folded flat to maximize storage and collection efficiency.',
       '3. Red Stream (Domestic Hazardous): Store paint residues, aerosol cans, expired pills, and disinfectant containers in a closed, labeled box away from children.',
       '4. Purple Stream (E-Waste): Never dispose of batteries or electronic cords in common bins. Place them in your purple e-waste drop or hand them directly to your EcoSync collection vehicle for cash payouts.',

@@ -84,6 +84,11 @@ class ProfileAddressRequest(BaseModel):
     pincode: str = Field(pattern=r"^\d{6}$", description="6-digit postal pincode")
     latitude: float | None = Field(default=None, description="GPS pin latitude")
     longitude: float | None = Field(default=None, description="GPS pin longitude")
+    vehicle_number: str | None = Field(default=None, max_length=40, description="Optional vehicle registration plate for drivers")
+
+
+class DriverProfileSetupRequest(BaseModel):
+    vehicle_number: str = Field(min_length=3, max_length=40, description="Vehicle registration plate (e.g. MP-04-EC-2024)")
 
 
 # --- Method Linking ---

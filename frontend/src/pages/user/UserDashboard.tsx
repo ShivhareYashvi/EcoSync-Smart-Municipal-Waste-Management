@@ -57,7 +57,7 @@ import { useSessionStore } from '../../store/session';
 export const formatPickupCode = (id: number) => `PKP-${String(id).padStart(3, '0')}`;
 export const formatComplaintCode = (id: number) => `CMP-${String(id).padStart(3, '0')}`;
 
-const activePickupStatuses: PickupStatus[] = ['assigned', 'in_progress'];
+const activePickupStatuses: PickupStatus[] = ['assigned', 'in_progress', 'near_your_door', 'arrived'];
 
 const WASTE_CATEGORIES: Array<{
   type: WasteType;
@@ -130,6 +130,18 @@ const getInitialSchedule = (userLat?: number | null, userLng?: number | null) =>
 
 function getStatusBadge(status: PickupStatus) {
   switch (status) {
+    case 'arrived':
+      return {
+        label: 'Vehicle At Gate',
+        color: 'bg-emerald-100 text-emerald-900 border-emerald-300',
+        dot: 'bg-emerald-500 animate-pulse',
+      };
+    case 'near_your_door':
+      return {
+        label: 'Near Your Door (<300m)',
+        color: 'bg-amber-100 text-amber-900 border-amber-300',
+        dot: 'bg-amber-500 animate-ping',
+      };
     case 'in_progress':
       return {
         label: 'Driver En Route',

@@ -35,8 +35,11 @@ class RouteService:
         Raises 409 if a route already exists for the same driver/zone/date.
         Raises 422 if there are zero eligible pickups.
         """
-        # Validate driver
-        driver = session.scalar(select(User).where(User.id == payload.driver_id))
+        # Validate driver (support both Driver.id and User.id)
+        from app.models.driver import Driver
+        matched_driver = session.scalar(select(Driver).where(Driver.id == payload.driver_id))
+        resolved_driver_user_id = matched_driver.user_id if matched_driver else payload.driver_id
+        driver = session.scalar(select(User).where(User.id == resolved_driver_user_id))
         if driver is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Driver user not found")
 
@@ -48,7 +51,7 @@ class RouteService:
         # Prevent duplicate routes for same driver/zone/date
         existing = session.scalar(
             select(Route).where(
-                Route.driver_id == payload.driver_id,
+                Route.driver_id == resolved_driver_user_id,
                 Route.zone_id == payload.zone_id,
                 Route.route_date == payload.route_date,
             )
@@ -94,7 +97,7 @@ class RouteService:
         # Persist route
         now = datetime.now(timezone.utc)
         route = Route(
-            driver_id=payload.driver_id,
+            driver_id=resolved_driver_user_id,
             vehicle_id=payload.vehicle_id,
             zone_id=payload.zone_id,
             route_date=payload.route_date,
@@ -150,8 +153,11 @@ class RouteService:
         return self._route_to_read(route)
 
     def get_routes_for_driver(self, session: Session, driver_user_id: int) -> list[RouteRead]:
+        from app.models.driver import Driver
+        matched_driver = session.scalar(select(Driver).where(Driver.id == driver_user_id))
+        resolved_user_id = matched_driver.user_id if matched_driver else driver_user_id
         routes = session.scalars(
-            select(Route).where(Route.driver_id == driver_user_id).order_by(Route.route_date.desc())
+            select(Route).where(Route.driver_id == resolved_user_id).order_by(Route.route_date.desc())
         ).all()
         return [self._route_to_read(r) for r in routes]
 

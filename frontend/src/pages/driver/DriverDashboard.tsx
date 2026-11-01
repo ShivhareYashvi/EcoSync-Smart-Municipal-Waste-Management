@@ -23,7 +23,8 @@ import { StatCard } from '../../components/StatCard';
 import { TrackingMap } from '../../components/TrackingMap';
 import { compressFieldPhoto, formatBytes } from '../../lib/imageCompression';
 import { api } from '../../lib/api';
-import type { DriverLocation, Pickup, PickupStatus, Route, WasteCategory } from '../../lib/types';
+import axios from 'axios';
+import type { DriverLocation, Pickup, PickupStatus, Route, User, WasteCategory } from '../../lib/types';
 import {
   dismissConflict,
   getOfflineConflicts,
@@ -405,11 +406,116 @@ function TodaysRoute({ driverUserId }: { driverUserId: number }) {
 }
 
 
+//  Driver Onboarding Form ─
+
+function ActivateDriverProfile({ onActivated }: { onActivated: (updatedUser: User) => void }) {
+  const [vehiclePlate, setVehiclePlate] = useState('MP-04-EC-2024');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const presets = [
+    { plate: 'MP-04-EC-2024', desc: 'EV Compactor (Ward 48 Arera Colony)' },
+    { plate: 'MP-04-EC-2025', desc: 'CNG Tipper (Ward 25 Kolar Road)' },
+    { plate: 'MP-04-EC-2026', desc: 'EV Hopper (Ward 36 MP Nagar)' },
+  ];
+
+  const handleActivate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!vehiclePlate.trim()) {
+      setErrorMsg('Please specify a valid vehicle registration number.');
+      return;
+    }
+    setIsSubmitting(true);
+    setErrorMsg(null);
+    try {
+      const res = await api.post('/auth/driver-profile', { vehicle_number: vehiclePlate.trim() });
+      onActivated(res.data);
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        setErrorMsg(err.response?.data?.detail || 'Failed to activate driver profile.');
+      } else if (err instanceof Error) {
+        setErrorMsg(err.message);
+      } else {
+        setErrorMsg('Failed to activate driver profile.');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <article className="glass-card rounded-[2.5rem] p-8 max-w-2xl mx-auto border border-emerald-200/80 bg-white/95 shadow-xl text-center space-y-6 animate-in fade-in duration-200">
+      <div className="mx-auto w-16 h-16 rounded-3xl bg-emerald-100 flex items-center justify-center text-emerald-700 shadow-inner">
+        <Truck className="w-8 h-8" />
+      </div>
+      <div>
+        <h2 className="text-2xl font-black text-slate-900 tracking-tight">Activate Municipal Driver Console</h2>
+        <p className="text-sm text-slate-600 mt-1 max-w-md mx-auto">
+          Link your assigned Bhopal Municipal Corporation (BMC) waste compactor or tipper vehicle to begin today's route.
+        </p>
+      </div>
+
+      <form onSubmit={handleActivate} className="text-left space-y-4">
+        <div>
+          <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+            Select Municipal Fleet Vehicle Plate
+          </label>
+          <div className="grid gap-2 sm:grid-cols-3 mb-3">
+            {presets.map((p) => (
+              <button
+                key={p.plate}
+                type="button"
+                onClick={() => setVehiclePlate(p.plate)}
+                className={`p-3 rounded-2xl border text-left text-xs transition-all ${
+                  vehiclePlate === p.plate
+                    ? 'border-emerald-600 bg-emerald-50 text-emerald-950 font-bold ring-2 ring-emerald-500/20'
+                    : 'border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700'
+                }`}
+              >
+                <div className="font-mono font-black">{p.plate}</div>
+                <div className="text-[10px] text-slate-500 mt-0.5 truncate">{p.desc}</div>
+              </button>
+            ))}
+          </div>
+
+          <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+            Or Enter Custom Vehicle Registration Plate
+          </label>
+          <input
+            type="text"
+            required
+            placeholder="e.g. MP-04-GB-2184"
+            value={vehiclePlate}
+            onChange={(e) => setVehiclePlate(e.target.value.toUpperCase())}
+            className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm font-mono font-bold text-slate-900 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 uppercase"
+          />
+        </div>
+
+        {errorMsg && (
+          <div className="p-3 rounded-2xl bg-rose-50 border border-rose-200 text-xs text-rose-700 font-semibold">
+            {errorMsg}
+          </div>
+        )}
+
+        <button
+          type="submit"
+          disabled={isSubmitting || !vehiclePlate}
+          className="w-full py-4 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm shadow-lg shadow-emerald-600/20 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+        >
+          {isSubmitting ? 'Linking Vehicle...' : 'Activate Driver Console'}
+          <CheckCircle2 className="w-4 h-4" />
+        </button>
+      </form>
+    </article>
+  );
+}
+
 //  Main driver dashboard 
 
 export function DriverDashboard() {
   const queryClient = useQueryClient();
   const user = useSessionStore((state) => state.user);
+  const setUser = useSessionStore((state) => state.setUser);
   const [selectedPickupId, setSelectedPickupId] = useState<number | null>(null);
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
@@ -617,7 +723,7 @@ export function DriverDashboard() {
   }
 
   if (!user.driver_id) {
-    return <EmptyState title="Driver profile missing" description="Register a driver account with a vehicle number to access live tracking tools." />;
+    return <ActivateDriverProfile onActivated={(updatedUser) => setUser(updatedUser)} />;
   }
 
   const pickups = pickupsQuery.data ?? [];
@@ -810,10 +916,12 @@ export function DriverDashboard() {
                     <input className="rounded-2xl border border-slate-200 px-4 py-3" placeholder="Longitude" value={longitude} onChange={(event) => setLongitude(event.target.value)} />
                   </div>
                   <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
-                    <select className="rounded-2xl border border-slate-200 px-4 py-3" value={status} onChange={(event) => setStatus(event.target.value as PickupStatus)}>
-                      <option value="assigned">Assigned</option>
-                      <option value="in_progress">In progress</option>
-                      <option value="completed">Completed</option>
+                    <select className="rounded-2xl border border-slate-200 px-4 py-3 text-xs font-bold text-slate-800" value={status} onChange={(event) => setStatus(event.target.value as PickupStatus)}>
+                      <option value="assigned">Assigned (Queued)</option>
+                      <option value="in_progress">Driver En Route</option>
+                      <option value="near_your_door">Near Your Door (&lt;300m)</option>
+                      <option value="arrived">Vehicle At Gate</option>
+                      <option value="completed">Completed &amp; Weighed</option>
                       <option value="cancelled">Cancelled</option>
                     </select>
                     <button

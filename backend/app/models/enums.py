@@ -20,6 +20,8 @@ class PickupStatus(StrEnum):
     PENDING = "pending"
     ASSIGNED = "assigned"
     IN_PROGRESS = "in_progress"
+    NEAR_YOUR_DOOR = "near_your_door"
+    ARRIVED = "arrived"
     COMPLETED = "completed"
     CANCELLED = "cancelled"
 

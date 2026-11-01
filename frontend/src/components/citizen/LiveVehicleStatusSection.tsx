@@ -50,6 +50,8 @@ export const LiveVehicleStatusSection: React.FC<LiveVehicleStatusSectionProps> =
   const getCurrentStepIndex = () => {
     if (!trackedPickup) return 0;
     if (trackedPickup.status === 'completed') return 5;
+    if (trackedPickup.status === 'arrived') return 4;
+    if (trackedPickup.status === 'near_your_door') return 3;
     if (trackedPickup.status === 'in_progress') {
       if (distanceMeters !== null && distanceMeters <= 50) return 4; // Arrived at gate
       if (isNearDoor || (distanceMeters !== null && distanceMeters <= 300)) return 3; // Within 300m

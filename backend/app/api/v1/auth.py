@@ -6,6 +6,7 @@ from app.core.security import get_current_user
 from app.db import get_db
 from app.models.user import User
 from app.schemas.auth import (
+    DriverProfileSetupRequest,
     EmailLoginRequest,
     EmailSignupRequest,
     EmailVerifyRequest,
@@ -105,6 +106,16 @@ def complete_profile_and_address(
 ) -> UserRead:
     """Save full name, mobile number, and Indian government structured address (House/Flat, Street, Locality, Landmark, Ward, Pincode, GPS pin)."""
     return auth_service.update_profile_and_address(session, current_user.id, payload)
+
+
+@router.post("/driver-profile", response_model=UserRead)
+def setup_driver_profile(
+    payload: DriverProfileSetupRequest,
+    session: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> UserRead:
+    """Register or activate a driver's municipal vehicle profile."""
+    return auth_service.setup_driver_profile(session, current_user.id, payload.vehicle_number)
 
 
 # -----------------------------------------------------------------------------

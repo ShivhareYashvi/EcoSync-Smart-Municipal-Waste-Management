@@ -484,8 +484,72 @@ class AuthService:
             except Exception:
                 pass
 
+        # Handle vehicle registration if provided or driver role
+        if getattr(payload, "vehicle_number", None) or user.role == UserRole.DRIVER:
+            v_num = (getattr(payload, "vehicle_number", None) or "MP-04-EC-2024").strip().upper()
+            from app.models.driver import Driver
+            from app.models.enums import DriverAvailability
+            driver = session.scalar(select(Driver).where(Driver.user_id == user_id))
+            if driver is None:
+                driver = Driver(
+                    user_id=user_id,
+                    vehicle_number=v_num,
+                    availability=DriverAvailability.AVAILABLE,
+                    created_at=datetime.now(timezone.utc),
+                    updated_at=datetime.now(timezone.utc),
+                )
+                session.add(driver)
+            else:
+                driver.vehicle_number = v_num
+                driver.updated_at = datetime.now(timezone.utc)
+            user.role = UserRole.DRIVER
+
         session.commit()
-        return self._to_read_model(user)
+        loaded = self._load_user(session, user_id) or user
+        return self._to_read_model(loaded)
+
+    def setup_driver_profile(self, session: Session, user_id: int, vehicle_number: str) -> UserRead:
+        """Register or activate a driver's municipal vehicle profile."""
+        from app.models.driver import Driver
+        from app.models.enums import DriverAvailability, UserRole
+        from app.models.vehicle import Vehicle
+
+        user = session.get(User, user_id)
+        if user is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
+        clean_vehicle = vehicle_number.strip().upper()
+        if not clean_vehicle:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Valid vehicle registration number required")
+
+        now = datetime.now(timezone.utc)
+        driver = session.scalar(select(Driver).where(Driver.user_id == user_id))
+        if driver is None:
+            existing = session.scalar(select(Driver).where(Driver.vehicle_number == clean_vehicle))
+            if existing and existing.user_id != user_id:
+                raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Vehicle number is already registered to another driver")
+            driver = Driver(
+                user_id=user_id,
+                vehicle_number=clean_vehicle,
+                availability=DriverAvailability.AVAILABLE,
+                created_at=now,
+                updated_at=now,
+            )
+            session.add(driver)
+        else:
+            driver.vehicle_number = clean_vehicle
+            driver.updated_at = now
+
+        user.role = UserRole.DRIVER
+
+        # Link fleet vehicle if one exists
+        fleet_v = session.scalar(select(Vehicle).where(Vehicle.registration_number == clean_vehicle))
+        if fleet_v:
+            fleet_v.assigned_driver_id = user_id
+
+        session.commit()
+        loaded = self._load_user(session, user_id) or user
+        return self._to_read_model(loaded)
 
     # -------------------------------------------------------------------------
     # Account Linking (Link Phone & Email to Single Account)

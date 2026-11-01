@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   Sparkles,
   User,
+  Truck,
 } from 'lucide-react';
 import { api } from '../lib/api';
 import { dashboardPathForRole } from '../lib/navigation';
@@ -53,6 +54,7 @@ export function CompleteProfilePage() {
   const [name, setName] = useState(user?.name && user.name !== 'Citizen' ? user.name : '');
   const [phone, setPhone] = useState(user?.phone ? user.phone.replace('+91', '') : '');
   const [email, setEmail] = useState(user?.email || '');
+  const [vehicleNumber, setVehicleNumber] = useState(user?.vehicle_number || '');
 
   // Step 2: Structured Indian Government Address Format
   const [houseFlat, setHouseFlat] = useState(user?.house_flat_number || '');
@@ -314,6 +316,23 @@ export function CompleteProfilePage() {
                     className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-900 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20"
                   />
                 </div>
+
+                {user?.role === 'driver' && (
+                  <div className="space-y-1 sm:col-span-2 p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200">
+                    <label className="text-xs font-bold uppercase tracking-wider text-emerald-900 flex items-center gap-1.5">
+                      <Truck className="w-3.5 h-3.5 text-emerald-700" />
+                      Assigned Municipal Vehicle Number
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. MP-04-EC-2024"
+                      value={vehicleNumber}
+                      onChange={(e) => setVehicleNumber(e.target.value.toUpperCase())}
+                      className="w-full rounded-xl border border-emerald-300 px-4 py-2.5 text-sm font-mono font-bold text-slate-900 bg-white outline-none uppercase"
+                    />
+                    <p className="text-[11px] text-emerald-700">Enter your assigned BMC compactor or tipper plate.</p>
+                  </div>
+                )}
               </div>
 
               <div className="pt-4 flex justify-end">
@@ -513,7 +532,7 @@ export function CompleteProfilePage() {
                   </div>
                 ) : (
                   <p className="text-[11px] text-slate-500 italic">
-                    Coordinates optional — if skipped, drivers will locate you via your registered landmark & house number.
+                    Coordinates optional - if skipped, drivers will locate you via your registered landmark & house number.
                   </p>
                 )}
 
