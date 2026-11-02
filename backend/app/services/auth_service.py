@@ -465,6 +465,8 @@ class AuthService:
         user.pincode = payload.pincode.strip()
         user.latitude = payload.latitude
         user.longitude = payload.longitude
+        if getattr(payload, "electricity_bill_path", None):
+            user.electricity_bill_path = payload.electricity_bill_path.strip()
 
         # Automatically format the comprehensive single address string
         user.update_formatted_address()

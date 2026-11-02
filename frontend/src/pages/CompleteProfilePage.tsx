@@ -182,6 +182,7 @@ export function CompleteProfilePage() {
       pincode: pinDigits,
       latitude: latitude ?? undefined,
       longitude: longitude ?? undefined,
+      vehicle_number: vehicleNumber ? vehicleNumber.trim().toUpperCase() : undefined,
     };
 
     setIsSubmitting(true);

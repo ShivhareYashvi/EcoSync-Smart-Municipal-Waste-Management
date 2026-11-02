@@ -70,6 +70,7 @@ export interface ProfileAddressPayload {
   latitude?: number | null;
   longitude?: number | null;
   vehicle_number?: string | null;
+  electricity_bill_path?: string | null;
 }
 
 export interface Pickup {

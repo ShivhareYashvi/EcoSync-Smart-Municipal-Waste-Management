@@ -85,6 +85,7 @@ class ProfileAddressRequest(BaseModel):
     latitude: float | None = Field(default=None, description="GPS pin latitude")
     longitude: float | None = Field(default=None, description="GPS pin longitude")
     vehicle_number: str | None = Field(default=None, max_length=40, description="Optional vehicle registration plate for drivers")
+    electricity_bill_path: str | None = Field(default=None, max_length=512, description="Optional electricity bill proof path")
 
 
 class DriverProfileSetupRequest(BaseModel):
