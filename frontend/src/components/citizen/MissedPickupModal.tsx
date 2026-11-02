@@ -48,7 +48,7 @@ export const MissedPickupModal: React.FC<MissedPickupModalProps> = ({
   const queryClient = useQueryClient();
 
   // Clean ward representation (removes duplicated "Ward Ward 25")
-  const cleanWard = (wardNumber || '48').replace(/^ward\s*/i, '').trim();
+  const cleanWard = (wardNumber || '48').replace(/^(ward\s*)+/gi, '').trim() || '48';
 
   // Form states
   const [address, setAddress] = useState('');

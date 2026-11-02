@@ -7,11 +7,14 @@ import {
   Menu,
   Phone,
   Recycle,
+  Moon,
+  Sun,
   X
 } from 'lucide-react';
 import { dashboardPathForRole } from '../lib/navigation';
 import { useScrollDirection } from '../lib/useScrollDirection';
 import { useSessionStore } from '../store/session';
+import { useAccessibilityStore } from '../store/accessibilityStore';
 
 export interface NavbarProps {
   /**
@@ -42,6 +45,8 @@ export function Navbar({ mode = 'public', subtitle }: NavbarProps) {
   const navigate = useNavigate();
   const user = useSessionStore((state) => state.user);
   const clearSession = useSessionStore((state) => state.clearSession);
+  const darkMode = useAccessibilityStore((state) => state.darkMode);
+  const toggleDarkMode = useAccessibilityStore((state) => state.toggleDarkMode);
 
   // Auto-hide scroll state for public mode
   const { isVisible, isAtTop } = useScrollDirection(12);
@@ -122,6 +127,16 @@ export function Navbar({ mode = 'public', subtitle }: NavbarProps) {
 
           {/* Right: User Profile & Actions */}
           <div className="hidden sm:flex items-center gap-2.5">
+            {/* Dark Mode Quick Toggle */}
+            <button
+              type="button"
+              onClick={toggleDarkMode}
+              aria-label={darkMode ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
+              title={darkMode ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
+              className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-amber-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition shadow-2xs"
+            >
+              {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </button>
             {user ? (
               <div className="flex items-center gap-2 rounded-2xl bg-slate-50 p-1 border border-slate-200">
                 <Link
@@ -225,6 +240,18 @@ export function Navbar({ mode = 'public', subtitle }: NavbarProps) {
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
           <div className="sm:hidden border-t border-slate-200 bg-white px-4 py-4 space-y-3 shadow-lg animate-in slide-in-from-top-2">
+            {/* Quick theme toggle in mobile drawer */}
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+              <span className="text-xs font-semibold text-slate-500">Night Shift / Theme</span>
+              <button
+                type="button"
+                onClick={toggleDarkMode}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-amber-300 bg-slate-50 dark:bg-slate-800"
+              >
+                {darkMode ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+                <span>{darkMode ? 'Switch to Light' : 'Switch to Dark'}</span>
+              </button>
+            </div>
             {user && (
               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div className="flex items-center gap-2.5">

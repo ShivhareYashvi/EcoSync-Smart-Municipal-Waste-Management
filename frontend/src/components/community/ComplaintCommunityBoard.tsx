@@ -24,6 +24,7 @@ import {
   XCircle,
 } from 'lucide-react';
 import { api } from '../../lib/api';
+import { formatWard, cleanComplaintText } from '../../lib/formatters';
 import type { Complaint, User } from '../../lib/types';
 
 interface ComplaintCommunityBoardProps {
@@ -126,7 +127,7 @@ const STATUS_META: Record<
 };
 
 // Clean duplicate "Ward Ward" and text
-function cleanDescription(desc: string): string {
+function _cleanDescription(desc: string): string {
   if (!desc) return '';
   return desc
     .replace(/\[Ward\s+Ward\s+/gi, '[Ward ')
@@ -776,8 +777,8 @@ export const ComplaintCommunityBoard: React.FC<ComplaintCommunityBoardProps> = (
             const sla = computeSla(c);
             const CatIcon = catMeta.icon;
             const StatusIcon = statusMeta.icon;
-            const cleanedDesc = cleanDescription(c.description);
-            const wardDisplay = c.ward_number ? c.ward_number.replace(/^Ward\s*/i, 'Ward ') : 'Ward 45';
+            const cleanedDesc = cleanComplaintText(c.description);
+            const wardDisplay = formatWard(c.ward_number);
 
             return (
               <article

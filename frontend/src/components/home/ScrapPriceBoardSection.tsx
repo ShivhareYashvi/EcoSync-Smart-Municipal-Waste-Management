@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Coins,
+
   TrendingUp,
   TrendingDown,
   Minus,
@@ -53,11 +53,6 @@ export const ScrapPriceBoardSection: React.FC = () => {
         {/* Section Header */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
           <div className="max-w-2xl space-y-3">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EAFBF4] text-[#006B4F] text-xs font-bold uppercase tracking-wider border border-[#009B70]/20">
-              <Coins className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>Transparent Municipal Marketplace</span>
-            </span>
-
             <h2
               id="scrap-heading"
               className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#101828] tracking-tight"

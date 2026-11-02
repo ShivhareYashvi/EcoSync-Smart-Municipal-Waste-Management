@@ -29,3 +29,4 @@ export function cleanComplaintText(text?: string | null): string {
     .replace(/\s+/g, ' ')
     .trim();
 }
+

@@ -7,6 +7,20 @@
     <meta name="theme-color" content="#009B70" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <title>EcoSync · Smart Waste & Circular Economy | Bhopal Municipal Operations Network</title>
+    <!-- Prevent theme flash (FOUC) on initial load -->
+    <script>
+      (function() {
+        try {
+          var prefs = localStorage.getItem('ecosync-accessibility-prefs');
+          if (prefs) {
+            var data = JSON.parse(prefs);
+            if (data && data.state && data.state.darkMode) {
+              document.documentElement.classList.add('dark');
+            }
+          }
+        } catch (e) {}
+      })();
+    </script>
     <!-- OneSignal Integration -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>

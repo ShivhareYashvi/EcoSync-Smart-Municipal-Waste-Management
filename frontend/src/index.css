@@ -29,6 +29,60 @@ body {
 }
 
 /* -------------------------------------------------------------------------- */
+/* ELEGANT CIVIC TECH ANIMATIONS                                              */
+/* -------------------------------------------------------------------------- */
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes float-reverse {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.08);
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 4.5s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+  animation: float-reverse 5.2s ease-in-out infinite;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 6s ease-in-out infinite;
+}
+
+.bg-hero-grid {
+  background-image: radial-gradient(rgba(0, 155, 112, 0.1) 1.2px, transparent 1.2px);
+  background-size: 24px 24px;
+}
+
+html.dark .bg-hero-grid {
+  background-image: radial-gradient(rgba(0, 155, 112, 0.2) 1.2px, transparent 1.2px);
+  background-size: 24px 24px;
+}
+
+/* -------------------------------------------------------------------------- */
 /* NIGHT SHIFT / DARK THEME SYSTEM                                            */
 /* -------------------------------------------------------------------------- */
 html.dark {
@@ -42,18 +96,169 @@ html.dark body {
   color: #f1f5f9;
 }
 
-html.dark .glass-card {
-  border-color: rgba(255, 255, 255, 0.12);
-  background-color: rgba(16, 24, 40, 0.92);
+/* Page containers & root surfaces */
+html.dark .min-h-screen,
+html.dark [class*="bg-[#F7F9FC]"],
+html.dark [class*="bg-[#F9FAFB]"] {
+  background-color: #0b111e !important;
+}
+
+/* Sticky Navbars, Sidebars & Headers */
+html.dark header,
+html.dark nav,
+html.dark aside {
+  background-color: #101928 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
   color: #f1f5f9;
 }
 
+/* Card surfaces */
+html.dark .bg-white {
+  background-color: #111c2e !important;
+}
+
+html.dark .bg-slate-50 {
+  background-color: #0e1726 !important;
+}
+
+html.dark .bg-slate-100 {
+  background-color: #162236 !important;
+}
+
+html.dark .glass-card,
+html.dark .card-elevated {
+  border-color: rgba(255, 255, 255, 0.09) !important;
+  background-color: rgba(17, 28, 46, 0.94) !important;
+  color: #f1f5f9;
+}
+
+/* Modal and Dialog overlays & surfaces */
+html.dark [role="dialog"] > div {
+  background-color: #111c2e !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #f8fafc !important;
+}
+
+/* Text colors in Dark Mode */
+html.dark .text-slate-950,
+html.dark .text-slate-900,
+html.dark [class*="text-[#101828]"] {
+  color: #f8fafc !important;
+}
+
+html.dark .text-slate-800 {
+  color: #f1f5f9 !important;
+}
+
+html.dark .text-slate-700 {
+  color: #e2e8f0 !important;
+}
+
+html.dark .text-slate-600,
+html.dark [class*="text-[#475467]"] {
+  color: #94a3b8 !important;
+}
+
+html.dark .text-slate-500 {
+  color: #cbd5e1 !important;
+}
+
+html.dark .text-slate-400 {
+  color: #94a3b8 !important;
+}
+
+/* Borders in Dark Mode */
+html.dark .border-slate-200,
+html.dark .border-slate-100,
+html.dark [class*="border-[#E4E7EC]"] {
+  border-color: rgba(255, 255, 255, 0.09) !important;
+}
+
+/* Hover backgrounds */
+html.dark .hover\:bg-slate-50:hover,
+html.dark .hover\:bg-slate-100:hover,
+html.dark .hover\:bg-white:hover {
+  background-color: #1b283d !important;
+}
+
+html.dark .hover\:text-slate-900:hover,
+html.dark .hover\:text-slate-800:hover {
+  color: #ffffff !important;
+}
+
+/* Inputs, Textareas, Selects */
 html.dark input,
 html.dark select,
 html.dark textarea {
-  background-color: #161f30;
-  border-color: #334155;
-  color: #f8fafc;
+  background-color: #162236 !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #64748b !important;
+}
+
+/* Status Badges in Dark Mode */
+html.dark .bg-emerald-50 {
+  background-color: rgba(6, 78, 59, 0.4) !important;
+}
+html.dark .text-emerald-800,
+html.dark .text-emerald-700 {
+  color: #6ee7b7 !important;
+}
+html.dark .border-emerald-200 {
+  border-color: rgba(5, 150, 105, 0.3) !important;
+}
+
+html.dark .bg-blue-50 {
+  background-color: rgba(30, 58, 138, 0.4) !important;
+}
+html.dark .text-blue-800,
+html.dark .text-blue-700 {
+  color: #93c5fd !important;
+}
+html.dark .border-blue-200 {
+  border-color: rgba(37, 99, 235, 0.3) !important;
+}
+
+html.dark .bg-rose-50 {
+  background-color: rgba(136, 19, 55, 0.4) !important;
+}
+html.dark .text-rose-800,
+html.dark .text-rose-700 {
+  color: #fca5a5 !important;
+}
+html.dark .border-rose-200 {
+  border-color: rgba(225, 29, 72, 0.3) !important;
+}
+
+html.dark .bg-amber-50 {
+  background-color: rgba(120, 53, 15, 0.4) !important;
+}
+html.dark .text-amber-800,
+html.dark .text-amber-700 {
+  color: #fcd34d !important;
+}
+html.dark .border-amber-200 {
+  border-color: rgba(217, 119, 6, 0.3) !important;
+}
+
+/* Dark mode scrollbars */
+html.dark ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+html.dark ::-webkit-scrollbar-track {
+  background: #0b111e;
+}
+html.dark ::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #334155;
 }
 
 /* -------------------------------------------------------------------------- */

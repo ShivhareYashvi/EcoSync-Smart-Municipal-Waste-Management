@@ -605,10 +605,6 @@ export const CitizenRewardsHub: React.FC<CitizenRewardsHubProps> = ({ userId }) 
       {selectedSubTab === 'roadmap' && (
         <div className="rounded-3xl border border-emerald-200 bg-emerald-50/40 p-6 sm:p-8 shadow-xs space-y-6">
           <div className="max-w-2xl">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EAFBF4] text-[#006B4F] text-xs font-bold uppercase tracking-wider border border-[#009B70]/20 mb-2">
-              <Sparkles className="h-3.5 w-3.5" />
-              <span>Smart-City Citizen Innovations</span>
-            </span>
             <h3 className="text-xl font-black text-slate-900">
               Exciting Features Coming Soon to EcoSync
             </h3>

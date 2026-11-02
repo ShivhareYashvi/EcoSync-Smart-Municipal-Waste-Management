@@ -7,6 +7,7 @@ import {
   Info,
 } from 'lucide-react';
 import { useSessionStore } from '../../store/session';
+import { formatWard } from '../../lib/formatters';
 
 export type WasteCategory = 'wet' | 'dry' | 'hazardous' | 'e_waste';
 
@@ -127,7 +128,7 @@ export const CircularRewardsCalculator: React.FC = () => {
 
         <div className="flex items-center gap-2">
           <span className="rounded-full bg-[#EAFBF4] px-2.5 py-1 text-[10px] font-bold text-[#006B4F] border border-[#009B70]/20">
-            {user?.ward_number ? `Ward ${user.ward_number} · Bhopal` : 'Ward 48 · Arera Colony'}
+            {user?.ward_number ? `${formatWard(user.ward_number)} · Bhopal` : 'Ward 48 · Arera Colony'}
           </span>
           <button
             type="button"
