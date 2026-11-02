@@ -276,10 +276,16 @@ export function UserDashboard() {
   const user = useSessionStore((state) => state.user);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Active Tab state (synced with URL ?tab=...)
+  // Active Tab & Sub-action state (synced with URL ?tab=... & ?action=...)
   const activeTab = searchParams.get('tab') || 'console';
-  const handleTabChange = (newTab: string) => {
-    setSearchParams({ tab: newTab });
+  const activeAction = searchParams.get('action') as 'submit' | 'track' | 'feedback' | null;
+
+  const handleTabChange = (newTab: string, subOption?: string) => {
+    const params: Record<string, string> = { tab: newTab };
+    if (subOption) {
+      params.action = subOption;
+    }
+    setSearchParams(params);
   };
 
   // Mobile navigation and modals state
@@ -515,6 +521,7 @@ export function UserDashboard() {
         {/* Left Structured Vertical Sidebar */}
         <CitizenSidebar
           activeTab={activeTab}
+          activeSubOption={activeAction || undefined}
           onSelectTab={handleTabChange}
           isOpenMobile={sidebarOpenMobile}
           onCloseMobile={() => setSidebarOpenMobile(false)}
@@ -1111,24 +1118,45 @@ export function UserDashboard() {
           {/* TAB 6: COMMUNITY & GRIEVANCES */}
           {activeTab === 'community' && (
             <div className="space-y-6 animate-in fade-in duration-150">
-              <CommunityHubPanel currentUser={user} />
+              <CommunityHubPanel
+                currentUser={user}
+                initialTab="complaints"
+                activeAction={activeAction}
+                onActionChange={(action) => {
+                  const next: Record<string, string> = { tab: 'community' };
+                  if (action) next.action = action;
+                  setSearchParams(next);
+                }}
+              />
 
               {/* In-App SMS Dispatch */}
-              <article className="glass-card rounded-[2rem] p-6 sm:p-7 shadow-sm">
-                <div className="flex items-center gap-3 pb-3 border-b border-slate-100">
-                  <div className="h-10 w-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                    <MessageSquareWarning className="h-5 w-5" />
+              <article className="glass-card rounded-[2rem] p-6 sm:p-7 shadow-sm space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                      <MessageSquareWarning className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-black text-slate-950">In-App SMS Grievance Desk</h2>
+                      <p className="text-xs text-slate-500">
+                        Direct Fast2SMS gateway to driver or municipal ward coordinator
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h2 className="text-xl font-black text-slate-950">In-App SMS Grievance Desk</h2>
-                    <p className="text-xs text-slate-500">
-                      Direct Fast2SMS gateway to driver or municipal ward coordinator
-                    </p>
+
+                  {/* Official Helpline Badges */}
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="px-3 py-1 rounded-xl bg-slate-100 border border-slate-200 text-[11px] font-bold text-slate-700">
+                      📞 Swachhata: 14420
+                    </span>
+                    <span className="px-3 py-1 rounded-xl bg-slate-100 border border-slate-200 text-[11px] font-bold text-slate-700">
+                      🏢 BMC Helpline: 1800-233-1555
+                    </span>
                   </div>
                 </div>
 
                 <form
-                  className="mt-5 grid gap-3 sm:grid-cols-[1fr_2fr_auto]"
+                  className="grid gap-3 sm:grid-cols-[1fr_2fr_auto]"
                   onSubmit={async (e) => {
                     e.preventDefault();
                     const target = e.currentTarget;
@@ -1155,21 +1183,48 @@ export function UserDashboard() {
                     name="phone"
                     className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-xs font-semibold outline-none focus:border-emerald-600"
                     placeholder="Phone Number (10 digits)"
+                    defaultValue={user.phone || ''}
                     required
                   />
                   <input
                     name="message"
+                    id="sms-desk-message-input"
                     className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-xs font-semibold outline-none focus:border-emerald-600"
-                    placeholder="Type your message / grievance..."
+                    placeholder="Type your message / grievance (or tap a quick template below)..."
                     required
                   />
                   <button
                     type="submit"
-                    className="rounded-2xl bg-slate-950 px-6 py-3 font-bold text-xs text-white shadow-sm hover:bg-slate-800 transition focus-visible:ring-2 focus-visible:ring-emerald-600"
+                    className="rounded-2xl bg-slate-950 px-6 py-3 font-bold text-xs text-white shadow-sm hover:bg-slate-800 transition focus-visible:ring-2 focus-visible:ring-emerald-600 active:scale-95"
                   >
                     Send SMS
                   </button>
                 </form>
+
+                {/* Quick Grievance Templates */}
+                <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                  <span className="text-[11px] font-bold text-slate-400 mr-1">Quick Templates:</span>
+                  {[
+                    'Doorstep collection vehicle skipped my colony lane',
+                    'Main road public waste bin is overflowing',
+                    'Driver refused dry recyclables separation',
+                  ].map((tpl) => (
+                    <button
+                      key={tpl}
+                      type="button"
+                      onClick={() => {
+                        const input = document.getElementById('sms-desk-message-input') as HTMLInputElement | null;
+                        if (input) {
+                          input.value = tpl;
+                          input.focus();
+                        }
+                      }}
+                      className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-emerald-50 hover:text-emerald-800 border border-slate-200 text-[11px] text-slate-600 font-medium transition cursor-pointer"
+                    >
+                      &quot;{tpl}&quot;
+                    </button>
+                  ))}
+                </div>
                 {smsFeedback && (
                   <div
                     className={`mt-3 p-3 rounded-xl border text-xs font-semibold flex items-center gap-2 animate-in fade-in ${
@@ -1201,6 +1256,7 @@ export function UserDashboard() {
         onClose={() => setMissedPickupOpen(false)}
         userId={user.id}
         wardNumber={user.ward_number || '48'}
+        user={user}
       />
 
       {/* Help & Support Modal Dialog */}

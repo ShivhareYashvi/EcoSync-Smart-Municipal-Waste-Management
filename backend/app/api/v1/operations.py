@@ -126,10 +126,10 @@ def update_complaint_status(
     current_user: User = Depends(get_current_user),
     session: Session = Depends(get_db),
 ) -> ComplaintRead:
-    if current_user.role != UserRole.ADMIN:
+    if current_user.role not in (UserRole.ADMIN, UserRole.DRIVER):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Admin privileges required to resolve or update complaint status.",
+            detail="Admin or driver privileges required to resolve or update complaint status.",
         )
     return operations_service.update_complaint_status(session, complaint_id, payload)
 

@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { EmptyState } from '../../components/EmptyState';
 import { DriverRewardsSection } from '../../components/driver/DriverRewardsSection';
+import { DriverMissedPickupQueue } from '../../components/driver/DriverMissedPickupQueue';
 import { StatCard } from '../../components/StatCard';
 import { TrackingMap } from '../../components/TrackingMap';
 import { compressFieldPhoto, formatBytes } from '../../lib/imageCompression';
@@ -524,7 +525,7 @@ export function DriverDashboard() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [trackingActive, setTrackingActive] = useState(false);
-  const [activeDriverTab, setActiveDriverTab] = useState<'routes' | 'rewards'>('routes');
+  const [activeDriverTab, setActiveDriverTab] = useState<'routes' | 'rewards' | 'missed'>('routes');
   const [isOnline, setIsOnline] = useState(typeof navigator !== 'undefined' ? navigator.onLine : true);
   const [queueCount, setQueueCount] = useState(0);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -848,9 +849,24 @@ export function DriverDashboard() {
             ₹3,850
           </span>
         </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveDriverTab('missed')}
+          className={`flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-bold transition ${
+            activeDriverTab === 'missed'
+              ? 'bg-rose-600 text-white shadow-xs'
+              : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
+          }`}
+        >
+          <AlertTriangle className="h-4 w-4 text-rose-500" />
+          <span>Urgent Missed Collections (24h SLA)</span>
+        </button>
       </div>
 
-      {activeDriverTab === 'rewards' ? (
+      {activeDriverTab === 'missed' ? (
+        <DriverMissedPickupQueue driverWard={user.ward_number} driverId={user.driver_id} />
+      ) : activeDriverTab === 'rewards' ? (
         <DriverRewardsSection
           driverName={user.name || 'Dileep Ahirwar'}
           driverCode={`BMC-DRV-${String(user.id).padStart(3, '0')}`}

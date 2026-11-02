@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session, joinedload
 from app.models.complaint import Complaint
 from app.models.driver import Driver
 from app.models.driver_location import DriverLocation
-from app.models.enums import ComplaintStatus, DriverAvailability, PickupStatus, RewardSource, RouteStatus, RouteStopStatus, WasteType
+from app.models.enums import ComplaintCategory, ComplaintStatus, DriverAvailability, PickupStatus, RewardSource, RouteStatus, RouteStopStatus, WasteType
 from app.models.notification import Notification
 from app.models.pickup_request import PickupRequest
 from app.models.reward import Reward
@@ -254,6 +254,35 @@ class OperationsService:
             complaint_data.setdefault("zone_id", user.zone_id)
         complaint = Complaint(**complaint_data)
         session.add(complaint)
+        session.flush()
+
+        # If missed collection, auto-schedule emergency pickup stop under 24h SLA
+        if complaint.category == ComplaintCategory.MISSED_PICKUP and user:
+            from datetime import date as dt_date, time as dt_time
+            today = dt_date.today()
+            existing_pickup = session.scalar(
+                select(PickupRequest).where(
+                    PickupRequest.user_id == user.id,
+                    PickupRequest.scheduled_date == today,
+                    PickupRequest.waste_type == WasteType.WET,
+                )
+            )
+            if existing_pickup is None:
+                coords = None
+                if user.latitude and user.longitude:
+                    coords = {"latitude": user.latitude, "longitude": user.longitude}
+                emergency_pickup = PickupRequest(
+                    user_id=user.id,
+                    waste_type=WasteType.WET,
+                    status=PickupStatus.PENDING,
+                    scheduled_date=today,
+                    scheduled_time=dt_time(18, 0),
+                    coordinates=coords,
+                    notes=f"EMERGENCY MISSED COLLECTION (24h SLA) - {complaint.description[:180]}",
+                    zone_id=user.zone_id,
+                )
+                session.add(emergency_pickup)
+
         session.commit()
         session.refresh(complaint)
         return ComplaintRead.model_validate(complaint)
@@ -281,7 +310,7 @@ class OperationsService:
     ) -> list[ComplaintRead]:
         from app.models.complaint_upvote import ComplaintUpvote
 
-        query = select(Complaint).options(joinedload(Complaint.upvotes))
+        query = select(Complaint).options(joinedload(Complaint.upvotes), joinedload(Complaint.user))
         if user_id is not None:
             query = query.where(Complaint.user_id == user_id)
 
@@ -311,6 +340,10 @@ class OperationsService:
             has_upvoted = False
             if current_user_id:
                 has_upvoted = any(u.user_id == current_user_id for u in upvotes_list)
+            u_name = c.user.name if c.user else None
+            u_phone = c.user.phone if c.user else None
+            u_addr = c.user.address if c.user else None
+            u_ward = c.user.ward_number if c.user else None
             results.append(
                 ComplaintRead(
                     id=c.id,
@@ -325,6 +358,10 @@ class OperationsService:
                     updated_at=c.updated_at,
                     upvote_count=upvote_cnt,
                     user_has_upvoted=has_upvoted,
+                    user_name=u_name,
+                    user_phone=u_phone,
+                    user_address=u_addr,
+                    ward_number=u_ward,
                 )
             )
         return results

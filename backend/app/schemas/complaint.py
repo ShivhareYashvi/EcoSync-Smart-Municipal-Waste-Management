@@ -29,6 +29,10 @@ class ComplaintRead(ComplaintBase):
     updated_at: datetime
     upvote_count: int = 0
     user_has_upvoted: bool = False
+    user_name: str | None = None
+    user_phone: str | None = None
+    user_address: str | None = None
+    ward_number: str | None = None
 
     model_config = {"from_attributes": True}
 

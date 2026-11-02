@@ -34,4 +34,20 @@ class Complaint(TimestampMixin, Base):
     #  Citizen Engagement: Complaint upvotes
     upvotes = relationship("ComplaintUpvote", back_populates="complaint", cascade="all, delete-orphan")
 
+    @property
+    def user_name(self) -> str | None:
+        return self.user.name if self.user else None
+
+    @property
+    def user_phone(self) -> str | None:
+        return self.user.phone if self.user else None
+
+    @property
+    def user_address(self) -> str | None:
+        return self.user.address if self.user else None
+
+    @property
+    def ward_number(self) -> str | None:
+        return self.user.ward_number if self.user else None
+
 

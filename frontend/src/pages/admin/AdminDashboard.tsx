@@ -7,6 +7,7 @@ import { CompostBatchPanel } from '../../components/admin/CompostBatchPanel';
 import { EPRCreditLedgerPanel } from '../../components/admin/EPRCreditLedgerPanel';
 import { RecyclerVerificationQueue } from '../../components/admin/RecyclerVerificationQueue';
 import { RWAAdminApprovalQueue } from '../../components/admin/RWAAdminApprovalQueue';
+import { MissedPickupSLAManager } from '../../components/admin/MissedPickupSLAManager';
 import { API_BASE_URL, api } from '../../lib/api';
 import type { AnalyticsSummary, Driver, Pickup } from '../../lib/types';
 
@@ -180,6 +181,9 @@ export function AdminDashboard() {
           </div>
         </article>
       </div>
+
+      {/* 24-Hour Municipal Missed Sweep SLA & Grievance Command */}
+      <MissedPickupSLAManager />
 
       {/* Recycler Verification Queue */}
       <RecyclerVerificationQueue />

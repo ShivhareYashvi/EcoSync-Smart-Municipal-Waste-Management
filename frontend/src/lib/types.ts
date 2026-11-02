@@ -105,6 +105,10 @@ export interface Complaint {
   resolved_at?: string | null;
   created_at: string;
   updated_at: string;
+  user_name?: string | null;
+  user_phone?: string | null;
+  user_address?: string | null;
+  ward_number?: string | null;
 }
 
 export interface Reward {
