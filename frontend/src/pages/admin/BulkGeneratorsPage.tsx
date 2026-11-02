@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '../../lib/api';
 import type { BulkGenerator, Zone } from '../../lib/types';
-import { AlertTriangle, Building2, CheckCircle2, Download, FileText, Plus, ShieldAlert } from 'lucide-react';
+import { Building2, CheckCircle2, Download, Plus, ShieldAlert } from 'lucide-react';
 
 const CATEGORY_LABELS: Record<string, string> = {
   hotel: '🏨 Hotel & Hospitality',

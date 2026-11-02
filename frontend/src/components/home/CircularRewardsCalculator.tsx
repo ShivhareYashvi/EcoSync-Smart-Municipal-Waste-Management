@@ -1,15 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Sparkles,
   ShieldCheck,
   ChevronRight,
   RotateCcw,
   Info,
-  Leaf,
-  Coins,
-  Scale,
-  CheckCircle2,
 } from 'lucide-react';
 import { useSessionStore } from '../../store/session';
 

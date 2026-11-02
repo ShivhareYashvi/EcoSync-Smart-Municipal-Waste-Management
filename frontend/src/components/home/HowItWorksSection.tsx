@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Scale, Recycle, ArrowRight, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { Sparkles, CheckCircle2 } from 'lucide-react';
 
 export const HowItWorksSection: React.FC = () => {
   const steps = [

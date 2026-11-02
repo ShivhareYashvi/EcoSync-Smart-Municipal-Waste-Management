@@ -4,7 +4,6 @@ import {
   Award,
   Coins,
   ShieldCheck,
-  CheckCircle2,
   Sparkles,
   Zap,
   Building2,

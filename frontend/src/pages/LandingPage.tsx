@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
@@ -35,26 +34,15 @@ export function LandingPage() {
           aria-labelledby="hero-heading"
           className="relative overflow-hidden pt-28 pb-16 lg:pt-36 lg:pb-24 bg-gradient-to-b from-white via-[#F7F9FC] to-[#F7F9FC]"
         >
-          {/* Subtle Ambient Background Blurs */}
-          <div
-            className="absolute top-12 right-1/4 -z-10 h-96 w-96 rounded-full bg-[#EAFBF4]/80 blur-3xl"
-            aria-hidden="true"
-          />
-          <div
-            className="absolute bottom-10 left-10 -z-10 h-80 w-80 rounded-full bg-emerald-100/40 blur-3xl"
-            aria-hidden="true"
-          />
+
 
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-10">
               {/* Left Column */}
               <div className="lg:col-span-7 space-y-7">
                 {/* Eyebrow */}
-                <div className="inline-flex items-center gap-2.5 rounded-full border border-[#009B70]/30 bg-[#EAFBF4] px-4 py-1.5 text-xs font-bold text-[#006B4F] shadow-2xs">
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#009B70] opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#009B70]"></span>
-                  </span>
+                <div className="inline-flex items-center gap-2 rounded-full border border-[#009B70]/30 bg-[#EAFBF4] px-3.5 py-1 text-xs font-bold text-[#006B4F]">
+                  <span className="h-2 w-2 rounded-full bg-[#009B70]" />
                   <span>SMART BHOPAL &middot; CONNECTED OPERATIONS</span>
                 </div>
 

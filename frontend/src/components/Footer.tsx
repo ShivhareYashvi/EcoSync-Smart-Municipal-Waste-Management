@@ -1,19 +1,10 @@
 import { Link } from 'react-router-dom';
 import {
   Activity,
-  CheckCircle2,
   ExternalLink,
-  Flame,
-  Globe,
-  Heart,
-  HelpCircle,
   Layers,
-  Leaf,
-  MapPin,
   Phone,
   Recycle,
-  Scale,
-  ShieldAlert,
   ShieldCheck,
   Sparkles
 } from 'lucide-react';
@@ -36,7 +27,7 @@ export function Footer({ mode = 'public' }: FooterProps) {
       <footer className="w-full py-4 text-center text-xs text-slate-500">
         <p className="flex items-center justify-center gap-1.5">
           <ShieldCheck className="h-4 w-4 text-emerald-500" />
-          <span>Secured by bcrypt hashing, rate-limiting & stateless JWT bearer tokens</span>
+          <span>Secured Civic Access · Bhopal Municipal Corporation</span>
         </p>
         <p className="mt-1 text-[11px] text-slate-400">
           EcoSync Municipal Network · Bhopal Smart City Development Corporation
@@ -58,11 +49,8 @@ export function Footer({ mode = 'public' }: FooterProps) {
 
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1.5 text-emerald-700 font-medium">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-              </span>
-              <span>All Systems Operational (85 Wards)</span>
+              <span className="h-2 w-2 rounded-full bg-emerald-500" />
+              <span>All Systems Operational</span>
             </div>
 
             <span className="hidden sm:inline text-slate-300">|</span>
@@ -110,32 +98,8 @@ export function Footer({ mode = 'public' }: FooterProps) {
             </div>
 
             <p className="text-xs leading-relaxed text-slate-400 max-w-md">
-              Next-generation municipal waste intelligence and circular economy platform.
-              Bridging citizens, municipal fleet dispatchers, and authorized recyclers with
-              transparent pricing, verified Extended Producer Responsibility (EPR) tracking,
-              and GPS-guided operations in Bhopal.
+              Intelligent municipal waste collection and circular recycling platform connecting citizens, drivers, and authorized recyclers in Bhopal.
             </p>
-
-            {/* Telemetry pill */}
-            <div className="inline-flex items-center gap-2 rounded-2xl bg-slate-900/90 px-3.5 py-2 border border-slate-800 text-xs text-slate-300">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-              </span>
-              <span>All Systems Operational · Bhopal Wards 1-85 Live · CPCB Aligned</span>
-            </div>
-
-            <div className="pt-2 flex flex-wrap gap-2 text-[11px] text-slate-400">
-              <span className="rounded-lg bg-slate-900 px-2.5 py-1 border border-slate-800">
-                Swachh Bharat Mission 2.0
-              </span>
-              <span className="rounded-lg bg-slate-900 px-2.5 py-1 border border-slate-800">
-                CPCB EPR Portal Aligned
-              </span>
-              <span className="rounded-lg bg-slate-900 px-2.5 py-1 border border-slate-800">
-                Smart Cities Mission MP
-              </span>
-            </div>
           </div>
 
           {/* Col 3: Role Portals */}
@@ -194,12 +158,7 @@ export function Footer({ mode = 'public' }: FooterProps) {
                 <span className="text-slate-300 font-medium">Bhopal Municipal Corp. (BMC)</span>
                 <span className="text-[11px] text-slate-500 block">Smart City Office, TT Nagar, Bhopal</span>
               </li>
-              <li className="pt-1">
-                <span className="text-slate-300 font-medium">Operational Wards:</span>
-                <span className="text-[11px] text-slate-500 block">
-                  Arera Colony, MP Nagar, Kolar, TT Nagar, Shahpura, Govindpura, Karond
-                </span>
-              </li>
+
             </ul>
           </div>
 
@@ -255,14 +214,12 @@ export function Footer({ mode = 'public' }: FooterProps) {
         {/* Bottom Bar: Copyright & Standards */}
         <div className="mt-12 border-t border-slate-900 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
           <p>
-            © {currentYear} EcoSync Smart Municipal Platform · Academic civic-tech research & demonstration prototype designed for Bhopal Municipal Corporation (BMC) & Swachh Bharat Mission workflows.
+            © {currentYear} EcoSync · Bhopal Municipal Corporation (BMC) &amp; Swachh Bharat Mission.
           </p>
           <div className="flex items-center gap-4 text-[11px]">
-            <a href="#features" className="hover:text-slate-400 transition">Privacy Policy</a>
+            <Link to="/features" className="hover:text-slate-400 transition">Features &amp; Security</Link>
             <span>·</span>
-            <a href="#features" className="hover:text-slate-400 transition">Civic Terms</a>
-            <span>·</span>
-            <span className="text-emerald-500 font-medium">Bhopal Ward 47-65 Node Active</span>
+            <a href="tel:155304" className="hover:text-slate-400 transition">BMC 155304</a>
           </div>
         </div>
       </div>

@@ -5,11 +5,9 @@ import {
   Phone,
   ShieldCheck,
   Building2,
-  Heart,
-  ExternalLink,
   Lock,
 } from 'lucide-react';
-import { ECO_NAV_ITEMS } from '../EcoNav';
+import { ECO_NAV_ITEMS } from '../../lib/navItems';
 
 export const EcoFooter: React.FC = () => {
   return (

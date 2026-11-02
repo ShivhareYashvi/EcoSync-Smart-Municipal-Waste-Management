@@ -1,7 +1,7 @@
 import React, { FormEvent, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import { CheckCircle2, ChevronRight, KeyRound, Mail, MapPin, Phone, ShieldCheck, Smartphone, Sparkles, Truck, Recycle, Shield } from 'lucide-react';
+import { CheckCircle2, ChevronRight, Mail, Smartphone, Truck, Recycle, Shield } from 'lucide-react';
 import { api } from '../lib/api';
 import { dashboardPathForRole } from '../lib/navigation';
 import type { LoginResponse } from '../lib/types';
@@ -204,19 +204,16 @@ export function LoginPage() {
     <div className="min-h-screen bg-slate-900 flex flex-col justify-between relative overflow-hidden">
       <Navbar mode="auth" />
 
-      {/* Background decoration */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+
 
       <main className="flex-1 flex flex-col justify-center items-center px-4 py-8 relative z-10">
         <section className="w-full max-w-md bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden">
         {/* Header Banner */}
         <div className="bg-gradient-to-r from-emerald-600 to-teal-700 p-7 text-white">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-emerald-200 text-xs font-bold uppercase tracking-widest">
-              <Sparkles className="w-4 h-4 text-emerald-300" />
-              EcoSync Municipal Network
-            </div>
+            <h1 className="text-2xl font-black tracking-tight">
+              {roleMeta ? roleMeta.label : 'Civic Sign-In'}
+            </h1>
             {roleMeta && (
               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white/20 text-white text-[10px] font-bold">
                 <roleMeta.icon className="h-3 w-3" />
@@ -224,11 +221,8 @@ export function LoginPage() {
               </span>
             )}
           </div>
-          <h1 className="mt-2 text-2xl font-black tracking-tight">
-            {roleMeta ? roleMeta.label : 'Smart Civic Sign-In'}
-          </h1>
           <p className="mt-1 text-emerald-100 text-xs leading-relaxed">
-            One account for household pickups, tracking, and Bhopal municipal services.
+            Doorstep pickups, live vehicle tracking, and circular rewards.
           </p>
 
           {/* Authentication Method Tabs */}
@@ -501,7 +495,7 @@ export function LoginPage() {
           {/* Privacy & civic info */}
           <div className="mt-6 pt-5 border-t border-slate-100 text-center">
             <p className="text-[11px] text-slate-400">
-              Secured by bcrypt hashing, rate-limiting & stateless JWT bearer tokens.
+              Secured civic access for Bhopal Municipal Corporation.
             </p>
           </div>
         </div>

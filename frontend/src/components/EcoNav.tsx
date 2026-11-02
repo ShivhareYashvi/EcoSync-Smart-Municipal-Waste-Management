@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Recycle,
@@ -17,24 +17,9 @@ import { useAccessibilityStore } from '../store/accessibilityStore';
 import { dashboardPathForRole } from '../lib/navigation';
 import { AccessibilityQuickModal } from './AccessibilityQuickModal';
 
-export interface EcoNavItem {
-  label: string;
-  href: string;
-  isExternal?: boolean;
-}
+import { ECO_NAV_ITEMS } from '../lib/navItems';
 
-export const ECO_NAV_ITEMS: EcoNavItem[] = [
-  { label: 'Home', href: '/#home' },
-  { label: 'Solutions', href: '/#solutions' },
-  { label: 'Operations', href: '/#operations' },
-  { label: 'Recycling', href: '/#recycling' },
-  { label: 'Scrap', href: '/#scrap' },
-  { label: 'About', href: '/#about' },
-  { label: 'Blog', href: '/#blog' },
-  { label: 'FAQ', href: '/#faq' },
-];
-
-export const EcoNav: React.FC = () => {
+export function EcoNav() {
   const location = useLocation();
   const navigate = useNavigate();
   const user = useSessionStore((s) => s.user);
@@ -127,15 +112,7 @@ export const EcoNav: React.FC = () => {
               <Recycle className="h-5 w-5" aria-hidden="true" />
             </div>
             <div className="text-left">
-              <div className="flex items-center gap-1.5 leading-tight">
-                <span className="text-lg font-black tracking-tight text-[#101828]">EcoSync</span>
-                <span className="hidden sm:inline-block rounded-md bg-[#EAFBF4] px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-[#006B4F] border border-[#009B70]/20">
-                  Bhopal
-                </span>
-              </div>
-              <p className="text-[10px] font-medium text-[#475467] truncate leading-none mt-0.5">
-                Smart Waste &amp; Circular Economy
-              </p>
+              <span className="text-lg font-black tracking-tight text-[#101828]">EcoSync</span>
             </div>
           </Link>
 
@@ -200,13 +177,13 @@ export const EcoNav: React.FC = () => {
 
             {/* Municipal Helpline Pill (Optional access) */}
             <a
-              href="tel:18002330014"
-              aria-label="Bhopal Municipal Corporation 24/7 Helpline: 1800-233-0014"
-              title="Bhopal Municipal Corporation 24/7 Central Control Room"
+              href="tel:155304"
+              aria-label="Bhopal Municipal Corporation Helpline: 155304"
+              title="Bhopal Municipal Corporation 24/7 Helpline"
               className="hidden lg:flex items-center gap-1.5 rounded-xl border border-[#E4E7EC] bg-[#F7F9FC] px-2.5 py-1.5 text-xs font-semibold text-[#475467] hover:text-[#006B4F] hover:border-[#009B70]/30 transition"
             >
               <Phone className="h-3.5 w-3.5 text-[#009B70]" aria-hidden="true" />
-              <span className="text-[11px]">Helpline: <strong>1800-233-0014</strong></span>
+              <span className="text-[11px]">Helpline: <strong>155304</strong></span>
             </a>
 
             {/* Citizen Hub Primary CTA */}
@@ -312,10 +289,10 @@ export const EcoNav: React.FC = () => {
                   BMC Verified
                 </span>
                 <a
-                  href="tel:18002330014"
+                  href="tel:155304"
                   className="font-bold text-[#006B4F] hover:underline"
                 >
-                  Helpline: 1800-233-0014
+                  Helpline: 155304
                 </a>
               </div>
             </div>

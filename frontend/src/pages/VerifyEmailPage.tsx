@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import { AlertCircle, CheckCircle2, Loader2, MailCheck } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Loader2,  } from 'lucide-react';
 import { api } from '../lib/api';
 import { dashboardPathForRole } from '../lib/navigation';
 import type { LoginResponse } from '../lib/types';

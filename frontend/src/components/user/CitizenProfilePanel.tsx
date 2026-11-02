@@ -6,14 +6,9 @@ import {
   Check,
   CheckCircle2,
   Copy,
-  ExternalLink,
-  HelpCircle,
   Home,
-  Info,
-  Landmark,
   Leaf,
   LocateFixed,
-  Mail,
   MapPin,
   MapPinned,
   Phone,
@@ -21,10 +16,7 @@ import {
   RefreshCw,
   Save,
   ShieldCheck,
-  Smartphone,
   Sparkles,
-  TrendingUp,
-  UserCheck
 } from 'lucide-react';
 import { api } from '../../lib/api';
 import type { User } from '../../lib/types';

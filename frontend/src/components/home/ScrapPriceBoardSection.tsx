@@ -9,8 +9,6 @@ import {
   Filter,
   Clock,
   ShieldCheck,
-  CheckCircle2,
-  Building2,
 } from 'lucide-react';
 
 export interface ScrapMaterial {

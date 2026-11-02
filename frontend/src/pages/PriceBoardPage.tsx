@@ -1,16 +1,13 @@
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
 import {
   AlertCircle,
   ArrowRight,
   Award,
-  Calendar,
-  Check,
   CheckCircle2,
-  Clock,
   Coins,
   Cpu,
   FileCheck2,
@@ -18,9 +15,7 @@ import {
   Flame,
   Layers,
   Leaf,
-  LogOut,
   MapPin,
-  Plus,
   Recycle,
   Scale,
   Search,
@@ -28,7 +23,6 @@ import {
   Sparkles,
   TrendingUp,
   Truck,
-  UserCheck,
   X
 } from 'lucide-react';
 import { api } from '../lib/api';

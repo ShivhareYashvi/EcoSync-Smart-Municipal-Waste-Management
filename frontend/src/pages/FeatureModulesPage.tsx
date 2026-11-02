@@ -1,24 +1,11 @@
 import {
   ArrowRight,
-  Award,
-  BarChart3,
   CheckCircle2,
-  Coins,
-  Cpu,
-  FileCheck2,
   Gift,
-  Layers,
-  Leaf,
-  MapPin,
   MapPinned,
   MessageSquareWarning,
-  Navigation,
   Recycle,
-  Scale,
-  ShieldCheck,
-  TrendingUp,
   Truck,
-  Users,
   Zap
 } from 'lucide-react';
 import { Link } from 'react-router-dom';

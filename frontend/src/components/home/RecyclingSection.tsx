@@ -4,12 +4,8 @@ import {
   Recycle,
   Shield,
   Coins,
-  Scale,
   TrendingUp,
-  CheckCircle2,
-  Users,
   Info,
-  ArrowRight,
 } from 'lucide-react';
 
 export const RecyclingSection: React.FC = () => {
@@ -54,7 +50,7 @@ export const RecyclingSection: React.FC = () => {
             The 5-Stage Closed-Loop Recovery Pathway
           </p>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-            {loopStages.map((st, i) => (
+            {loopStages.map((st) => (
               <div
                 key={st.step}
                 className="rounded-2xl border border-[#E4E7EC] bg-white p-4 text-center space-y-2 shadow-2xs hover:border-[#009B70]/40 transition"

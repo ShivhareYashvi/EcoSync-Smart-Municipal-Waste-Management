@@ -1,18 +1,14 @@
-import React, { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {
   ArrowLeft,
   ArrowRight,
   CheckCircle2,
-  Compass,
   Home,
   Loader2,
   MapPin,
   Navigation,
-  Phone,
-  ShieldCheck,
-  Sparkles,
   User,
   Truck,
 } from 'lucide-react';
@@ -71,7 +67,6 @@ export function CompleteProfilePage() {
 
   // UI state
   const [isLocating, setIsLocating] = useState(false);
-  const [locationSuccess, setLocationSuccess] = useState(false);
   const [locationError, setLocationError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -106,11 +101,9 @@ export function CompleteProfilePage() {
         setLatitude(position.coords.latitude);
         setLongitude(position.coords.longitude);
         setIsLocating(false);
-        setLocationSuccess(true);
       },
       (error) => {
         setIsLocating(false);
-        setLocationSuccess(false);
         setLocationError(`Unable to retrieve GPS fix (${error.message}). Moving outdoors often resolves this.`);
       },
       { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
@@ -207,22 +200,15 @@ export function CompleteProfilePage() {
     <div className="min-h-screen bg-slate-900 flex flex-col justify-between relative overflow-hidden">
       <Navbar mode="auth" />
 
-      {/* Background decoration */}
-      <div className="absolute top-0 right-1/3 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
+
 
       <main className="flex-1 flex flex-col justify-center items-center px-4 py-8 relative z-10">
         <section className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 p-7 sm:p-8 text-white">
-          <div className="flex items-center gap-2 text-emerald-200 text-xs font-bold uppercase tracking-widest">
-            <Compass className="w-4 h-4 text-emerald-300" />
-            Bhopal Municipal Corporation Onboarding
-          </div>
-          <h1 className="mt-2 text-2xl sm:text-3xl font-black tracking-tight">Complete Household Profile</h1>
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight">Complete Household Profile</h1>
           <p className="mt-1 text-emerald-100 text-xs leading-relaxed max-w-xl">
-            In India, municipal route optimization and collector dispatch require structured correspondence
-            and GPS coordinates. Please complete your 3-step profile.
+            Complete your contact and address details to coordinate doorstep waste pickups.
           </p>
 
           {/* Stepper Progress Bar */}
@@ -487,7 +473,7 @@ export function CompleteProfilePage() {
               <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                 <h2 className="text-sm font-black uppercase tracking-wider text-slate-800 flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-emerald-600" />
-                  Step 3: Precise Household Gate GPS Pin
+                  Step 3: Household Gate GPS Pin (Optional)
                 </h2>
                 <span className="text-xs font-bold text-slate-400">Step 3 of 3</span>
               </div>
@@ -496,7 +482,7 @@ export function CompleteProfilePage() {
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                   <div>
                     <h3 className="text-xs font-black text-emerald-950 uppercase tracking-wider flex items-center gap-1.5">
-                      <Sparkles className="w-4 h-4 text-emerald-600" />
+                      <Navigation className="w-4 h-4 text-emerald-600" />
                       Latch Geolocation Coordinates
                     </h3>
                     <p className="text-[11px] text-emerald-800 mt-0.5 leading-relaxed">
@@ -543,21 +529,7 @@ export function CompleteProfilePage() {
                 )}
               </div>
 
-              {/* Identity Token Minting Preview */}
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                  Municipal Identity To Be Minted:
-                </span>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-black text-slate-900">{name}</p>
-                    <p className="text-xs text-slate-500">{houseFlat}, {streetColony}, {locality}, {wardNumber}</p>
-                  </div>
-                  <span className="font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 border border-emerald-200">
-                    ECO-2026-{String(user?.id || 1).padStart(6, '0')}
-                  </span>
-                </div>
-              </div>
+
 
               <div className="pt-4 flex items-center justify-between">
                 <button

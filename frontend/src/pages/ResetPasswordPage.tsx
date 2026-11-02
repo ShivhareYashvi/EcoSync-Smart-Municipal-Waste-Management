@@ -1,7 +1,7 @@
 import React, { FormEvent, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import { CheckCircle2, ChevronRight, KeyRound, Lock, ShieldCheck } from 'lucide-react';
+import { CheckCircle2, ChevronRight, KeyRound,  } from 'lucide-react';
 import { api } from '../lib/api';
 import { dashboardPathForRole } from '../lib/navigation';
 import type { LoginResponse } from '../lib/types';
