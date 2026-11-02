@@ -5,24 +5,22 @@ import {
   MapPinned,
   CheckCircle2,
   Compass,
+  Radio,
+  Coins,
+  Building2,
+  BookOpen,
 } from 'lucide-react';
 import { EcoNav } from '../components/EcoNav';
 import { CircularRewardsCalculator } from '../components/home/CircularRewardsCalculator';
 import { HowItWorksSection } from '../components/home/HowItWorksSection';
 import { SwachhBharatBanner } from '../components/home/SwachhBharatBanner';
-import { BhopalOperationsSection } from '../components/home/BhopalOperationsSection';
 import { SolutionsSection } from '../components/home/SolutionsSection';
-import { RecyclingSection } from '../components/home/RecyclingSection';
-import { ScrapPriceBoardSection } from '../components/home/ScrapPriceBoardSection';
-import { AboutSection } from '../components/home/AboutSection';
-import { BlogSection } from '../components/home/BlogSection';
-import { FAQSection } from '../components/home/FAQSection';
 import { EcoFooter } from '../components/home/EcoFooter';
 
 export function LandingPage() {
   return (
     <div className="min-h-screen bg-[#F7F9FC] text-[#101828] antialiased selection:bg-[#009B70] selection:text-white">
-      {/* ── EcoNav: Premium Desktop & Mobile Navigation ─────────────── */}
+      {/* ── EcoNav Navigation ────────────────────────────────────────── */}
       <EcoNav />
 
       {/* ── Main Content Target for Skip Link ──────────────────────── */}
@@ -34,8 +32,6 @@ export function LandingPage() {
           aria-labelledby="hero-heading"
           className="relative overflow-hidden pt-28 pb-16 lg:pt-36 lg:pb-24 bg-gradient-to-b from-white via-[#F7F9FC] to-[#F7F9FC]"
         >
-
-
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-10">
               {/* Left Column */}
@@ -70,13 +66,13 @@ export function LandingPage() {
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </a>
 
-                  <a
-                    href="#operations"
+                  <Link
+                    to="/operations"
                     className="inline-flex items-center gap-2 rounded-xl border border-[#E4E7EC] bg-white px-5 py-3.5 text-sm font-bold text-[#101828] shadow-2xs transition hover:bg-slate-50 hover:border-slate-300 focus-visible:ring-2 focus-visible:ring-[#009B70]"
                   >
                     <Compass className="h-4 w-4 text-[#009B70]" aria-hidden="true" />
                     <span>View Operations</span>
-                  </a>
+                  </Link>
                 </div>
 
                 {/* Three Concise Trust Indicators */}
@@ -159,29 +155,90 @@ export function LandingPage() {
         {/* ── Swachh Bharat & Swachh Bhopal Slogan Showcase ───────────── */}
         <SwachhBharatBanner />
 
+        {/* ── Solutions: Merged Into Landing Page ──────────────────────── */}
+        <SolutionsSection />
+
         {/* ── How EcoSync Works: 3-Stage Process Stepper ─────────────── */}
         <HowItWorksSection />
 
-        {/* ── Operations: Bhopal Command View & Interactive Map ──────── */}
-        <BhopalOperationsSection />
+        {/* ── Quick Discovery Navigation Strip (Separate Distinct Pages) ── */}
+        <section className="border-t border-[#E4E7EC] bg-white py-16 lg:py-20">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-8">
+            <div className="text-center max-w-2xl mx-auto space-y-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#006B4F] bg-[#EAFBF4] px-3 py-1 rounded-full border border-[#009B70]/20">
+                Explore The Platform
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-black text-[#101828]">
+                Dedicated Civic &amp; Municipal Modules
+              </h2>
+              <p className="text-xs sm:text-sm text-[#475467]">
+                Access detailed telemetry, live commodity rates, knowledge guides, and municipal mission details.
+              </p>
+            </div>
 
-        {/* ── Solutions: 6 Comprehensive Capabilities Cards ──────────── */}
-        <SolutionsSection />
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <Link
+                to="/operations"
+                className="group rounded-2xl border border-[#E4E7EC] bg-[#F7F9FC] p-6 text-left transition hover:border-[#009B70] hover:bg-white hover:shadow-md"
+              >
+                <div className="h-10 w-10 rounded-xl bg-emerald-50 text-[#006B4F] flex items-center justify-center mb-4 group-hover:bg-[#009B70] group-hover:text-white transition">
+                  <Radio className="h-5 w-5" />
+                </div>
+                <h3 className="font-black text-slate-900 text-base group-hover:text-[#006B4F] transition">
+                  Operations &amp; Recycling &rarr;
+                </h3>
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                  Real-time fleet tracking, 85 ward telemetry, compactor stations, and certified MRF recovery.
+                </p>
+              </Link>
 
-        {/* ── Recycling: Circular Loop & Environmental Metrics ───────── */}
-        <RecyclingSection />
+              <Link
+                to="/rates"
+                className="group rounded-2xl border border-[#E4E7EC] bg-[#F7F9FC] p-6 text-left transition hover:border-[#009B70] hover:bg-white hover:shadow-md"
+              >
+                <div className="h-10 w-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center mb-4 group-hover:bg-amber-600 group-hover:text-white transition">
+                  <Coins className="h-5 w-5" />
+                </div>
+                <h3 className="font-black text-slate-900 text-base group-hover:text-amber-700 transition">
+                  Live Scrap Rates &rarr;
+                </h3>
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                  Verified benchmark prices for paper, plastic, metal, and e-waste with doorstep payouts.
+                </p>
+              </Link>
 
-        {/* ── Scrap: Live Benchmark Scrap Price Board ────────────────── */}
-        <ScrapPriceBoardSection />
+              <Link
+                to="/about"
+                className="group rounded-2xl border border-[#E4E7EC] bg-[#F7F9FC] p-6 text-left transition hover:border-[#009B70] hover:bg-white hover:shadow-md"
+              >
+                <div className="h-10 w-10 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center mb-4 group-hover:bg-purple-600 group-hover:text-white transition">
+                  <Building2 className="h-5 w-5" />
+                </div>
+                <h3 className="font-black text-slate-900 text-base group-hover:text-purple-700 transition">
+                  About EcoSync &rarr;
+                </h3>
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                  Mission architecture, BMC partnership, ISO compliance, and clean city impact.
+                </p>
+              </Link>
 
-        {/* ── About: Mission, Civic Network & Problems Solved ────────── */}
-        <AboutSection />
-
-        {/* ── Blog: Civic Articles, Segregation Guides & Updates ─────── */}
-        <BlogSection />
-
-        {/* ── FAQ: Mission, Citizen/Driver Rewards & Future Roadmap ─── */}
-        <FAQSection />
+              <Link
+                to="/blog"
+                className="group rounded-2xl border border-[#E4E7EC] bg-[#F7F9FC] p-6 text-left transition hover:border-[#009B70] hover:bg-white hover:shadow-md"
+              >
+                <div className="h-10 w-10 rounded-xl bg-sky-50 text-sky-700 flex items-center justify-center mb-4 group-hover:bg-sky-600 group-hover:text-white transition">
+                  <BookOpen className="h-5 w-5" />
+                </div>
+                <h3 className="font-black text-slate-900 text-base group-hover:text-sky-700 transition">
+                  Blog &amp; FAQs &rarr;
+                </h3>
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                  Practical 4-stream segregation guides, municipal news, and answers to common civic questions.
+                </p>
+              </Link>
+            </div>
+          </div>
+        </section>
       </main>
 
       {/* ── EcoFooter: Smart-City Municipal Footer ─────────────────── */}

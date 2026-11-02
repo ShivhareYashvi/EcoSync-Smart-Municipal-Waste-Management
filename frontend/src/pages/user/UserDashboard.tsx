@@ -37,11 +37,11 @@ import { ServiceOverviewSection } from '../../components/citizen/ServiceOverview
 import { LiveVehicleStatusSection } from '../../components/citizen/LiveVehicleStatusSection';
 import { QuickActionsSection } from '../../components/citizen/QuickActionsSection';
 import { RecentActivityTimeline } from '../../components/citizen/RecentActivityTimeline';
-import { AccessibilitySettingsPanel } from '../../components/citizen/AccessibilitySettingsPanel';
 import { MissedPickupModal } from '../../components/citizen/MissedPickupModal';
 import { HelpSupportModal } from '../../components/citizen/HelpSupportModal';
 import { SkipSweepModal } from '../../components/citizen/SkipSweepModal';
 import { MorningAlarmModal } from '../../components/citizen/MorningAlarmModal';
+import { formatWard, cleanWardNumber } from '../../lib/formatters';
 
 import { api, buildTrackingSocketUrl } from '../../lib/api';
 import type {
@@ -553,7 +553,7 @@ export function UserDashboard() {
                   <div className="flex items-center gap-2">
                     <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3.5 py-1 text-xs font-bold text-emerald-800 border border-emerald-200">
                       <ShieldCheck className="h-4 w-4 text-emerald-600" aria-hidden="true" />
-                      <span>{user.ward_number ? `BMC Ward ${user.ward_number} Node` : 'Ward 48 · Arera Colony Node'}</span>
+                      <span>{user.ward_number ? `BMC ${formatWard(user.ward_number)} Node` : 'Ward 48 · Arera Colony Node'}</span>
                     </span>
                     <span className="rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold text-blue-700 border border-blue-200">
                       Verified Municipal Resident
@@ -691,7 +691,7 @@ export function UserDashboard() {
                           </div>
                           <div>
                             <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-800">
-                              Registered Doorstep Gate · Ward {user.ward_number || '48'}
+                              Registered Doorstep Gate · {formatWard(user.ward_number)}
                             </p>
                             <p className="text-xs font-bold text-slate-800 leading-snug">
                               {user.house_flat_number
@@ -983,12 +983,7 @@ export function UserDashboard() {
             </div>
           )}
 
-          {/* TAB 2: ACCESSIBILITY PREFERENCES PANEL */}
-          {activeTab === 'accessibility' && (
-            <div className="animate-in fade-in duration-150">
-              <AccessibilitySettingsPanel />
-            </div>
-          )}
+
 
           {/* TAB 3: MY PICKUPS & DISPUTES */}
           {activeTab === 'history' && (
@@ -1139,7 +1134,7 @@ export function UserDashboard() {
                     <div>
                       <h2 className="text-xl font-black text-slate-950">In-App SMS Grievance Desk</h2>
                       <p className="text-xs text-slate-500">
-                        Direct Fast2SMS gateway to driver or municipal ward coordinator
+                        Direct Twilio SMS gateway to driver or municipal ward coordinator
                       </p>
                     </div>
                   </div>
@@ -1166,7 +1161,7 @@ export function UserDashboard() {
                       await api.post('/chat/send', { phone, message: msg, user_id: user.id });
                       setSmsFeedback({
                         type: 'success',
-                        message: 'SMS grievance dispatched via Fast2SMS gateway successfully!',
+                        message: 'SMS grievance dispatched via Twilio gateway successfully!',
                       });
                       target.reset();
                       setTimeout(() => setSmsFeedback(null), 5000);
@@ -1255,7 +1250,7 @@ export function UserDashboard() {
         isOpen={missedPickupOpen}
         onClose={() => setMissedPickupOpen(false)}
         userId={user.id}
-        wardNumber={user.ward_number || '48'}
+        wardNumber={cleanWardNumber(user.ward_number)}
         user={user}
       />
 

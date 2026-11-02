@@ -55,12 +55,12 @@ export const EcoFooter: React.FC = () => {
             <ul className="space-y-2 text-xs text-slate-300">
               {ECO_NAV_ITEMS.map((item) => (
                 <li key={item.label}>
-                  <a
-                    href={item.href}
+                  <Link
+                    to={item.href}
                     className="hover:text-emerald-400 transition focus-visible:ring-2 focus-visible:ring-emerald-400 rounded"
                   >
                     {item.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -168,12 +168,6 @@ export const EcoFooter: React.FC = () => {
           </p>
 
           <div className="flex items-center gap-4">
-            <span className="text-emerald-400 font-semibold">WCAG 2.2 Level AA Compliant</span>
-            <span>&middot;</span>
-            <Link to="/dashboard/user?tab=help" className="hover:text-white transition">
-              Accessibility Statement
-            </Link>
-            <span>&middot;</span>
             <a href="#home" className="hover:text-white transition">
               Back to Top
             </a>

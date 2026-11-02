@@ -9,7 +9,6 @@ import {
   Users,
   UserCheck,
   Settings,
-  Sliders,
   HelpCircle,
   X,
   AlertTriangle,
@@ -359,10 +358,10 @@ export const CitizenSidebar: React.FC<CitizenSidebarProps> = ({
             </ul>
           </div>
 
-          {/* 2. Account & Accessibility Category */}
+          {/* 2. Account & Settings Category */}
           <div className="pt-2 border-t border-slate-100">
             <div className={`px-3 mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400 ${isDesktopCollapsed ? 'sr-only' : ''}`}>
-              Account & Accessibility
+              Account & Settings
             </div>
             <ul className="space-y-1">
               {/* 7. Citizen Profile & ID */}
@@ -399,27 +398,6 @@ export const CitizenSidebar: React.FC<CitizenSidebarProps> = ({
                 >
                   <Settings className="h-4 w-4 shrink-0 text-slate-500" aria-hidden="true" />
                   {!isDesktopCollapsed && <span>Settings</span>}
-                </button>
-              </li>
-
-              {/* 9. Accessibility Settings */}
-              <li>
-                <button
-                  type="button"
-                  onClick={() => {
-                    onSelectTab('accessibility');
-                    onCloseMobile();
-                  }}
-                  aria-current={isSelected('accessibility') ? 'page' : undefined}
-                  className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-bold transition focus-visible:ring-2 focus-visible:ring-emerald-600 ${
-                    isSelected('accessibility')
-                      ? 'bg-emerald-600 text-white shadow-xs'
-                      : 'text-emerald-800 bg-emerald-50/70 hover:bg-emerald-100'
-                  }`}
-                  title="Accessibility Settings (WCAG 2.2 AA)"
-                >
-                  <Sliders className="h-4 w-4 shrink-0 text-emerald-700" aria-hidden="true" />
-                  {!isDesktopCollapsed && <span>Accessibility Settings</span>}
                 </button>
               </li>
 

@@ -78,7 +78,7 @@ export const HelpSupportModal: React.FC<HelpSupportModalProps> = ({ isOpen, onCl
           <div className="rounded-2xl border border-slate-200 p-4 space-y-2">
             <div className="flex items-center gap-2 text-slate-900 font-bold text-sm">
               <Keyboard className="h-4 w-4 text-blue-600" aria-hidden="true" />
-              <span>Keyboard Navigation & Accessibility</span>
+              <span>Keyboard Navigation</span>
             </div>
             <p className="leading-normal">
               Press <kbd className="px-1.5 py-0.5 bg-slate-100 border border-slate-300 rounded font-mono text-[11px]">Tab</kbd> to cycle through controls,{' '}

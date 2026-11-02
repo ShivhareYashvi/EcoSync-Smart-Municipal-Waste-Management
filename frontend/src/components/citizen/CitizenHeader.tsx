@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import {
   Menu,
   LogOut,
-  Sliders,
   ChevronDown,
   UserCheck,
   Building2,
@@ -16,6 +15,7 @@ import {
 import { useSessionStore } from '../../store/session';
 import { useAccessibilityStore } from '../../store/accessibilityStore';
 import NotificationInbox from '../NotificationInbox';
+import { formatWard } from '../../lib/formatters';
 import type { User } from '../../lib/types';
 
 interface CitizenHeaderProps {
@@ -100,15 +100,7 @@ export const CitizenHeader: React.FC<CitizenHeaderProps> = ({
             {darkMode ? <Sun className="h-4 w-4" aria-hidden="true" /> : <Moon className="h-4 w-4" aria-hidden="true" />}
           </button>
 
-          {/* Accessibility Quick Settings Shortcut */}
-          <Link
-            to="/dashboard/user?tab=accessibility"
-            aria-label="Open Accessibility & Display Settings"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:text-emerald-700 focus-visible:ring-2 focus-visible:ring-emerald-600 transition"
-            title="Accessibility Settings (Alt+A)"
-          >
-            <Sliders className="h-4 w-4" aria-hidden="true" />
-          </Link>
+
 
           {/* Accessible Notifications Hub */}
           <div className="relative">
@@ -138,7 +130,7 @@ export const CitizenHeader: React.FC<CitizenHeaderProps> = ({
                   {currentUser.name || 'Citizen'}
                 </p>
                 <p className="text-[10px] font-medium text-slate-500 mt-0.5">
-                  Ward {currentUser.ward_number || '48'} Resident
+                  {formatWard(currentUser.ward_number)} Resident
                 </p>
               </div>
               <ChevronDown className="h-3.5 w-3.5 text-slate-400 hidden sm:block" aria-hidden="true" />
@@ -170,15 +162,7 @@ export const CitizenHeader: React.FC<CitizenHeaderProps> = ({
                   <span>Citizen Profile & Address</span>
                 </Link>
 
-                <Link
-                  to="/dashboard/user?tab=accessibility"
-                  role="menuitem"
-                  onClick={() => setProfileDropdownOpen(false)}
-                  className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-100 focus-visible:ring-2 focus-visible:ring-emerald-600"
-                >
-                  <Sliders className="h-4 w-4 text-slate-500" />
-                  <span>Accessibility & Contrast</span>
-                </Link>
+
 
                 {/* Account Switcher Options */}
                 <div className="border-t border-slate-100 my-1 pt-1">

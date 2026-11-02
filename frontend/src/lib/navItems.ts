@@ -5,13 +5,9 @@ export interface EcoNavItem {
 }
 
 export const ECO_NAV_ITEMS: EcoNavItem[] = [
-  { label: 'Home', href: '/#home' },
-  { label: 'Solutions', href: '/#solutions' },
-  { label: 'Operations', href: '/#operations' },
-  { label: 'Recycling', href: '/#recycling' },
-  { label: 'Scrap', href: '/#scrap' },
-  { label: 'About', href: '/#about' },
-  { label: 'Blog', href: '/#blog' },
-  { label: 'FAQ', href: '/#faq' },
+  { label: 'Home', href: '/' },
+  { label: 'Operations', href: '/operations' },
+  { label: 'Scrap Rates', href: '/rates' },
+  { label: 'About', href: '/about' },
+  { label: 'Blog', href: '/blog' },
 ];
-
