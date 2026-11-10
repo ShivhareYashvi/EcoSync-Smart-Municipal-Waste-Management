@@ -94,7 +94,7 @@ export const HelpSupportModal: React.FC<HelpSupportModalProps> = ({ isOpen, onCl
             onClick={onClose}
             className="rounded-xl bg-slate-900 text-white font-bold text-xs px-5 py-2.5 hover:bg-slate-800 focus-visible:ring-2 focus-visible:ring-slate-900"
           >
-            Close Help Guide
+            Close
           </button>
         </div>
       </div>

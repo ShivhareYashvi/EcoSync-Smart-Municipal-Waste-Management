@@ -598,22 +598,20 @@ export function CitizenProfilePanel({ currentUser }: CitizenProfilePanelProps) {
           <button
             type="button"
             onClick={() => setActiveTab('all')}
-            className={`whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-bold transition ${
-              activeTab === 'all'
-                ? 'bg-slate-900 text-white shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-            }`}
+            className={`whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-bold transition ${activeTab === 'all'
+              ? 'bg-slate-900 text-white shadow-xs'
+              : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              }`}
           >
             📋 All Fields
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('contact')}
-            className={`whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
-              activeTab === 'contact'
-                ? 'bg-emerald-700 text-white shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-            }`}
+            className={`whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${activeTab === 'contact'
+              ? 'bg-emerald-700 text-white shadow-xs'
+              : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              }`}
           >
             <Phone className="h-3.5 w-3.5" />
             <span>Mobile &amp; Identity</span>
@@ -621,11 +619,10 @@ export function CitizenProfilePanel({ currentUser }: CitizenProfilePanelProps) {
           <button
             type="button"
             onClick={() => setActiveTab('address')}
-            className={`whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
-              activeTab === 'address'
-                ? 'bg-emerald-700 text-white shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-            }`}
+            className={`whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${activeTab === 'address'
+              ? 'bg-emerald-700 text-white shadow-xs'
+              : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              }`}
           >
             <Building className="h-3.5 w-3.5" />
             <span>Doorstep Address</span>
@@ -633,11 +630,10 @@ export function CitizenProfilePanel({ currentUser }: CitizenProfilePanelProps) {
           <button
             type="button"
             onClick={() => setActiveTab('gps')}
-            className={`whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
-              activeTab === 'gps'
-                ? 'bg-emerald-700 text-white shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-            }`}
+            className={`whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${activeTab === 'gps'
+              ? 'bg-emerald-700 text-white shadow-xs'
+              : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              }`}
           >
             <MapPinned className="h-3.5 w-3.5" />
             <span>Gate GPS Pin</span>
@@ -645,11 +641,10 @@ export function CitizenProfilePanel({ currentUser }: CitizenProfilePanelProps) {
           <button
             type="button"
             onClick={() => setActiveTab('docs')}
-            className={`whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
-              activeTab === 'docs'
-                ? 'bg-emerald-700 text-white shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-            }`}
+            className={`whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${activeTab === 'docs'
+              ? 'bg-emerald-700 text-white shadow-xs'
+              : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              }`}
           >
             <FileText className="h-3.5 w-3.5" />
             <span>Bill Proof (+100 Pts)</span>
@@ -966,9 +961,9 @@ export function CitizenProfilePanel({ currentUser }: CitizenProfilePanelProps) {
 
                   {electricityBillPath ? (
                     <div className="flex items-center gap-2">
-                      <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-300">
+                      <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-emerald-100 text-emerald-800 text-xs fontd-300">
                         <Check className="h-3.5 w-3.5 text-emerald-600" />
-                        Verified Document Linked
+                        Document Linked
                       </span>
                       <button
                         type="button"
@@ -1060,7 +1055,7 @@ export function CitizenProfilePanel({ currentUser }: CitizenProfilePanelProps) {
                 ) : (
                   <>
                     <Save className="h-4 w-4" />
-                    <span>Save All Profile Changes</span>
+                    <span>Save</span>
                   </>
                 )}
               </button>

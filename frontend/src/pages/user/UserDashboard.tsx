@@ -69,47 +69,47 @@ const WASTE_CATEGORIES: Array<{
   activeBorder: string;
   activeBg: string;
 }> = [
-  {
-    type: 'wet',
-    title: 'Wet / Organic Waste',
-    badge: 'Compostable',
-    description: 'Kitchen scraps, vegetable peels, leftover food, fruit rinds & coffee grounds.',
-    icon: Leaf,
-    color: 'text-emerald-700 bg-emerald-50 border-emerald-200',
-    activeBorder: 'border-emerald-600 ring-2 ring-emerald-500/20',
-    activeBg: 'bg-emerald-50/70',
-  },
-  {
-    type: 'dry',
-    title: 'Dry / Recyclables',
-    badge: 'Circular Economy',
-    description: 'Clean paper, cardboard boxes, PET bottles, shampoo tubs & tin cans.',
-    icon: Layers,
-    color: 'text-blue-700 bg-blue-50 border-blue-200',
-    activeBorder: 'border-blue-600 ring-2 ring-blue-500/20',
-    activeBg: 'bg-blue-50/70',
-  },
-  {
-    type: 'e-waste',
-    title: 'Electronic Waste',
-    badge: 'Hazardous / Valuable',
-    description: 'Decommissioned phones, chargers, circuit boards, batteries & cables.',
-    icon: Cpu,
-    color: 'text-purple-700 bg-purple-50 border-purple-200',
-    activeBorder: 'border-purple-600 ring-2 ring-purple-500/20',
-    activeBg: 'bg-purple-50/70',
-  },
-  {
-    type: 'bulky',
-    title: 'Bulky Household',
-    badge: 'Special Vehicle',
-    description: 'Old furniture, mattresses, broken appliances, wooden crates & debris.',
-    icon: Package,
-    color: 'text-amber-700 bg-amber-50 border-amber-200',
-    activeBorder: 'border-amber-600 ring-2 ring-amber-500/20',
-    activeBg: 'bg-amber-50/70',
-  },
-];
+    {
+      type: 'wet',
+      title: 'Wet / Organic Waste',
+      badge: 'Compostable',
+      description: 'Kitchen scraps, vegetable peels, leftover food, fruit rinds & coffee grounds.',
+      icon: Leaf,
+      color: 'text-emerald-700 bg-emerald-50 border-emerald-200',
+      activeBorder: 'border-emerald-600 ring-2 ring-emerald-500/20',
+      activeBg: 'bg-emerald-50/70',
+    },
+    {
+      type: 'dry',
+      title: 'Dry / Recyclables',
+      badge: 'Circular Economy',
+      description: 'Clean paper, cardboard boxes, PET bottles, shampoo tubs & tin cans.',
+      icon: Layers,
+      color: 'text-blue-700 bg-blue-50 border-blue-200',
+      activeBorder: 'border-blue-600 ring-2 ring-blue-500/20',
+      activeBg: 'bg-blue-50/70',
+    },
+    {
+      type: 'e-waste',
+      title: 'Electronic Waste',
+      badge: 'Hazardous / Valuable',
+      description: 'Decommissioned phones, chargers, circuit boards, batteries & cables.',
+      icon: Cpu,
+      color: 'text-purple-700 bg-purple-50 border-purple-200',
+      activeBorder: 'border-purple-600 ring-2 ring-purple-500/20',
+      activeBg: 'bg-purple-50/70',
+    },
+    {
+      type: 'bulky',
+      title: 'Bulky Household',
+      badge: 'Special Vehicle',
+      description: 'Old furniture, mattresses, broken appliances, wooden crates & debris.',
+      icon: Package,
+      color: 'text-amber-700 bg-amber-50 border-amber-200',
+      activeBorder: 'border-amber-600 ring-2 ring-amber-500/20',
+      activeBg: 'bg-amber-50/70',
+    },
+  ];
 
 const QUICK_INSTRUCTION_CHIPS = [
   'Near front gate',
@@ -429,15 +429,15 @@ export function UserDashboard() {
         coordinates:
           schedule.latitude && schedule.longitude
             ? {
-                latitude: Number(schedule.latitude),
-                longitude: Number(schedule.longitude),
-              }
+              latitude: Number(schedule.latitude),
+              longitude: Number(schedule.longitude),
+            }
             : user.latitude && user.longitude
-            ? {
+              ? {
                 latitude: Number(user.latitude),
                 longitude: Number(user.longitude),
               }
-            : null,
+              : null,
         notes: schedule.notes || null,
       });
       return res.data;
@@ -555,9 +555,6 @@ export function UserDashboard() {
                       <ShieldCheck className="h-4 w-4 text-emerald-600" aria-hidden="true" />
                       <span>{user.ward_number ? `BMC ${formatWard(user.ward_number)} Node` : 'Ward 48 · Arera Colony Node'}</span>
                     </span>
-                    <span className="rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold text-blue-700 border border-blue-200">
-                      Verified Municipal Resident
-                    </span>
                   </div>
                 </div>
 
@@ -590,8 +587,8 @@ export function UserDashboard() {
                   latestDriverLocation
                     ? 'Driver En Route'
                     : trackedPickup?.status === 'assigned'
-                    ? 'Vehicle Allocated'
-                    : 'Scheduled'
+                      ? 'Vehicle Allocated'
+                      : 'Scheduled'
                 }
                 vehicleIsActive={Boolean(latestDriverLocation)}
                 openComplaintsCount={openComplaintsCount}
@@ -723,11 +720,10 @@ export function UserDashboard() {
                                 key={cat.type}
                                 type="button"
                                 onClick={() => setSchedule((prev) => ({ ...prev, waste_type: cat.type }))}
-                                className={`rounded-2xl border p-4 text-left transition relative flex flex-col justify-between focus-visible:ring-2 focus-visible:ring-emerald-600 min-h-[110px] ${
-                                  isSelected
+                                className={`rounded-2xl border p-4 text-left transition relative flex flex-col justify-between focus-visible:ring-2 focus-visible:ring-emerald-600 min-h-[110px] ${isSelected
                                     ? `${cat.activeBorder} ${cat.activeBg} shadow-sm`
                                     : 'border-slate-200 bg-white hover:border-slate-300'
-                                }`}
+                                  }`}
                               >
                                 <div className="flex items-start justify-between gap-2">
                                   <span
@@ -926,10 +922,10 @@ export function UserDashboard() {
                               p.waste_type === 'wet'
                                 ? '🌿'
                                 : p.waste_type === 'dry'
-                                ? '📦'
-                                : p.waste_type === 'bulky'
-                                ? '🛋️'
-                                : '⚡';
+                                  ? '📦'
+                                  : p.waste_type === 'bulky'
+                                    ? '🛋️'
+                                    : '⚡';
                             const label = p.waste_type.charAt(0).toUpperCase() + p.waste_type.slice(1);
                             return (
                               <option key={p.id} value={p.id}>
@@ -1222,11 +1218,10 @@ export function UserDashboard() {
                 </div>
                 {smsFeedback && (
                   <div
-                    className={`mt-3 p-3 rounded-xl border text-xs font-semibold flex items-center gap-2 animate-in fade-in ${
-                      smsFeedback.type === 'success'
+                    className={`mt-3 p-3 rounded-xl border text-xs font-semibold flex items-center gap-2 animate-in fade-in ${smsFeedback.type === 'success'
                         ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
                         : 'bg-rose-50 text-rose-800 border-rose-200'
-                    }`}
+                      }`}
                   >
                     {smsFeedback.type === 'success' ? (
                       <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
