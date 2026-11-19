@@ -34,7 +34,7 @@ export const SWACHH_SLOGANS: SloganItem[] = [
     id: 'slogan-3',
     hindiSlogan: 'स्वच्छ भोपाल, सुंदर भोपाल - एक कदम स्वच्छता की ओर!',
     categoryTag: 'Swachh Survekshan',
-    civicNote: 'Rank #1 Clean State Capital',
+    civicNote: 'Swachh Bhopal',
     icon: Award,
     accentColor: 'text-amber-300',
     tagClass: 'bg-amber-500/15 text-amber-200 border-amber-400/30',

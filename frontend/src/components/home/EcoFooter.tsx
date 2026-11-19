@@ -4,6 +4,7 @@ import {
   Recycle,
   Phone,
   GraduationCap,
+  ArrowUp,
 } from 'lucide-react';
 import { ECO_NAV_ITEMS } from '../../lib/navItems';
 
@@ -155,8 +156,19 @@ export const EcoFooter: React.FC = () => {
           </p>
 
           <div className="flex items-center gap-4">
-            <a href="#home" className="hover:text-white transition">
-              Back to Top
+            <a
+              href="#home"
+              onClick={(e) => {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="inline-flex items-center gap-2 rounded-lg px-2.5 py-1 text-slate-400 hover:text-white hover:bg-slate-800/60 transition group font-medium"
+              aria-label="Back to top of page"
+            >
+              <span>Back to Top</span>
+              <span className="flex h-5 w-5 items-center justify-center rounded-md bg-slate-800 text-slate-300 group-hover:bg-emerald-600 group-hover:text-white transition">
+                <ArrowUp className="h-3 w-3 transition-transform group-hover:-translate-y-0.5" aria-hidden="true" />
+              </span>
             </a>
           </div>
         </div>

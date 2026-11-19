@@ -353,7 +353,7 @@ export const CitizenSidebar: React.FC<CitizenSidebarProps> = ({
               Account & Settings
             </div>
             <ul className="space-y-1">
-              {/* 7. Citizen Profile & ID */}
+              {/* 7. Profile & Settings */}
               <li>
                 <button
                   type="button"
@@ -366,10 +366,10 @@ export const CitizenSidebar: React.FC<CitizenSidebarProps> = ({
                       ? 'bg-emerald-600 text-white shadow-xs'
                       : 'text-slate-700 hover:bg-slate-100'
                     }`}
-                  title="Citizen Profile & ID"
+                  title="Profile & Settings"
                 >
                   <UserCheck className="h-4 w-4 shrink-0" aria-hidden="true" />
-                  {!isDesktopCollapsed && <span>Citizen Profile & ID</span>}
+                  {!isDesktopCollapsed && <span>Profile & Settings</span>}
                 </button>
               </li>
 

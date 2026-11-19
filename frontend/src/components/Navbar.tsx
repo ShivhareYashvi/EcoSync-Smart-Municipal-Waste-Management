@@ -37,8 +37,6 @@ const DASHBOARD_LINKS: Array<{ to: string; label: string; role?: string }> = [
   { to: '/dashboard/admin/bulk-generators', label: 'Bulk Generators', role: 'admin' },
   { to: '/dashboard/admin/routes', label: 'Route Dispatch', role: 'admin' },
   { to: 'http://localhost:8000/admin', label: 'SQLAdmin Portal ↗', role: 'admin' },
-  { to: '/price-board', label: 'Scrap Rates' },
-  { to: '/features', label: 'Platform Features' }
 ];
 
 export function Navbar({ mode = 'public', subtitle }: NavbarProps) {
