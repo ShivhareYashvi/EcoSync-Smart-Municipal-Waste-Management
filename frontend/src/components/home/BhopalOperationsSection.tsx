@@ -26,7 +26,7 @@ export const BhopalOperationsSection: React.FC = () => {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#009B70] opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#009B70]"></span>
               </span>
-              <span>Bhopal Municipal Command Desk</span>
+              <span>Municipal Command Simulation Desk</span>
             </div>
 
             <h2
@@ -43,7 +43,7 @@ export const BhopalOperationsSection: React.FC = () => {
 
           <div className="flex items-center gap-2 text-xs font-semibold text-[#475467] bg-white border border-[#E4E7EC] px-4 py-2.5 rounded-2xl shadow-2xs">
             <Radio className="h-4 w-4 text-[#009B70] animate-pulse" aria-hidden="true" />
-            <span>Telemetry Feed: <strong>Bhopal ICCC (Zone 10)</strong></span>
+            <span>Simulation Feed: <strong>Bhopal Ward Network</strong></span>
           </div>
         </div>
 

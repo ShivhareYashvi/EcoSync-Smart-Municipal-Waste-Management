@@ -123,10 +123,10 @@ class OperationsService:
             )
             driver_name = matched_driver.user.name if matched_driver.user else "Sanitation Officer"
             zone_obj = session.get(Zone, zone_id) if zone_id else None
-            ward_label = zone_obj.name if zone_obj else f"Ward {ward_num or 'BMC Central'}"
+            ward_label = zone_obj.name if zone_obj else f"Ward {ward_num or 'Central'}"
 
             # Append assignment trace to pickup notes for full transparency
-            bmc_note = f"[BMC Auto-Dispatch] Dedicated {ward_label} Vehicle [{vehicle_reg}] assigned (Driver: {driver_name})"
+            bmc_note = f"[Auto-Dispatch] Dedicated {ward_label} Vehicle [{vehicle_reg}] assigned (Driver: {driver_name})"
             pickup.notes = f"{pickup.notes} · {bmc_note}".strip(" ·") if pickup.notes else bmc_note
 
             # Auto-link to the driver's active route for this date if present

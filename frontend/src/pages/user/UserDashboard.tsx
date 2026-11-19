@@ -553,7 +553,7 @@ export function UserDashboard() {
                   <div className="flex items-center gap-2">
                     <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3.5 py-1 text-xs font-bold text-emerald-800 border border-emerald-200">
                       <ShieldCheck className="h-4 w-4 text-emerald-600" aria-hidden="true" />
-                      <span>{user.ward_number ? `BMC ${formatWard(user.ward_number)} Node` : 'Ward 48 · Arera Colony Node'}</span>
+                      <span>{user.ward_number ? `${formatWard(user.ward_number)} Node` : 'Ward 48 · Arera Colony Node'}</span>
                     </span>
                   </div>
                 </div>
@@ -1135,13 +1135,13 @@ export function UserDashboard() {
                     </div>
                   </div>
 
-                  {/* Official Helpline Badges */}
+                  {/* Civic Helpline Badges */}
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="px-3 py-1 rounded-xl bg-slate-100 border border-slate-200 text-[11px] font-bold text-slate-700">
                       📞 Swachhata: 14420
                     </span>
                     <span className="px-3 py-1 rounded-xl bg-slate-100 border border-slate-200 text-[11px] font-bold text-slate-700">
-                      🏢 BMC Helpline: 1800-233-1555
+                      🏢 Bhopal City Helpline: 1800-233-1555
                     </span>
                   </div>
                 </div>

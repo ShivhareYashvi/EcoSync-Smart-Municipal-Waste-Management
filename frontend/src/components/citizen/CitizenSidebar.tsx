@@ -424,7 +424,7 @@ export const CitizenSidebar: React.FC<CitizenSidebarProps> = ({
         {!isDesktopCollapsed && (
           <div className="p-3 border-t border-slate-100 bg-slate-50/60 m-3 rounded-2xl">
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-              BMC Citizen Helpline
+              Bhopal Civic Helpline
             </p>
             <p className="text-xs font-extrabold text-emerald-700 mt-0.5">
               Dial 155304 / 1800-233-0014

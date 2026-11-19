@@ -62,12 +62,12 @@ export const SwachhBharatBanner: React.FC = () => {
               🇮🇳
             </span>
             <span className="text-xs sm:text-sm font-black tracking-wide text-emerald-100">
-              Swachh Bharat Mission &middot; Bhopal Municipal Corporation
+              Swachh Bharat Awareness &middot; Proposed Concept for Bhopal (BMC)
             </span>
           </div>
           <div className="flex items-center gap-1.5 text-[11px] font-bold text-emerald-200 bg-white/10 px-3 py-1 rounded-full border border-white/15 backdrop-blur-xs">
             <Sparkles className="h-3 w-3 text-amber-300" />
-            <span>Official Civic Pledges</span>
+            <span>Civic &amp; Environmental Pledges</span>
           </div>
         </div>
 

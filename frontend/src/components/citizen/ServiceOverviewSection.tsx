@@ -25,7 +25,7 @@ export const ServiceOverviewSection: React.FC<ServiceOverviewProps> = ({
           Service Overview & Civic Metrics
         </h2>
         <span className="text-xs text-slate-500 font-medium hidden sm:inline-block">
-          Live sync with BMC central operations
+          Live sync with simulated central operations
         </span>
       </div>
 
@@ -132,7 +132,7 @@ export const ServiceOverviewSection: React.FC<ServiceOverviewProps> = ({
               {vehicleStatusText}
             </p>
             <p className="text-xs text-slate-500 mt-1">
-              Dedicated BMC Ward Tipper GPS Feed.
+              Dedicated Ward Tipper GPS Simulation Feed.
             </p>
           </div>
           <div className="mt-4 pt-3 border-t border-slate-100">
@@ -156,7 +156,7 @@ export const ServiceOverviewSection: React.FC<ServiceOverviewProps> = ({
                 <AlertCircle className="h-5 w-5" aria-hidden="true" />
               </span>
               <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-bold text-slate-700">
-                <span>BMC SLA</span>
+                <span>Proposed SLA</span>
               </span>
             </div>
             <h3 className="mt-3 text-xs font-bold uppercase tracking-wider text-slate-500">

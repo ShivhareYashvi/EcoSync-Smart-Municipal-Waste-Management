@@ -41,8 +41,8 @@ export const RecentActivityTimeline: React.FC<RecentActivityTimelineProps> = ({
       id: `pickup-${p.id}`,
       type: 'pickup',
       title: `${p.waste_type.toUpperCase()} Waste Collection · [${formatPickupCode(p.id)}]`,
-      subtitle: p.notes?.includes('[BMC Auto-Dispatch]')
-        ? p.notes.split('[BMC Auto-Dispatch]')[1].trim().replace(/^·\s*/, '')
+      subtitle: p.notes && /\[(?:BMC )?Auto-Dispatch\]/.test(p.notes)
+        ? p.notes.split(/\[(?:BMC )?Auto-Dispatch\]/)[1].trim().replace(/^·\s*/, '')
         : `Scheduled for ${p.scheduled_date} at ${p.scheduled_time || '09:00 AM'}`,
       date: p.scheduled_date,
       timestamp: new Date(p.scheduled_date).getTime(),

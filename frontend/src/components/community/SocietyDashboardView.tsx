@@ -211,7 +211,7 @@ export const SocietyDashboardView: React.FC<SocietyDashboardViewProps> = ({ curr
             <div>
               <p className="font-semibold">RWA Admin Verification in Progress</p>
               <p className="text-amber-800 text-[11px] mt-0.5">
-                The municipal administration is verifying your society documentation. Once approved, you will have official RWA administrative oversight.
+                The municipal administration is verifying your society documentation. Once approved, you will have RWA administrative oversight in the system.
               </p>
             </div>
           </div>
@@ -387,7 +387,7 @@ export const SocietyDashboardView: React.FC<SocietyDashboardViewProps> = ({ curr
                   className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                 />
                 <p className="text-[11px] text-gray-400">
-                  Municipal authority requires verified RWA registration to unlock official admin verification.
+                  Requires verified RWA registration to unlock admin access in the simulation.
                 </p>
               </div>
 

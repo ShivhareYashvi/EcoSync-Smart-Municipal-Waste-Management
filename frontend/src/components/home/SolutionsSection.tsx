@@ -36,12 +36,12 @@ export const SolutionsSection: React.FC = () => {
     {
       id: 'weighment',
       title: 'Digital Weighment Logging',
-      subtitle: 'CPCB Calibrated Legal Metrology',
+      subtitle: 'Standardized Digital Weighment',
       desc: 'Field drivers weigh segregated streams with digital scales, logging tamper-proof kilogram weights with optional photo verification and instant SMS receipts.',
       icon: Scale,
       route: '/dashboard/user?tab=history',
       ctaText: 'Weighment Ledger',
-      badge: 'CPCB Calibrated',
+      badge: 'Digital Weighment',
     },
     {
       id: 'circular',
@@ -67,11 +67,11 @@ export const SolutionsSection: React.FC = () => {
       id: 'analytics',
       title: 'Municipal Analytics & ICCC Desk',
       subtitle: 'Ward Heatmaps & Landfill Diversion',
-      desc: 'Centralized administrative intelligence desk for Bhopal Municipal Corporation (BMC), offering ward segregation indices, fleet heatmaps, and carbon audits.',
+      desc: 'Centralized administrative intelligence desk proposed for Bhopal Municipal Corporation (BMC), offering ward segregation indices, fleet heatmaps, and carbon audits.',
       icon: BarChart3,
       route: '/dashboard/admin',
       ctaText: 'Command Desk',
-      badge: 'BMC Commissioners',
+      badge: 'Municipal Admin Desk',
     },
   ];
 

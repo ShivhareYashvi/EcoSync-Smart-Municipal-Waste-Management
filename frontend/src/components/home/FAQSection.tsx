@@ -21,13 +21,13 @@ export const FAQ_ITEMS: FAQItem[] = [
   {
     id: 'faq-01',
     category: 'mission',
-    question: 'What is EcoSync and how is it integrated with Bhopal Municipal Corporation (BMC)?',
+    question: 'What is EcoSync and is it an official platform of Bhopal Municipal Corporation (BMC)?',
     answer:
-      'EcoSync is Bhopal’s intelligent civic waste management and circular economy platform, developed in partnership with Bhopal Smart City Development Corporation Limited (BSCDCL) and BMC. It coordinates morning doorstep waste collection across all 85 municipal wards, connects fleet telemetry directly to the Bhopal Integrated Command and Control Centre (ICCC), and ensures verified recovery of recyclables.',
+      'EcoSync is an academic college project proposal and conceptual prototype demonstrating a smart-city municipal waste management and circular economy platform designed for Bhopal Municipal Corporation (BMC). It is not an official BMC platform, but an academic proof-of-concept modeling morning doorstep collection, fleet telemetry, and recyclable recovery.',
     highlights: [
-      'Active across all 85 BMC administrative wards and 19 zones.',
-      'Sub-second telemetry fed directly to the Bhopal ICCC Command Desk.',
-      'Diverts segregated wet waste to Adampur Chhawani bio-methanation and composting plants.',
+      'College project proposal conceptualized for Bhopal\'s 85 wards.',
+      'Demonstrates real-time telemetry simulation and route optimization.',
+      'Models waste diversion workflows under SWM Rules 2016.',
     ],
   },
   {
@@ -68,16 +68,16 @@ export const FAQ_ITEMS: FAQItem[] = [
   {
     id: 'faq-05',
     category: 'rewards',
-    question: 'How can citizens redeem EcoPoints for BMC Property Tax rebates and utility vouchers?',
+    question: 'How does the proposed EcoPoints model simulate property tax rebates and utility vouchers?',
     answer:
-      'Citizens can open their Citizen Hub Rewards tab and redeem accumulated EcoPoints for official Bhopal Municipal benefits. For the 5% or 10% Annual Property Tax Rebate, a tamper-proof digital certificate tied to your Bhopal GIS Property ID is generated. You can also redeem points for Bhopal Metro (Bhoj Metro) ₹250 travel passes, free 10 kg ward organic compost bags, or electricity bill credits.',
+      'As a college project proposal, EcoSync models how citizens could redeem EcoPoints for simulated municipal benefits. In this conceptual model, points could be mapped to 5% or 10% property tax rebates, metro passes, or compost credits, demonstrating how gamified civic incentives boost source segregation compliance.',
   },
   {
     id: 'faq-06',
     category: 'rewards',
     question: 'How does EcoSync guarantee accurate weighing under Legal Metrology standards?',
     answer:
-      'Every EcoSync driver uses a Bluetooth-linked digital hanging load cell calibrated under CPCB and Department of Legal Metrology regulations (Accuracy Class III). The scale performs automatic digital tare calibration before each weighment. The encrypted gross, tare, and net weights are uploaded with a timestamp and GPS coordinate directly to the immutable database.',
+      'In this proposed model, collection vehicles are paired with Bluetooth-linked digital scales following standard Legal Metrology guidelines (Accuracy Class III). The scale performs automatic digital tare calibration before each weighment. The encrypted gross, tare, and net weights are uploaded with a timestamp and GPS coordinate directly to the immutable database.',
   },
   {
     id: 'faq-07',
@@ -315,7 +315,7 @@ export const FAQSection: React.FC = () => {
               href="tel:155304"
               className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-xs font-bold text-[#006B4F] shadow-sm hover:bg-slate-100 transition"
             >
-              <span>Call BMC Helpline (155304)</span>
+              <span>Bhopal Civic Helpline (155304)</span>
             </a>
           </div>
         </div>

@@ -94,7 +94,7 @@ export const MorningAlarmModal: React.FC<MorningAlarmModalProps> = ({
     if (typeof window !== 'undefined' && 'Notification' in window) {
       if (Notification.permission === 'granted') {
         new Notification('EcoSync Morning Collection Alarm ⏰', {
-          body: `BMC collection tipper is arriving in ~15 mins in ${wardNumber}! Please place your Green (wet) & Blue (dry) bins outside.`,
+          body: `Collection tipper is arriving in ~15 mins in ${wardNumber}! Please place your Green (wet) & Blue (dry) bins outside.`,
           icon: '/favicon.ico',
         });
       } else if (Notification.permission !== 'denied') {
@@ -102,7 +102,7 @@ export const MorningAlarmModal: React.FC<MorningAlarmModalProps> = ({
         setNotificationStatus(perm);
         if (perm === 'granted') {
           new Notification('EcoSync Morning Collection Alarm ⏰', {
-            body: `BMC collection tipper is arriving in ~15 mins in ${wardNumber}! Please place your Green (wet) & Blue (dry) bins outside.`,
+            body: `Collection tipper is arriving in ~15 mins in ${wardNumber}! Please place your Green (wet) & Blue (dry) bins outside.`,
             icon: '/favicon.ico',
           });
         }

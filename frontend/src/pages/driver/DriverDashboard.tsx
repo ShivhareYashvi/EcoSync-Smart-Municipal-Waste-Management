@@ -452,7 +452,7 @@ function ActivateDriverProfile({ onActivated }: { onActivated: (updatedUser: Use
       <div>
         <h2 className="text-2xl font-black text-slate-900 tracking-tight">Activate Municipal Driver Console</h2>
         <p className="text-sm text-slate-600 mt-1 max-w-md mx-auto">
-          Link your assigned Bhopal Municipal Corporation (BMC) waste compactor or tipper vehicle to begin today's route.
+          Link your assigned waste compactor or tipper vehicle (proposed BMC route simulation) to begin today's route.
         </p>
       </div>
 
@@ -869,7 +869,7 @@ export function DriverDashboard() {
       ) : activeDriverTab === 'rewards' ? (
         <DriverRewardsSection
           driverName={user.name || 'Dileep Ahirwar'}
-          driverCode={`BMC-DRV-${String(user.id).padStart(3, '0')}`}
+          driverCode={`ECO-DRV-${String(user.id).padStart(3, '0')}`}
           vehiclePlate={user.vehicle_number || 'MP-04-GB-2184'}
           wardNumber={user.ward_number ? `Ward ${user.ward_number} (Bhopal)` : 'Ward 48 (Arera Colony)'}
           completedStopsToday={completed}

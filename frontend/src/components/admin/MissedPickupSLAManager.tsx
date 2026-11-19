@@ -77,7 +77,7 @@ export const MissedPickupSLAManager: React.FC = () => {
       return res.data;
     },
     onSuccess: () => {
-      setSuccessMsg('Missed pickup ticket marked as Resolved in BMC database.');
+      setSuccessMsg('Missed pickup ticket marked as Resolved in system database.');
       setTimeout(() => setSuccessMsg(null), 4000);
       void queryClient.invalidateQueries({ queryKey: ['admin-complaints'] });
       void queryClient.invalidateQueries({ queryKey: ['analytics-summary'] });

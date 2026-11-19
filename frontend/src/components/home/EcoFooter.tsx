@@ -3,9 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   Recycle,
   Phone,
-  ShieldCheck,
-  Building2,
-  Lock,
+  GraduationCap,
 } from 'lucide-react';
 import { ECO_NAV_ITEMS } from '../../lib/navItems';
 
@@ -39,10 +37,10 @@ export const EcoFooter: React.FC = () => {
 
             <div className="pt-2 text-xs text-slate-400 space-y-1">
               <p>
-                <strong>Bhopal Municipal Operations Network</strong>
+                <strong>Academic Project Proposal &middot; College Capstone</strong>
               </p>
               <p>
-                Integrated with Bhopal Smart City Development Corporation (BSCDCL) &amp; Swachh Survekshan 2026.
+                Conceptual smart waste management model proposed for Bhopal.
               </p>
             </div>
           </div>
@@ -111,7 +109,7 @@ export const EcoFooter: React.FC = () => {
                 className="block p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-emerald-500/50 transition"
               >
                 <span className="text-[10px] uppercase font-bold text-slate-400 block">
-                  BMC 24/7 Waste Control Room
+                  Bhopal Waste Control Room (Reference)
                 </span>
                 <span className="text-sm font-black text-white flex items-center gap-1.5 mt-0.5">
                   <Phone className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
@@ -133,38 +131,27 @@ export const EcoFooter: React.FC = () => {
               </a>
 
               <p className="text-[11px] text-slate-400">
-                Email: <span className="text-slate-200">controlroom@bhopalcorp.gov.in</span>
+                Public Directory Reference: <span className="text-slate-200">Bhopal Municipal Services</span>
               </p>
             </div>
           </div>
         </div>
 
-        {/* Civic Compliance & Verification Badges */}
-        <div className="pt-8 border-t border-slate-800 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-400">
-          <div className="flex flex-wrap items-center gap-6">
-            <span className="flex items-center gap-1.5 text-slate-300">
-              <ShieldCheck className="h-4 w-4 text-emerald-400" aria-hidden="true" />
-              CPCB Legal Metrology Calibrated
-            </span>
-            <span className="flex items-center gap-1.5 text-slate-300">
-              <Building2 className="h-4 w-4 text-emerald-400" aria-hidden="true" />
-              Swachh Bharat Mission Urban 2.0
-            </span>
-            <span className="flex items-center gap-1.5 text-slate-300">
-              <Lock className="h-4 w-4 text-emerald-400" aria-hidden="true" />
-              AES-256 Encrypted Civic Ledger
-            </span>
-          </div>
-
-          <div className="text-[11px] text-slate-400">
-            Certified ISO 14001:2015 Environmental Management
-          </div>
+        {/* Academic Project Proposal Disclaimer */}
+        <div className="pt-8 border-t border-slate-800 text-xs text-slate-400 space-y-2">
+          <p className="text-emerald-400 font-bold uppercase tracking-wider text-[11px] flex items-center gap-2">
+            <GraduationCap className="h-4 w-4 text-emerald-400" aria-hidden="true" />
+            <span>Academic Project Proposal &middot; Not An Official BMC Platform</span>
+          </p>
+          <p className="text-[11px] text-slate-400 leading-relaxed max-w-4xl">
+            <strong>Disclaimer:</strong> EcoSync is a student college project proposal created strictly for educational, academic, and demonstration purposes. It is a proposed technological concept for municipal solid waste management and is not operated, owned, verified, or officially endorsed by the Bhopal Municipal Corporation (BMC), BSCDCL, CPCB, or any government authority.
+          </p>
         </div>
 
         {/* Bottom Bar: Copyright & Accessibility Statement */}
         <div className="pt-6 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-400">
           <p>
-            &copy; 2026 EcoSync · Bhopal Municipal Operations Network. All rights reserved.
+            &copy; 2026 EcoSync · College Project Proposal for Smart Municipal Waste Management.
           </p>
 
           <div className="flex items-center gap-4">

@@ -317,7 +317,7 @@ export function CompleteProfilePage() {
                       onChange={(e) => setVehicleNumber(e.target.value.toUpperCase())}
                       className="w-full rounded-xl border border-emerald-300 px-4 py-2.5 text-sm font-mono font-bold text-slate-900 bg-white outline-none uppercase"
                     />
-                    <p className="text-[11px] text-emerald-700">Enter your assigned BMC compactor or tipper plate.</p>
+                    <p className="text-[11px] text-emerald-700">Enter your assigned vehicle plate number (e.g., MP-04-EA-1024).</p>
                   </div>
                 )}
               </div>

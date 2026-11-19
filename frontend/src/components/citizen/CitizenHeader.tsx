@@ -81,7 +81,7 @@ export const CitizenHeader: React.FC<CitizenHeaderProps> = ({
                 </span>
               </div>
               <span className="text-[11px] font-medium text-slate-500 hidden sm:inline-block leading-none mt-0.5">
-                Bhopal Municipal Operations Network
+                Municipal Operations Proposal (College Project)
               </span>
             </div>
           </Link>
@@ -148,7 +148,7 @@ export const CitizenHeader: React.FC<CitizenHeaderProps> = ({
                   <p className="text-[11px] text-slate-500 truncate">{currentUser.email || currentUser.phone}</p>
                   <div className="mt-1 flex items-center gap-1.5 text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md w-fit">
                     <UserCheck className="h-3 w-3" />
-                    <span>Verified BMC Resident</span>
+                    <span>Registered Citizen User (Simulation)</span>
                   </div>
                 </div>
 

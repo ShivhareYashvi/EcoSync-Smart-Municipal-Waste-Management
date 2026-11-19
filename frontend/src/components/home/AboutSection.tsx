@@ -27,7 +27,7 @@ export const AboutSection: React.FC = () => {
           </h2>
 
           <p className="text-base sm:text-lg text-[#475467] leading-relaxed">
-            The next-generation smart city waste management operating network powering Bhopal’s transition to zero-landfill urban circularity.
+            A next-generation smart city waste management operating concept proposed as a college project for Bhopal’s transition to zero-landfill urban circularity.
           </p>
         </div>
 
@@ -53,7 +53,7 @@ export const AboutSection: React.FC = () => {
             </p>
 
             <p className="text-sm sm:text-base text-[#475467] leading-relaxed">
-              EcoSync provides a unified digital operating system connecting the <strong>Bhopal Municipal Corporation (BMC)</strong>, 85 ward supervisors, municipal collection drivers, and CPCB-registered recycling facilities into a transparent civic operating grid.
+              EcoSync is an academic proposal designing a unified digital operating concept for the <strong>Bhopal Municipal Corporation (BMC)</strong>, 85 simulated ward jurisdictions, municipal collection drivers, and recycling facilities into a transparent civic operating grid.
             </p>
 
             <div className="pt-4 border-t border-slate-100 grid grid-cols-2 gap-4">
@@ -113,7 +113,7 @@ export const AboutSection: React.FC = () => {
             </ul>
 
             <div className="p-4 rounded-2xl bg-[#EAFBF4] border border-[#009B70]/20 text-xs text-[#006B4F] font-semibold">
-              Aligned with Swachh Bharat Mission 2.0 &amp; Bhopal Smart City Development Corporation (BSCDCL).
+              🎓 College Project Proposal: Academic research and prototype conceptualized around Swachh Bharat Mission 2.0 objectives. Not an official BMC government platform.
             </div>
           </div>
         </div>

@@ -229,7 +229,7 @@ export function EcoNav() {
               <div className="pt-2 flex items-center justify-between text-xs text-[#475467] px-1">
                 <span className="flex items-center gap-1 text-[11px]">
                   <ShieldCheck className="h-3.5 w-3.5 text-[#009B70]" aria-hidden="true" />
-                  BMC Verified
+                  College Project Proposal
                 </span>
                 <a
                   href="tel:155304"

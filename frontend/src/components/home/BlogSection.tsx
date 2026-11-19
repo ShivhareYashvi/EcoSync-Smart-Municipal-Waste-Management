@@ -31,7 +31,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     readTime: '4 min read',
     summary: 'A detailed breakdown of how to organize your home kitchen, bathroom, and utility areas to achieve 100% compliant source sorting and maximize household EcoPoints.',
     author: 'Dr. Sunita Deshmukh',
-    role: 'Civic Environmental Consultant, BMC',
+    role: 'Environmental Researcher (Academic Study)',
     tags: ['Segregation', 'Doorstep Collection', 'EcoPoints'],
     fullContent: [
       'Proper waste segregation at the doorstep is the single most critical factor determining whether waste is converted into valuable compost and recycled commodities or left to generate methane in landfills.',
@@ -43,14 +43,14 @@ export const BLOG_ARTICLES: BlogArticle[] = [
   },
   {
     id: 'blog-02',
-    title: 'BMC Deploys 45 New Electric Collection Vehicles Across Zones 8 & 11',
+    title: 'Case Study: Electrification of Municipal Collection Fleets in Bhopal',
     category: 'Municipal Update',
     badgeBg: 'bg-blue-100 text-blue-800',
     date: 'Oct 24, 2026',
     readTime: '3 min read',
     summary: 'Bhopal Municipal Corporation expands its green fleet with zero-emission electric tippers equipped with integrated digital weighment sensors and sub-second GPS telemetry.',
     author: 'Er. R. K. Sharma',
-    role: 'Chief Fleet Engineer, BSCDCL',
+    role: 'Fleet Engineering Analyst (Academic Case Study)',
     tags: ['EV Fleet', 'Smart Bhopal', 'Telemetry'],
     fullContent: [
       'In alignment with the National Clean Air Programme (NCAP) and Swachh Survekshan guidelines, Bhopal Municipal Corporation has inducted 45 new zero-emission electric collection tippers into active service.',
@@ -84,7 +84,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     readTime: '6 min read',
     summary: 'How brand producers, fast-moving consumer goods companies, and certified recyclers are utilizing EcoSync digital weighment receipts for verified audit compliance.',
     author: 'Adv. Manisha Trivedi',
-    role: 'Environmental Law Practitioner, MP High Court',
+    role: 'Environmental Policy Researcher',
     tags: ['EPR Credits', 'CPCB Compliance', 'Circular Economy'],
     fullContent: [
       'Under the Plastic Waste Management and E-Waste Management Rules issued by the Central Pollution Control Board (CPCB), consumer product manufacturers are legally mandated to recover 100% of the post-consumer packaging materials they place in the market.',

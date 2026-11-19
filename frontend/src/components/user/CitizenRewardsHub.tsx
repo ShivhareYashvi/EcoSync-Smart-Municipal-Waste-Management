@@ -88,16 +88,16 @@ export const CitizenRewardsHub: React.FC<CitizenRewardsHubProps> = ({ userId }) 
     ? Math.min(100, Math.round(((lifetimePoints - currentTierInfo.min) / (currentTierInfo.nextThreshold - currentTierInfo.min)) * 100))
     : 100;
 
-  // Official Municipal Redemptions (Bhopal Smart City Benefits)
+  // Proposed Municipal Redemptions (Simulation Model)
   const municipalPerks = [
     {
       id: 'bmc-prop-tax-5',
-      title: '5% BMC Annual Property Tax Rebate',
+      title: '5% Property Tax Rebate (Proposed Model)',
       category: 'Municipal Tax Rebate',
       pointsCost: 2500,
-      description: 'Official Bhopal Municipal Corporation property tax deduction voucher for residential holdings in Wards 1–85.',
+      description: 'Simulated municipal property tax deduction voucher proposed for residential holdings in Wards 1–85.',
       icon: Building2,
-      badge: 'Bhopal Municipal Mandate',
+      badge: 'Proposed Civic Incentive',
       instructions: 'Applied directly against your Bhopal Property GIS PIN at municipal citizen service centers.',
     },
     {
@@ -122,7 +122,7 @@ export const CitizenRewardsHub: React.FC<CitizenRewardsHubProps> = ({ userId }) 
     },
     {
       id: 'mppkvvcl-electricity',
-      title: 'MPPKVVCL ₹100 Electricity Bill Deduction',
+      title: '₹100 Electricity Bill Deduction',
       category: 'Green Utility Credit',
       pointsCost: 1000,
       description: 'Government power utility rebate credited toward your Madhya Pradesh electricity service number.',
@@ -142,7 +142,7 @@ export const CitizenRewardsHub: React.FC<CitizenRewardsHubProps> = ({ userId }) 
     }
     setRedeemMsg((prev) => ({
       ...prev,
-      [id]: '✅ Claim submitted! Verification code generated: BMC-SWC-9428. Present with your Citizen ID.',
+      [id]: '✅ Simulation Claim submitted! Verification code generated: PROP-SWC-9428 (College Project Demo).',
     }));
   };
 
@@ -273,44 +273,40 @@ export const CitizenRewardsHub: React.FC<CitizenRewardsHubProps> = ({ userId }) 
         <button
           type="button"
           onClick={() => setSelectedSubTab('catalog')}
-          className={`rounded-xl px-4 py-2 text-xs font-bold transition ${
-            selectedSubTab === 'catalog'
+          className={`rounded-xl px-4 py-2 text-xs font-bold transition ${selectedSubTab === 'catalog'
               ? 'bg-[#101828] text-white shadow-xs'
               : 'text-slate-600 hover:bg-slate-100'
-          }`}
+            }`}
         >
           Redeem Vouchers &amp; Benefits
         </button>
         <button
           type="button"
           onClick={() => setSelectedSubTab('tiers')}
-          className={`rounded-xl px-4 py-2 text-xs font-bold transition ${
-            selectedSubTab === 'tiers'
+          className={`rounded-xl px-4 py-2 text-xs font-bold transition ${selectedSubTab === 'tiers'
               ? 'bg-[#101828] text-white shadow-xs'
               : 'text-slate-600 hover:bg-slate-100'
-          }`}
+            }`}
         >
           Citizen Tiers &amp; Perks
         </button>
         <button
           type="button"
           onClick={() => setSelectedSubTab('rules')}
-          className={`rounded-xl px-4 py-2 text-xs font-bold transition ${
-            selectedSubTab === 'rules'
+          className={`rounded-xl px-4 py-2 text-xs font-bold transition ${selectedSubTab === 'rules'
               ? 'bg-[#101828] text-white shadow-xs'
               : 'text-slate-600 hover:bg-slate-100'
-          }`}
+            }`}
         >
           Earning Rules &amp; Anti-Gaming
         </button>
         <button
           type="button"
           onClick={() => setSelectedSubTab('roadmap')}
-          className={`rounded-xl px-4 py-2 text-xs font-bold transition ${
-            selectedSubTab === 'roadmap'
+          className={`rounded-xl px-4 py-2 text-xs font-bold transition ${selectedSubTab === 'roadmap'
               ? 'bg-[#009B70] text-white shadow-xs'
               : 'text-emerald-700 bg-emerald-50 hover:bg-emerald-100'
-          }`}
+            }`}
         >
           Coming Soon Features
         </button>
@@ -319,7 +315,7 @@ export const CitizenRewardsHub: React.FC<CitizenRewardsHubProps> = ({ userId }) 
       {/* ── TAB 1: REDEEM VOUCHERS & BENEFITS ─────────────────────── */}
       {selectedSubTab === 'catalog' && (
         <div className="space-y-8">
-          {/* Section A: Official Municipal Public Benefits */}
+          {/* Section A: Proposed Municipal Public Benefits */}
           <div className="space-y-4">
             <div>
               <div className="flex items-center gap-2">
@@ -327,7 +323,7 @@ export const CitizenRewardsHub: React.FC<CitizenRewardsHubProps> = ({ userId }) 
                   1
                 </span>
                 <h3 className="text-base sm:text-lg font-black text-slate-900">
-                  Bhopal Municipal Corporation &middot; Official Civic Benefits
+                  Simulated Municipal Public Benefits (Proposed Model)
                 </h3>
               </div>
               <p className="text-xs text-slate-500 mt-1">
@@ -384,11 +380,10 @@ export const CitizenRewardsHub: React.FC<CitizenRewardsHubProps> = ({ userId }) 
                         <button
                           type="button"
                           onClick={() => handleMunicipalRedeem(perk.id, perk.pointsCost)}
-                          className={`w-full rounded-xl py-2.5 text-xs font-bold transition flex items-center justify-center gap-1.5 ${
-                            canAfford
+                          className={`w-full rounded-xl py-2.5 text-xs font-bold transition flex items-center justify-center gap-1.5 ${canAfford
                               ? 'bg-[#009B70] text-white hover:bg-[#006B4F] shadow-xs'
                               : 'bg-slate-100 text-slate-400 cursor-not-allowed'
-                          }`}
+                            }`}
                         >
                           <span>{canAfford ? 'Claim Municipal Perk' : `Need ${perk.pointsCost - currentPoints} More Points`}</span>
                           {canAfford && <ArrowUpRight className="h-3.5 w-3.5" />}
@@ -518,7 +513,7 @@ export const CitizenRewardsHub: React.FC<CitizenRewardsHubProps> = ({ userId }) 
               </div>
               <h4 className="text-base font-black text-slate-900">Gold Champion</h4>
               <ul className="space-y-1.5 text-xs text-slate-600">
-                <li>&bull; <strong>5% BMC Property Tax Rebate</strong></li>
+                <li>&bull; <strong>5% Property Tax Rebate (Proposed)</strong></li>
                 <li>&bull; Bhopal Metro ₹250 pass redemption</li>
                 <li>&bull; 1.2x streak points multiplier</li>
               </ul>
@@ -534,7 +529,7 @@ export const CitizenRewardsHub: React.FC<CitizenRewardsHubProps> = ({ userId }) 
               </div>
               <h4 className="text-base font-black text-slate-900">Platinum Icon</h4>
               <ul className="space-y-1.5 text-xs text-slate-600">
-                <li>&bull; <strong>10% BMC Property Tax Rebate</strong></li>
+                <li>&bull; <strong>10% Property Tax Rebate (Proposed)</strong></li>
                 <li>&bull; Free organic compost bags delivered</li>
                 <li>&bull; Annual Swachh Survekshan citation</li>
               </ul>
@@ -640,7 +635,7 @@ export const CitizenRewardsHub: React.FC<CitizenRewardsHubProps> = ({ userId }) 
               </div>
               <h4 className="text-sm font-bold text-slate-900">RWA Community Green Grants Pool</h4>
               <p className="text-xs text-slate-500 leading-relaxed">
-                Donate surplus EcoPoints into your neighborhood society pool. When a colony reaches 50,000 points, BMC matches it with a ₹25,000 park solarization and landscaping grant.
+                Donate surplus EcoPoints into your neighborhood society pool. When a colony reaches 50,000 points, the proposed model matches it with a ₹25,000 park solarization and landscaping grant.
               </p>
             </div>
 

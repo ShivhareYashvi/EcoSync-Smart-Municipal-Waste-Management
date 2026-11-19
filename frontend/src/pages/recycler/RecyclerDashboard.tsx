@@ -512,7 +512,7 @@ export function RecyclerDashboard() {
                     <ShieldCheck className="h-6 w-6 text-emerald-600" />
                     <div>
                       <h4 className="text-base font-black text-slate-900">
-                        Official CPCB & Municipal EPR Weighment Receipt
+                        Digital CPCB & Municipal EPR Weighment Receipt (Simulation)
                       </h4>
                       <p className="text-[11px] text-slate-500">
                         Certified Under Swachh Bharat Circular Economy Framework

@@ -120,7 +120,7 @@ export function CitizenRecyclingMarketplace({ userId }: Props) {
           </div>
           <h2 className="text-2xl font-black text-slate-950">Sell Segregated Recyclables</h2>
           <p className="text-sm text-slate-600">
-            Sell clean dry recyclables to verified buyers at live posted rates and receive official digital receipts.
+            Sell clean dry recyclables to verified buyers at live posted rates and receive verified digital receipts.
           </p>
         </div>
 
@@ -388,7 +388,7 @@ export function CitizenRecyclingMarketplace({ userId }: Props) {
 
                   {txn.receipt && (
                     <div className="text-xs text-emerald-700 font-semibold flex items-center gap-1.5 pt-1">
-                      <FileCheck className="h-4 w-4" /> Official Receipt #{txn.receipt.receipt_number} issued.
+                      <FileCheck className="h-4 w-4" /> Verified Receipt #{txn.receipt.receipt_number} issued.
                     </div>
                   )}
                 </div>

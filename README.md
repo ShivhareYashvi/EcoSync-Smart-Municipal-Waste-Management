@@ -2,7 +2,7 @@
 
 # ♻️ EcoSync
 ### Smart Waste & Circular Economy Operating Network
-**Official Civic Platform for Bhopal Municipal Corporation (BMC) · Swachh Bharat Mission Urban 2.0**
+**Academic Capstone Proposal · Smart Municipal Waste Management Concept Proposed for Bhopal Municipal Corporation (BMC)**
 
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![React 19](https://img.shields.io/badge/Frontend-React%2019-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
@@ -26,9 +26,16 @@
 
 </div>
 
+> [!NOTE]
+> **Academic Project Disclaimer:**
+> **EcoSync is an academic college project proposal and proof-of-concept prototype.** It is designed for educational and demonstration purposes to model smart municipal waste collection and circular economy operations for Bhopal. It is **not** an official platform of, nor is it endorsed, owned, or operated by, the Bhopal Municipal Corporation (BMC), BSCDCL, or CPCB.
+
+---
+
+
 ## 📌 Executive Summary
 
-**EcoSync** is an enterprise-grade smart-city operating system engineered for the **Bhopal Municipal Corporation (BMC)** across all **85 wards (Zones 1–14)**. It bridges **14,000+ households**, municipal collection drivers, certified Material Recovery Facilities (MRFs), and city administrators into a single unified operating network.
+**EcoSync** is an academic smart-city operating system proposal designed as a college capstone project for the **Bhopal Municipal Corporation (BMC)** across all **85 wards (Zones 1–14)**. It bridges **14,000+ households**, municipal collection drivers, certified Material Recovery Facilities (MRFs), and city administrators into a single unified operating network.
 
 Designed to eliminate unverified landfill dumping at the Adampur Chhawani site, EcoSync replaces legacy paper manifests with:
 * **Sub-second GPS vehicle tracking** and automated proximity alerts.
@@ -43,7 +50,7 @@ Designed to eliminate unverified landfill dumping at the Adampur Chhawani site, 
 ```mermaid
 stateDiagram-v2
     [*] --> Scheduled: 1. Pickup Booked (Citizen Portal)
-    Scheduled --> Assigned: 2. Driver & Vehicle Allocated (BMC Dispatch)
+    Scheduled --> Assigned: 2. Driver & Vehicle Allocated (Dispatch Engine)
     Assigned --> EnRoute: 3. Daily Sector Sweep Started (GPS Live)
     EnRoute --> NearYourDoor: 4. Proximity Alert (< 300m / Next in Queue)
     NearYourDoor --> Arrived: 5. Vehicle At Household Gate
@@ -94,7 +101,7 @@ stateDiagram-v2
 
 ### 8. 📰 Civic Knowledge Blog & 13-Point Smart-City FAQ Engine
 * **Blog & Municipal Updates:** Educational articles on 4-stream kitchen sorting, Bhopal's 45 new zero-emission electric tippers, Arera Colony compost diversion case studies, and CPCB EPR regulatory guidelines.
-* **Accessible FAQ Section:** WCAG 2.2 AA compliant accordion addressing municipal partnership (BSCDCL & BMC), Legal Metrology scale calibration, citizen tax rebates, driver safety, and public helpline access.
+* **Accessible FAQ Section:** WCAG 2.2 AA compliant accordion addressing project proposal scope, simulation mechanics, Legal Metrology scale calibration, citizen tax rebates, driver safety, and public helpline access.
 
 ### 9. 🚀 Smart-City Innovation Roadmap (Coming Soon Features)
 * **AI Contamination Camera Pre-Scan:** 3-second on-device computer vision check validating household bins before collection.
@@ -105,7 +112,7 @@ stateDiagram-v2
 
 ### 10. 🎯 Smart Civic Delight & Field Optimization Features
 * **WhatsApp "Alert My Colony" Link:** 1-click sharing of real-time collection vehicle arrival ETA directly to neighborhood and RWA WhatsApp groups.
-* **Swachh Bharat & Swachh Bhopal Municipal Slogan Showcase:** Prominent landing page civic banner showcasing official BMC slogans with tricolor accents.
+* **Swachh Bharat & Swachh Bhopal Municipal Slogan Showcase:** Prominent landing page civic banner showcasing civic and environmental awareness slogans with tricolor accents.
 * **"Skip Today's Sweep" Advance Notice:** Households out of town or generating zero waste notify drivers in advance, saving vehicle route fuel and idling while preserving their $1.2\times$ EcoPoints streak.
 * **Client-Side Photo Compression:** Native in-browser canvas compression reducing 4–12 MB field camera photos to ~150 KB (95% bandwidth saved), ensuring instant upload over 2G/3G connections.
 * **Morning Collection Alarm & Web Audio Chime:** Scheduled daily morning alert (07:15 AM) with pleasant 2-tone melodic chime and desktop/phone notification.
@@ -300,7 +307,7 @@ npm run lint
 
 ---
 
-## 📍 Municipal Directory & Helplines
+## 📍 Public Directory Reference & Simulated Coverage
 
 * **Bhopal Municipal Corporation 24/7 Waste Control Room:** `1800-233-0014`
 * **City Civic Helpline:** `155304`

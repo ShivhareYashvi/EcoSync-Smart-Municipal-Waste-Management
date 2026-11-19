@@ -309,7 +309,7 @@ export function Navbar({ mode = 'public', subtitle }: NavbarProps) {
                 Public Home
               </Link>
               <a href="tel:155304" className="text-emerald-700 font-bold">
-                BMC Helpline: 155304
+                Bhopal Helpline: 155304
               </a>
             </div>
           </div>
@@ -376,7 +376,7 @@ export function Navbar({ mode = 'public', subtitle }: NavbarProps) {
             title="Bhopal Municipal Corporation 24/7 Helpline"
           >
             <Phone className="h-3.5 w-3.5 text-emerald-600" />
-            <span>BMC Helpline: 155304</span>
+            <span>Bhopal Helpline: 155304</span>
           </a>
 
           {user ? (

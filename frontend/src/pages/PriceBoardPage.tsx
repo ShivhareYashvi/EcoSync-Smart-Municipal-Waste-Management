@@ -787,7 +787,7 @@ export function PriceBoardPage() {
                           <span className="font-semibold text-slate-500">EPR Credits:</span>
                           <span className="font-bold text-purple-700 flex items-center gap-1">
                             <FileCheck2 className="h-3.5 w-3.5 text-purple-600" />
-                            Official Certificate
+                            EPR Certificate (Simulation)
                           </span>
                         </div>
                       </div>

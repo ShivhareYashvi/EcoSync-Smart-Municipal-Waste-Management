@@ -27,10 +27,10 @@ export function Footer({ mode = 'public' }: FooterProps) {
       <footer className="w-full py-4 text-center text-xs text-slate-500">
         <p className="flex items-center justify-center gap-1.5">
           <ShieldCheck className="h-4 w-4 text-emerald-500" />
-          <span>Secured Civic Access · Bhopal Municipal Corporation</span>
+          <span>EcoSync · College Project Proposal</span>
         </p>
         <p className="mt-1 text-[11px] text-slate-400">
-          EcoSync Municipal Network · Bhopal Smart City Development Corporation
+          Simulated Municipal Waste Management Platform for Bhopal
         </p>
       </footer>
     );
@@ -44,7 +44,7 @@ export function Footer({ mode = 'public' }: FooterProps) {
           <div className="flex items-center gap-2">
             <span className="font-semibold text-slate-700">EcoSync Command Center</span>
             <span>·</span>
-            <span>Bhopal Municipal Corporation (BMC)</span>
+            <span>Simulated Municipal Model (Bhopal Concept)</span>
           </div>
 
           <div className="flex items-center gap-4">
@@ -214,12 +214,12 @@ export function Footer({ mode = 'public' }: FooterProps) {
         {/* Bottom Bar: Copyright & Standards */}
         <div className="mt-12 border-t border-slate-900 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
           <p>
-            © {currentYear} EcoSync · Bhopal Municipal Corporation (BMC) &amp; Swachh Bharat Mission.
+            © {currentYear} EcoSync · College Project Proposal (Smart Municipal Waste Management Concept).
           </p>
           <div className="flex items-center gap-4 text-[11px]">
             <Link to="/features" className="hover:text-slate-400 transition">Features &amp; Security</Link>
             <span>·</span>
-            <a href="tel:155304" className="hover:text-slate-400 transition">BMC 155304</a>
+            <a href="tel:155304" className="hover:text-slate-400 transition">Helpline: 155304</a>
           </div>
         </div>
       </div>

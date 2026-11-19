@@ -338,7 +338,7 @@ export function CitizenProfilePanel({ currentUser }: CitizenProfilePanelProps) {
     <div className="space-y-6">
       {/* ── Top Header / Digital Civic ID Row ──────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Official Smart Civic ID Card (5 Cols) */}
+        {/* Smart Civic ID Card (5 Cols) */}
         <div className="lg:col-span-5 relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-emerald-800 via-teal-900 to-slate-950 p-6 sm:p-7 text-white shadow-xl shadow-emerald-950/20 border border-emerald-600/30 flex flex-col justify-between">
           {/* Card Watermark pattern */}
           <div className="absolute -right-8 -bottom-8 w-44 h-44 rounded-full bg-emerald-500/10 blur-2xl pointer-events-none" />
@@ -487,7 +487,7 @@ export function CitizenProfilePanel({ currentUser }: CitizenProfilePanelProps) {
                 <span className="text-xs font-bold text-slate-500">kg</span>
               </div>
               <p className="text-[10px] text-slate-500 mt-1">
-                Composted & recycled via BMC network
+                Composted & recycled via municipal network (Simulation)
               </p>
             </div>
 
@@ -547,7 +547,7 @@ export function CitizenProfilePanel({ currentUser }: CitizenProfilePanelProps) {
           <div>
             <div className="flex items-center gap-2">
               <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 flex items-center gap-1.5">
-                <MapPin className="h-4 w-4" /> Official Municipal Property Record
+                <MapPin className="h-4 w-4" /> Simulated Property Record
               </span>
               {isDirty && (
                 <span className="px-2 py-0.5 text-[10px] font-black rounded-full bg-amber-100 text-amber-800 border border-amber-300 animate-pulse">
@@ -778,7 +778,7 @@ export function CitizenProfilePanel({ currentUser }: CitizenProfilePanelProps) {
                   Structured Bhopal Property Address
                 </h3>
                 <span className="text-[11px] font-semibold text-slate-400">
-                  BMC Ward Jurisdictions
+                  Bhopal Ward Jurisdictions
                 </span>
               </div>
 
@@ -955,7 +955,7 @@ export function CitizenProfilePanel({ currentUser }: CitizenProfilePanelProps) {
                       Electricity Bill / Property Tax Verification
                     </h4>
                     <p className="text-[11px] text-slate-500 mt-0.5 max-w-lg leading-relaxed">
-                      Linking a digital electricity bill (MPPKVVCL) or Bhopal property receipt verifies your single-household gate and awards an immediate 100-point Swachh bonus.
+                      Linking a digital electricity bill or Bhopal property receipt verifies your single-household gate and awards an immediate 100-point Swachh bonus.
                     </p>
                   </div>
 
@@ -1025,7 +1025,7 @@ export function CitizenProfilePanel({ currentUser }: CitizenProfilePanelProps) {
                 </span>
               ) : (
                 <span className="text-slate-400">
-                  Profile is synchronized with Bhopal Municipal Corporation records.
+
                 </span>
               )}
             </div>

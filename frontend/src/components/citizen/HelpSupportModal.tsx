@@ -30,7 +30,7 @@ export const HelpSupportModal: React.FC<HelpSupportModalProps> = ({ isOpen, onCl
                 Citizen Help & Civic Support
               </h2>
               <p className="text-xs text-slate-500">
-                Bhopal Municipal Corporation Operations Network
+                Simulated Operations Network &middot; Academic Project Proposal
               </p>
             </div>
           </div>
@@ -49,7 +49,7 @@ export const HelpSupportModal: React.FC<HelpSupportModalProps> = ({ isOpen, onCl
           <div className="rounded-2xl bg-emerald-50/70 border border-emerald-200 p-4 space-y-2">
             <div className="flex items-center gap-2 text-emerald-800 font-extrabold text-sm">
               <Phone className="h-4 w-4" aria-hidden="true" />
-              <span>Official 24x7 BMC Control Room</span>
+              <span>Bhopal Municipal Control Room (Helpline Info)</span>
             </div>
             <p className="leading-relaxed">
               Toll-Free Helpline: <strong className="text-slate-900 font-mono">155304</strong> or{' '}

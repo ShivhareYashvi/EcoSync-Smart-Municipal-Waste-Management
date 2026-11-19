@@ -139,7 +139,7 @@ export const MissedPickupModal: React.FC<MissedPickupModalProps> = ({
         `Missed Stream: ${wasteStream.toUpperCase()}`,
         `Time Window: ${timeWindow}`,
         notes.trim() ? `Resident Remarks: ${notes.trim()}` : null,
-        `Dispatch SLA: Mandatory 24-hour resolution window under BMC Swachhata Mandate.`,
+        `Dispatch SLA: 24-hour resolution window (Proposed Operational SLA).`,
       ]
         .filter(Boolean)
         .join(' | ');
@@ -164,7 +164,7 @@ export const MissedPickupModal: React.FC<MissedPickupModalProps> = ({
       const msg =
         err && typeof err === 'object' && 'response' in err
           ? (err as { response?: { data?: { detail?: string } } }).response?.data?.detail
-          : 'Failed to dispatch alert. Please dial the BMC 155304 helpline directly.';
+          : 'Failed to dispatch alert. Please dial the toll-free 155304 helpline directly.';
       setError(String(msg));
     } finally {
       setLoading(false);
@@ -198,7 +198,7 @@ export const MissedPickupModal: React.FC<MissedPickupModalProps> = ({
                 </span>
               </div>
               <p className="text-xs text-slate-500">
-                Direct emergency alert to BMC Ward {cleanWard} Sanitation Inspector &amp; Fleet Drivers
+                Simulation emergency alert for Ward {cleanWard} Fleet Drivers
               </p>
             </div>
           </div>
@@ -242,7 +242,7 @@ export const MissedPickupModal: React.FC<MissedPickupModalProps> = ({
             </div>
 
             <p className="text-[11px] text-slate-500 max-w-sm mx-auto leading-relaxed">
-              Ticket logged in BMC Central Dispatch. Drivers assigned to Ward {cleanWard} have received your gate details and phone. If not serviced within 24 hours, call toll-free 155304.
+              Ticket logged in simulation dispatch. In a live system, drivers assigned to Ward {cleanWard} receive gate details and phone. If needed, the Bhopal civic helpline is toll-free 155304.
             </p>
 
             <button
@@ -262,7 +262,7 @@ export const MissedPickupModal: React.FC<MissedPickupModalProps> = ({
                 <p className="font-black text-slate-900 flex items-center gap-1.5">
                   <span>Guaranteed 24-Hour Resolution Timeline</span>
                   <span className="inline-flex items-center gap-1 text-[10px] text-emerald-800 bg-white/80 px-2 py-0.5 rounded-full border border-emerald-300 font-bold">
-                    <ShieldCheck className="h-3 w-3 text-emerald-600" /> BMC Citizen Charter
+                    <ShieldCheck className="h-3 w-3 text-emerald-600" /> Proposed Citizen Charter
                   </span>
                 </p>
                 <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
@@ -328,11 +328,10 @@ export const MissedPickupModal: React.FC<MissedPickupModalProps> = ({
                     key={ws.id}
                     type="button"
                     onClick={() => setWasteStream(ws.id)}
-                    className={`p-2.5 rounded-xl border text-left transition flex flex-col ${
-                      wasteStream === ws.id
+                    className={`p-2.5 rounded-xl border text-left transition flex flex-col ${wasteStream === ws.id
                         ? 'border-emerald-600 bg-emerald-50/70 shadow-2xs'
                         : 'border-slate-200 bg-white hover:bg-slate-50'
-                    }`}
+                      }`}
                   >
                     <span className="text-xs font-black text-slate-900">{ws.label}</span>
                     <span className="text-[10px] text-slate-500 mt-0.5">{ws.desc}</span>
@@ -419,7 +418,7 @@ export const MissedPickupModal: React.FC<MissedPickupModalProps> = ({
                 className="inline-flex items-center gap-2 rounded-xl bg-rose-600 text-white px-5 py-2.5 text-xs font-black shadow-md hover:bg-rose-700 transition disabled:opacity-50"
               >
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-                <span>{loading ? 'Transmitting Alert...' : 'Dispatch Alert to Ward (24h SLA)'}</span>
+                <span>{loading ? 'Transmitting Alert...' : 'Dispatch Alert to Ward'}</span>
               </button>
             </div>
           </form>
