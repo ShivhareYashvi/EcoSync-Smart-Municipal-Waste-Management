@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
   ArrowRight,
@@ -29,7 +29,9 @@ export interface NavbarProps {
 
 const DASHBOARD_LINKS: Array<{ to: string; label: string; role?: string }> = [
   { to: '/dashboard/user', label: 'Citizen Console', role: 'citizen' },
-  { to: '/dashboard/driver', label: 'Driver Console', role: 'driver' },
+  { to: '/dashboard/driver', label: 'Active Route & Stop Management', role: 'driver' },
+  { to: '/dashboard/driver?tab=rewards', label: 'Swachhata Mitra Incentives & Welfare', role: 'driver' },
+  { to: '/dashboard/driver?tab=missed', label: 'Urgent Missed Collections (24h SLA)', role: 'driver' },
   { to: '/dashboard/recycler', label: 'Recycler Hub', role: 'recycler' },
   { to: '/dashboard/admin', label: 'Operations Command', role: 'admin' },
   { to: '/dashboard/admin/zones', label: 'Zone Analytics', role: 'admin' },
@@ -48,6 +50,15 @@ export function Navbar({ mode = 'public', subtitle }: NavbarProps) {
 
   // Auto-hide scroll state for public mode
   const { isVisible, isAtTop } = useScrollDirection(12);
+  const location = useLocation();
+
+  const isLinkActive = (to: string) => {
+    if (to.includes('?')) {
+      const [path, search] = to.split('?');
+      return location.pathname === path && location.search === `?${search}`;
+    }
+    return location.pathname === to && (!location.search || location.search === '');
+  };
 
   // Mobile menu drawer open state
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -216,19 +227,17 @@ export function Navbar({ mode = 'public', subtitle }: NavbarProps) {
                     {link.label}
                   </a>
                 ) : (
-                  <NavLink
+                  <Link
                     key={link.to}
                     to={link.to}
-                    className={({ isActive }) =>
-                      `whitespace-nowrap rounded-xl px-3.5 py-1.5 text-xs font-bold transition ${
-                        isActive
-                          ? 'bg-slate-900 text-white shadow-sm'
-                          : 'text-slate-600 hover:bg-white hover:text-slate-900'
-                      }`
-                    }
+                    className={`whitespace-nowrap rounded-xl px-3.5 py-1.5 text-xs font-bold transition ${
+                      isLinkActive(link.to)
+                        ? 'bg-slate-900 text-white shadow-sm'
+                        : 'text-slate-600 hover:bg-white hover:text-slate-900'
+                    }`}
                   >
                     {link.label}
-                  </NavLink>
+                  </Link>
                 )
               ))}
             </nav>
@@ -286,18 +295,16 @@ export function Navbar({ mode = 'public', subtitle }: NavbarProps) {
                     {link.label}
                   </a>
                 ) : (
-                  <NavLink
+                  <Link
                     key={link.to}
                     to={link.to}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={({ isActive }) =>
-                      `block rounded-xl px-3 py-2 text-sm font-bold transition ${
-                        isActive ? 'bg-emerald-50 text-emerald-900' : 'text-slate-700 hover:bg-slate-50'
-                      }`
-                    }
+                    className={`block rounded-xl px-3 py-2 text-sm font-bold transition ${
+                      isLinkActive(link.to) ? 'bg-emerald-50 text-emerald-900 font-extrabold' : 'text-slate-700 hover:bg-slate-50'
+                    }`}
                   >
                     {link.label}
-                  </NavLink>
+                  </Link>
                 )
               ))}
             </div>

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   AlertTriangle,
@@ -525,7 +526,10 @@ export function DriverDashboard() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [trackingActive, setTrackingActive] = useState(false);
-  const [activeDriverTab, setActiveDriverTab] = useState<'routes' | 'rewards' | 'missed'>('routes');
+  const [searchParams] = useSearchParams();
+  const tabParam = searchParams.get('tab');
+  const activeDriverTab: 'routes' | 'rewards' | 'missed' =
+    tabParam === 'rewards' || tabParam === 'missed' ? tabParam : 'routes';
   const [isOnline, setIsOnline] = useState(typeof navigator !== 'undefined' ? navigator.onLine : true);
   const [queueCount, setQueueCount] = useState(0);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -818,50 +822,6 @@ export function DriverDashboard() {
         <StatCard label="Completed today" value={String(completed)} icon={PackageCheck} tone="blue" />
         <StatCard label="Route efficiency" value={pickups.length ? `${Math.round((completed / pickups.length) * 100)}%` : '0%'} icon={Navigation} tone="amber" />
         <StatCard label="Driver Incentive" value="₹3,850" icon={Award} tone="green" />
-      </div>
-
-      {/* Driver View Switcher: Routes vs Performance & Welfare */}
-      <div className="flex flex-wrap items-center gap-3 border-b border-slate-200/80 pb-3">
-        <button
-          type="button"
-          onClick={() => setActiveDriverTab('routes')}
-          className={`flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-bold transition ${
-            activeDriverTab === 'routes'
-              ? 'bg-[#101828] text-white shadow-xs'
-              : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
-          }`}
-        >
-          <Navigation className="h-4 w-4" />
-          <span>Active Route &amp; Stop Management</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveDriverTab('rewards')}
-          className={`flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-bold transition ${
-            activeDriverTab === 'rewards'
-              ? 'bg-[#009B70] text-white shadow-xs'
-              : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
-          }`}
-        >
-          <Award className="h-4 w-4 text-amber-300" />
-          <span>Swachhata Mitra Incentives &amp; Welfare</span>
-          <span className="rounded-full bg-emerald-100 text-emerald-800 px-2 py-0.5 text-xs font-black">
-            ₹3,850
-          </span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setActiveDriverTab('missed')}
-          className={`flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-bold transition ${
-            activeDriverTab === 'missed'
-              ? 'bg-rose-600 text-white shadow-xs'
-              : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
-          }`}
-        >
-          <AlertTriangle className="h-4 w-4 text-rose-500" />
-          <span>Urgent Missed Collections (24h SLA)</span>
-        </button>
       </div>
 
       {activeDriverTab === 'missed' ? (
