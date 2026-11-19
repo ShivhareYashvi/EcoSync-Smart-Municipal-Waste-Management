@@ -1,7 +1,9 @@
 <div align="center">
 
 # ♻️ EcoSync
+
 ### Smart Waste & Circular Economy Operating Network
+
 **Academic Capstone Proposal · Smart Municipal Waste Management Concept Proposed for Bhopal Municipal Corporation (BMC)**
 
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
@@ -32,12 +34,12 @@
 
 ---
 
-
 ## 📌 Executive Summary
 
 **EcoSync** is an academic smart-city operating system proposal designed as a college capstone project for the **Bhopal Municipal Corporation (BMC)** across all **85 wards (Zones 1–14)**. It bridges **14,000+ households**, municipal collection drivers, certified Material Recovery Facilities (MRFs), and city administrators into a single unified operating network.
 
 Designed to eliminate unverified landfill dumping at the Adampur Chhawani site, EcoSync replaces legacy paper manifests with:
+
 * **Sub-second GPS vehicle tracking** and automated proximity alerts.
 * **Point-of-collection digital weighment** calibrated to Central Pollution Control Board (CPCB) standards.
 * **Closed-loop scrap marketplace trading** that mints transparent Extended Producer Responsibility (EPR) credits.
@@ -59,22 +61,26 @@ stateDiagram-v2
 ```
 
 ### 1. 🚛 Live GPS Telemetry & Proximity Notification Engine
+
 * Sub-second vehicle tracking visualized via **Leaflet GIS** and OpenStreetMap.
 * Automated **proximity alerts** trigger when the municipal vehicle is within **300 meters** of the resident's doorstep, prompting households to bring out segregated bins.
 * Accessible text alternative (`aria-live="polite"`) providing spoken telemetry (speed, route, driver name, ETA) for visually impaired and low-bandwidth users.
 
 ### 2. 🔄 6-Stage Collection Lifecycle & Verification
+
 * Every pickup progresses through an auditable, six-stage state machine:
   $$\text{Scheduled} \longrightarrow \text{Assigned} \longrightarrow \text{En Route} \longrightarrow \text{Near Your Door} \longrightarrow \text{Arrived} \longrightarrow \text{Collected}$$
 * Doorstep collection drivers verify segregation and log net kilogram weights using calibrated digital scales, generating immediate SMS receipts.
 
 ### 3. ⚖️ Standardized 4-Stream Waste Sorting
+
 * **Green Stream (Wet Organic):** Food scraps, fruit/vegetable peels, garden cuttings; routed to decentralized aerobic composting.
 * **Blue Stream (Dry Recyclables):** PET bottles, HDPE plastics, cardboard, metal cans, glass; routed to certified recovery hubs.
 * **Red Stream (Domestic Hazardous):** Expired pharmaceuticals, paint solvents, chemical containers; routed to industrial containment.
 * **Purple Stream (E-Waste):** Circuit boards, batteries, chargers, mobile electronics; high-yield recovery with auditable EPR minting.
 
 ### 4. 🧮 Interactive Circular Rewards Calculator
+
 * Citizens simulate waste streams, weights ($1 - 50\text{ kg}$), and segregation quality on the public portal.
 * Automatically computes:
   * **Earned EcoPoints:** Base $50\text{ pts}$ + weight bonus $\times 1.25$ streak multiplier.
@@ -82,16 +88,19 @@ stateDiagram-v2
   * **Direct Cash Value:** Live Bhopal scrap benchmark payout estimates.
 
 ### 5. 📈 Live Scrap Price Board & EPR Credit Ledger
+
 * Real-time benchmark price board for secondary commodities across Bhopal (PET, HDPE, Cardboard, Aluminium, Copper, E-Waste).
 * Seven-day trend indicators with verified local MRF buyer tags.
 * Brand producers and packaging manufacturers generate verifiable CPCB-compliant EPR credit certificates to satisfy statutory ESG obligations.
 
 ### 6. 📡 Zero-Drop Offline PWA for Dense Alleyways
+
 * Driver application runs as a **Progressive Web App (PWA)** backed by an **IndexedDB** queue.
 * Drivers navigating Bhopal's narrow, signal-dead alleyways log collections without interruption; all actions queue client-side and synchronize automatically upon reconnect with SHA-256 server idempotency.
 
 ### 7. 🎁 Dual Closed-Loop Rewards (Citizen Perks & Swachhata Mitra Incentives)
-* **Citizen Hub Rewards:**
+
+* **Login Rewards:**
   * **4-Tier Progression:** Bronze ($0-499\text{ pts}$), Silver ($500-1,999\text{ pts}$), Gold ($2,000-4,999\text{ pts}$), and Platinum Swachhata Champion ($5,000+\text{ pts}$).
   * **Municipal Public Rebates:** Verified redemption for **$5\% - 10\%$ BMC Annual Property Tax Rebates**, Bhopal Metro (Bhoj Metro) ₹250 travel passes, free $10\text{ kg}$ decentralized organic compost bags, and MPPKVVCL green electricity bill credits.
   * **Streak Protection:** $1.2\times$ clean segregation multiplier with automated 72-hour dispute appeal buffers.
@@ -100,10 +109,12 @@ stateDiagram-v2
   * Integrated with **Direct Benefit Transfer (DBT)** to driver bank accounts and **Swachhata Mitra Suraksha Bima** (₹5,00,000 cashless healthcare coverage at AIIMS Bhopal).
 
 ### 8. 📰 Civic Knowledge Blog & 13-Point Smart-City FAQ Engine
+
 * **Blog & Municipal Updates:** Educational articles on 4-stream kitchen sorting, Bhopal's 45 new zero-emission electric tippers, Arera Colony compost diversion case studies, and CPCB EPR regulatory guidelines.
 * **Accessible FAQ Section:** WCAG 2.2 AA compliant accordion addressing project proposal scope, simulation mechanics, Legal Metrology scale calibration, citizen tax rebates, driver safety, and public helpline access.
 
 ### 9. 🚀 Smart-City Innovation Roadmap (Coming Soon Features)
+
 * **AI Contamination Camera Pre-Scan:** 3-second on-device computer vision check validating household bins before collection.
 * **Bhopal Metro NFC Tap-to-Ride:** Direct contactless conversion of EcoPoints into Bhoj Metro transit balances.
 * **IoT Ultrasonic Smart Bin Sensors:** Real-time solar-assisted community bin fill-level alerts sent to nearest collection tippers.
@@ -111,6 +122,7 @@ stateDiagram-v2
 * **RWA Community Green Pools:** Society-level point aggregation unlocking matching municipal park development grants.
 
 ### 10. 🎯 Smart Civic Delight & Field Optimization Features
+
 * **WhatsApp "Alert My Colony" Link:** 1-click sharing of real-time collection vehicle arrival ETA directly to neighborhood and RWA WhatsApp groups.
 * **Swachh Bharat & Swachh Bhopal Municipal Slogan Showcase:** Prominent landing page civic banner showcasing civic and environmental awareness slogans with tricolor accents.
 * **"Skip Today's Sweep" Advance Notice:** Households out of town or generating zero waste notify drivers in advance, saving vehicle route fuel and idling while preserving their $1.2\times$ EcoPoints streak.
@@ -136,7 +148,7 @@ stateDiagram-v2
 
 | Portal | Core Capabilities | URL Route |
 | :--- | :--- | :--- |
-| **🏠 Citizen Hub** | Modern sidebar navigation, 6-stage collection progress tracker, on-demand doorstep booking, missed pickup emergency filing, EcoPoints green wallet, housing society (RWA) leaderboards, and geo-tagged grievance resolution. | [`/dashboard/user`](http://localhost:5173/dashboard/user) |
+| **🏠 Login** | Modern sidebar navigation, 6-stage collection progress tracker, on-demand doorstep booking, missed pickup emergency filing, EcoPoints green wallet, housing society (RWA) leaderboards, and geo-tagged grievance resolution. | [`/dashboard/user`](http://localhost:5173/dashboard/user) |
 | **🚛 Driver PWA** | Turn-by-turn stop sequencing, digital scale weighment logging across 4 waste streams, offline-first IndexedDB background queue, and daily route performance analytics. | [`/dashboard/driver`](http://localhost:5173/dashboard/driver) |
 | **♻️ Recycler MRF Desk** | Facility rate-card publisher, public scrap price board updater, citizen lot intake verification, and digital CPCB Extended Producer Responsibility (EPR) certificate minting. | [`/dashboard/recycler`](http://localhost:5173/dashboard/recycler) |
 | **🏛️ Municipal Command Desk** | Comprehensive city command dashboard covering all 85 wards, Nearest-Neighbor Vehicle Routing Problem (VRP) fleet dispatch, live GIS telematics, spatial complaint heatmaps, and aerobic compost batch oversight. | [`/dashboard/admin`](http://localhost:5173/dashboard/admin) |
@@ -149,7 +161,7 @@ stateDiagram-v2
 flowchart TD
     subgraph UI["Frontend Layer (React 19 · Vite · TypeScript · Tailwind CSS)"]
         A["Public Platform (EcoNav · Calculator · Price Board · Blog · FAQ)"]
-        B["Citizen Hub (Sidebar · 6-Stage Tracking · Green Wallet)"]
+        B["Login (Sidebar · 6-Stage Tracking · Green Wallet)"]
         C["Driver PWA (Offline IndexedDB · Weighment Scales)"]
         D["Recycler MRF Desk (Price Board · EPR Ledger)"]
         E["Municipal Command Desk (ICCC · VRP Dispatch · Heatmaps)"]
@@ -209,6 +221,7 @@ The platform implements an 8px spacing system inspired by modern enterprise SaaS
 ## 🚀 Quickstart Guide
 
 ### Prerequisites
+
 * **Node.js** (v18+ recommended) & **npm**
 * **Python** (v3.11+)
 
@@ -285,6 +298,7 @@ Log in using any of the seeded credentials on the [Login Screen](http://localhos
 EcoSync includes automated verification across both backend and frontend environments:
 
 ### Backend Test Suite (108 Tests)
+
 ```bash
 cd backend
 pytest tests/ -v
@@ -292,6 +306,7 @@ pytest tests/ -v
 ```
 
 ### Frontend Production Build & Typecheck
+
 ```bash
 cd frontend
 npm run build
@@ -299,6 +314,7 @@ npm run build
 ```
 
 ### Static Analysis & Linter
+
 ```bash
 cd frontend
 npm run lint

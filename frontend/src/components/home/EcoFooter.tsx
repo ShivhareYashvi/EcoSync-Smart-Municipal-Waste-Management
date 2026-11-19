@@ -72,7 +72,7 @@ export const EcoFooter: React.FC = () => {
             <ul className="space-y-2 text-xs text-slate-300">
               <li>
                 <Link to="/dashboard/user" className="hover:text-emerald-400 transition">
-                  Citizen Hub &amp; Green Points
+                  Login &amp; Green Points
                 </Link>
               </li>
               <li>

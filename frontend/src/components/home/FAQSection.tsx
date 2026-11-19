@@ -180,22 +180,20 @@ export const FAQSection: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveCategory('all')}
-            className={`rounded-full px-4 py-2 text-xs font-bold transition ${
-              activeCategory === 'all'
+            className={`rounded-full px-4 py-2 text-xs font-bold transition ${activeCategory === 'all'
                 ? 'bg-[#101828] text-white shadow-xs'
                 : 'bg-white text-[#475467] hover:bg-slate-100 border border-[#E4E7EC]'
-            }`}
+              }`}
           >
             All Questions ({FAQ_ITEMS.length})
           </button>
           <button
             type="button"
             onClick={() => setActiveCategory('mission')}
-            className={`rounded-full px-4 py-2 text-xs font-bold transition flex items-center gap-1.5 ${
-              activeCategory === 'mission'
+            className={`rounded-full px-4 py-2 text-xs font-bold transition flex items-center gap-1.5 ${activeCategory === 'mission'
                 ? 'bg-[#009B70] text-white shadow-xs'
                 : 'bg-white text-[#475467] hover:bg-slate-100 border border-[#E4E7EC]'
-            }`}
+              }`}
           >
             <Building2 className="h-3.5 w-3.5" />
             <span>Project &amp; Bhopal Operations</span>
@@ -203,11 +201,10 @@ export const FAQSection: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveCategory('rewards')}
-            className={`rounded-full px-4 py-2 text-xs font-bold transition flex items-center gap-1.5 ${
-              activeCategory === 'rewards'
+            className={`rounded-full px-4 py-2 text-xs font-bold transition flex items-center gap-1.5 ${activeCategory === 'rewards'
                 ? 'bg-[#009B70] text-white shadow-xs'
                 : 'bg-white text-[#475467] hover:bg-slate-100 border border-[#E4E7EC]'
-            }`}
+              }`}
           >
             <Gift className="h-3.5 w-3.5" />
             <span>Citizen Rewards &amp; Taxes</span>
@@ -215,11 +212,10 @@ export const FAQSection: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveCategory('driver')}
-            className={`rounded-full px-4 py-2 text-xs font-bold transition flex items-center gap-1.5 ${
-              activeCategory === 'driver'
+            className={`rounded-full px-4 py-2 text-xs font-bold transition flex items-center gap-1.5 ${activeCategory === 'driver'
                 ? 'bg-[#009B70] text-white shadow-xs'
                 : 'bg-white text-[#475467] hover:bg-slate-100 border border-[#E4E7EC]'
-            }`}
+              }`}
           >
             <Truck className="h-3.5 w-3.5" />
             <span>Driver Welfare &amp; Incentives</span>
@@ -227,11 +223,10 @@ export const FAQSection: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveCategory('roadmap')}
-            className={`rounded-full px-4 py-2 text-xs font-bold transition flex items-center gap-1.5 ${
-              activeCategory === 'roadmap'
+            className={`rounded-full px-4 py-2 text-xs font-bold transition flex items-center gap-1.5 ${activeCategory === 'roadmap'
                 ? 'bg-[#009B70] text-white shadow-xs'
                 : 'bg-white text-[#475467] hover:bg-slate-100 border border-[#E4E7EC]'
-            }`}
+              }`}
           >
             <Sparkles className="h-3.5 w-3.5" />
             <span>Coming Soon Innovations</span>
@@ -246,11 +241,10 @@ export const FAQSection: React.FC = () => {
             return (
               <div
                 key={faq.id}
-                className={`rounded-2xl border transition-all duration-200 bg-white ${
-                  isOpen
+                className={`rounded-2xl border transition-all duration-200 bg-white ${isOpen
                     ? 'border-[#009B70] shadow-md ring-1 ring-[#009B70]/20'
                     : 'border-[#E4E7EC] hover:border-slate-300 shadow-2xs'
-                }`}
+                  }`}
               >
                 <button
                   type="button"
@@ -263,11 +257,10 @@ export const FAQSection: React.FC = () => {
                     {faq.question}
                   </span>
                   <div
-                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-transform duration-200 ${
-                      isOpen
+                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-transform duration-200 ${isOpen
                         ? 'bg-[#EAFBF4] text-[#006B4F] rotate-180'
                         : 'bg-slate-100 text-slate-500'
-                    }`}
+                      }`}
                   >
                     <ChevronDown className="h-4 w-4" aria-hidden="true" />
                   </div>
@@ -307,7 +300,7 @@ export const FAQSection: React.FC = () => {
           <div className="space-y-1">
             <h3 className="text-xl font-black text-white">Have a specific question about your ward?</h3>
             <p className="text-xs sm:text-sm text-emerald-100">
-              Contact the Bhopal Municipal Corporation citizen helpline or connect directly via the Citizen Hub.
+              Contact the Bhopal Municipal Corporation citizen helpline or connect directly via the Login.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3 shrink-0">

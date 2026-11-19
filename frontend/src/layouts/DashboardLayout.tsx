@@ -6,7 +6,7 @@ export function DashboardLayout() {
   const location = useLocation();
   const isCitizenHub = location.pathname === '/dashboard/user' || location.pathname.startsWith('/dashboard/user');
 
-  // Citizen Hub uses its own dedicated accessible Top Header + Sidebar layout
+  // Login uses its own dedicated accessible Top Header + Sidebar layout
   if (isCitizenHub) {
     return <Outlet />;
   }

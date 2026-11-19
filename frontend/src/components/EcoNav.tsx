@@ -65,11 +65,10 @@ export function EcoNav() {
 
       <header
         role="banner"
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
-          isScrolled
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${isScrolled
             ? 'bg-white/95 backdrop-blur-md border-b border-[#E4E7EC] shadow-xs py-2.5'
             : 'bg-white/90 backdrop-blur-sm border-b border-[#E4E7EC]/80 py-3.5'
-        }`}
+          }`}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Left: Brand Identity */}
@@ -102,11 +101,10 @@ export function EcoNav() {
                   type="button"
                   onClick={() => handleNavClick(item.href)}
                   aria-current={active ? 'page' : undefined}
-                  className={`relative whitespace-nowrap px-3.5 py-1.5 rounded-xl transition text-xs font-bold focus-visible:ring-2 focus-visible:ring-[#009B70] ${
-                    active
+                  className={`relative whitespace-nowrap px-3.5 py-1.5 rounded-xl transition text-xs font-bold focus-visible:ring-2 focus-visible:ring-[#009B70] ${active
                       ? 'text-[#006B4F] bg-[#EAFBF4] font-black shadow-2xs'
                       : 'text-[#475467] hover:text-[#101828] hover:bg-slate-50'
-                  }`}
+                    }`}
                 >
                   <span>{item.label}</span>
                   {active && (
@@ -144,7 +142,7 @@ export function EcoNav() {
               <span className="text-[11px]">Helpline: <strong>155304</strong></span>
             </a>
 
-            {/* Citizen Hub Primary CTA */}
+            {/* Login Primary CTA */}
             <Link
               to={citizenHubDestination}
               className="inline-flex items-center gap-1.5 rounded-xl bg-[#009B70] px-3.5 py-2 text-xs font-bold text-white shadow-xs transition hover:bg-[#006B4F] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#009B70]"
@@ -154,11 +152,11 @@ export function EcoNav() {
                   <div className="h-4 w-4 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-black">
                     {user.name ? user.name[0].toUpperCase() : 'U'}
                   </div>
-                  <span>Citizen Hub</span>
+                  <span>Login</span>
                 </>
               ) : (
                 <>
-                  <span>Citizen Hub</span>
+                  <span>Login</span>
                   <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                 </>
               )}
@@ -203,11 +201,10 @@ export function EcoNav() {
                     key={item.label}
                     type="button"
                     onClick={() => handleNavClick(item.href)}
-                    className={`w-full flex items-center justify-between rounded-xl px-3.5 py-2.5 text-sm font-bold text-left transition ${
-                      active
+                    className={`w-full flex items-center justify-between rounded-xl px-3.5 py-2.5 text-sm font-bold text-left transition ${active
                         ? 'bg-[#EAFBF4] text-[#006B4F] font-black border border-[#009B70]/20'
                         : 'text-[#475467] hover:bg-slate-50 hover:text-[#101828]'
-                    }`}
+                      }`}
                   >
                     <span>{item.label}</span>
                     <ChevronRight className="h-4 w-4 text-slate-300" aria-hidden="true" />
@@ -222,7 +219,7 @@ export function EcoNav() {
                 onClick={() => setMobileMenuOpen(false)}
                 className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#009B70] py-2.5 text-xs font-bold text-white shadow-xs"
               >
-                <span>Open Citizen Hub Console</span>
+                <span>Open Login Console</span>
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
 

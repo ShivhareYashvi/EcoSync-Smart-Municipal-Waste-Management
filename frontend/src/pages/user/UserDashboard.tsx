@@ -30,7 +30,7 @@ import { CitizenProfilePanel } from '../../components/user/CitizenProfilePanel';
 import { CitizenRewardsHub } from '../../components/user/CitizenRewardsHub';
 import { calculateHaversineMeters } from '../../components/TrackingMap';
 
-// New Accessible Citizen Hub Components
+// New Accessible Login Components
 import { CitizenHeader } from '../../components/citizen/CitizenHeader';
 import { CitizenSidebar } from '../../components/citizen/CitizenSidebar';
 import { ServiceOverviewSection } from '../../components/citizen/ServiceOverviewSection';
@@ -536,7 +536,7 @@ export function UserDashboard() {
           tabIndex={-1}
           className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full focus:outline-none"
         >
-          {/* TAB 1: OPERATIONS CONSOLE (Default Citizen Hub Dashboard) */}
+          {/* TAB 1: OPERATIONS CONSOLE (Default Login Dashboard) */}
           {activeTab === 'console' && (
             <div className="space-y-6 animate-in fade-in duration-150">
               {/* Section 1: Welcome and Location Header */}
@@ -721,8 +721,8 @@ export function UserDashboard() {
                                 type="button"
                                 onClick={() => setSchedule((prev) => ({ ...prev, waste_type: cat.type }))}
                                 className={`rounded-2xl border p-4 text-left transition relative flex flex-col justify-between focus-visible:ring-2 focus-visible:ring-emerald-600 min-h-[110px] ${isSelected
-                                    ? `${cat.activeBorder} ${cat.activeBg} shadow-sm`
-                                    : 'border-slate-200 bg-white hover:border-slate-300'
+                                  ? `${cat.activeBorder} ${cat.activeBg} shadow-sm`
+                                  : 'border-slate-200 bg-white hover:border-slate-300'
                                   }`}
                               >
                                 <div className="flex items-start justify-between gap-2">
@@ -1219,8 +1219,8 @@ export function UserDashboard() {
                 {smsFeedback && (
                   <div
                     className={`mt-3 p-3 rounded-xl border text-xs font-semibold flex items-center gap-2 animate-in fade-in ${smsFeedback.type === 'success'
-                        ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                        : 'bg-rose-50 text-rose-800 border-rose-200'
+                      ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                      : 'bg-rose-50 text-rose-800 border-rose-200'
                       }`}
                   >
                     {smsFeedback.type === 'success' ? (

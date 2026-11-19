@@ -20,7 +20,7 @@ export const SolutionsSection: React.FC = () => {
       desc: 'Intuitive resident console for scheduling scheduled doorstep pickups, tracking collection vehicles in real-time, reporting missed visits, and accessing civic support.',
       icon: Users,
       route: '/dashboard/user',
-      ctaText: 'Explore Citizen Hub',
+      ctaText: 'Explore Login',
       badge: 'Bhopal Residents',
     },
     {

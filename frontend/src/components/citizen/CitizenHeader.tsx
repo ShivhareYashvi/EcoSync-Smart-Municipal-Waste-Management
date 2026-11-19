@@ -66,9 +66,9 @@ export const CitizenHeader: React.FC<CitizenHeaderProps> = ({
           </button>
 
           <Link
-            to="/dashboard/user"
+            to="/"
             className="flex items-center gap-2.5 focus-visible:ring-2 focus-visible:ring-emerald-600 rounded-lg p-1"
-            aria-label="EcoSync Bhopal Municipal Operations Network, Citizen Hub Dashboard"
+            aria-label="EcoSync Home Page"
           >
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-xs">
               <Recycle className="h-5 w-5" aria-hidden="true" />
@@ -77,7 +77,7 @@ export const CitizenHeader: React.FC<CitizenHeaderProps> = ({
               <div className="flex items-center gap-2">
                 <span className="font-extrabold text-slate-900 tracking-tight text-base">EcoSync</span>
                 <span className="rounded-md bg-emerald-50 px-2 py-0.5 text-[10px] font-bold tracking-wider text-emerald-800 border border-emerald-200 uppercase">
-                  Citizen Hub
+                  Login
                 </span>
               </div>
               <span className="text-[11px] font-medium text-slate-500 hidden sm:inline-block leading-none mt-0.5">

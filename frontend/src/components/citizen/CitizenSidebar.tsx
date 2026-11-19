@@ -8,7 +8,6 @@ import {
   Trophy,
   Users,
   UserCheck,
-  Settings,
   HelpCircle,
   X,
   AlertTriangle,
@@ -69,10 +68,9 @@ export const CitizenSidebar: React.FC<CitizenSidebarProps> = ({
       {/* Vertical Sidebar Navigation */}
       <aside
         id="citizen-sidebar"
-        aria-label="Citizen Hub Primary Navigation"
-        className={`fixed inset-y-0 left-0 z-50 flex flex-col border-r border-slate-200/90 bg-white transition-all duration-200 ease-in-out lg:static lg:z-30 ${
-          isOpenMobile ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        } ${isDesktopCollapsed ? 'lg:w-20' : 'lg:w-64'} w-72`}
+        aria-label="Login Primary Navigation"
+        className={`fixed inset-y-0 left-0 z-50 flex flex-col border-r border-slate-200/90 bg-white transition-all duration-200 ease-in-out lg:static lg:z-30 ${isOpenMobile ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+          } ${isDesktopCollapsed ? 'lg:w-20' : 'lg:w-64'} w-72`}
       >
         {/* Mobile Header / Close Button */}
         <div className="flex h-16 items-center justify-between px-4 border-b border-slate-100 lg:hidden">
@@ -127,11 +125,10 @@ export const CitizenSidebar: React.FC<CitizenSidebarProps> = ({
                     onCloseMobile();
                   }}
                   aria-current={isSelected('console') ? 'page' : undefined}
-                  className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-bold transition focus-visible:ring-2 focus-visible:ring-emerald-600 ${
-                    isSelected('console')
+                  className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-bold transition focus-visible:ring-2 focus-visible:ring-emerald-600 ${isSelected('console')
                       ? 'bg-emerald-600 text-white shadow-xs'
                       : 'text-slate-700 hover:bg-slate-100'
-                  }`}
+                    }`}
                   title="Dashboard Console"
                 >
                   <LayoutDashboard className="h-4 w-4 shrink-0" aria-hidden="true" />
@@ -146,9 +143,8 @@ export const CitizenSidebar: React.FC<CitizenSidebarProps> = ({
                   onClick={() => setWasteMenuOpen((prev) => !prev)}
                   aria-expanded={wasteMenuOpen}
                   aria-controls="waste-collection-submenu"
-                  className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-100 transition focus-visible:ring-2 focus-visible:ring-emerald-600 ${
-                    activeTab === 'history' ? 'text-emerald-800 bg-emerald-50' : ''
-                  }`}
+                  className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-100 transition focus-visible:ring-2 focus-visible:ring-emerald-600 ${activeTab === 'history' ? 'text-emerald-800 bg-emerald-50' : ''
+                    }`}
                 >
                   <div className="flex items-center gap-3">
                     <Trash2 className="h-4 w-4 shrink-0 text-emerald-600" aria-hidden="true" />
@@ -186,9 +182,8 @@ export const CitizenSidebar: React.FC<CitizenSidebarProps> = ({
                           onCloseMobile();
                         }}
                         aria-current={isSelected('history') ? 'page' : undefined}
-                        className={`flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus-visible:ring-2 focus-visible:ring-emerald-600 text-left ${
-                          isSelected('history') ? 'text-emerald-700 font-bold bg-emerald-50' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                        }`}
+                        className={`flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-semibold focus-visible:ring-2 focus-visible:ring-emerald-600 text-left ${isSelected('history') ? 'text-emerald-700 font-bold bg-emerald-50' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                          }`}
                       >
                         <History className="h-3.5 w-3.5" />
                         <span>Pickup History</span>
@@ -236,11 +231,10 @@ export const CitizenSidebar: React.FC<CitizenSidebarProps> = ({
                     onCloseMobile();
                   }}
                   aria-current={isSelected('marketplace') ? 'page' : undefined}
-                  className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-bold transition focus-visible:ring-2 focus-visible:ring-emerald-600 ${
-                    isSelected('marketplace')
+                  className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-bold transition focus-visible:ring-2 focus-visible:ring-emerald-600 ${isSelected('marketplace')
                       ? 'bg-emerald-600 text-white shadow-xs'
                       : 'text-slate-700 hover:bg-slate-100'
-                  }`}
+                    }`}
                   title="Sell Scrap & Recyclables"
                 >
                   <Sparkles className="h-4 w-4 shrink-0 text-amber-500" aria-hidden="true" />
@@ -257,11 +251,10 @@ export const CitizenSidebar: React.FC<CitizenSidebarProps> = ({
                     onCloseMobile();
                   }}
                   aria-current={isSelected('rewards') ? 'page' : undefined}
-                  className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-bold transition focus-visible:ring-2 focus-visible:ring-emerald-600 ${
-                    isSelected('rewards')
+                  className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-bold transition focus-visible:ring-2 focus-visible:ring-emerald-600 ${isSelected('rewards')
                       ? 'bg-emerald-600 text-white shadow-xs'
                       : 'text-slate-700 hover:bg-slate-100'
-                  }`}
+                    }`}
                   title="Rewards & Compliance"
                 >
                   <Trophy className="h-4 w-4 shrink-0 text-amber-500" aria-hidden="true" />
@@ -281,11 +274,10 @@ export const CitizenSidebar: React.FC<CitizenSidebarProps> = ({
                   }}
                   aria-expanded={communityMenuOpen}
                   aria-controls="community-grievance-submenu"
-                  className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-xs font-bold transition focus-visible:ring-2 focus-visible:ring-emerald-600 ${
-                    activeTab === 'community'
+                  className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-xs font-bold transition focus-visible:ring-2 focus-visible:ring-emerald-600 ${activeTab === 'community'
                       ? 'text-emerald-900 bg-emerald-50 border border-emerald-200'
                       : 'text-slate-700 hover:bg-slate-100'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center gap-3">
                     <Users className="h-4 w-4 shrink-0 text-indigo-600" aria-hidden="true" />
@@ -308,11 +300,10 @@ export const CitizenSidebar: React.FC<CitizenSidebarProps> = ({
                           onSelectTab('community', 'submit');
                           onCloseMobile();
                         }}
-                        className={`flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition text-left ${
-                          activeTab === 'community' && activeSubOption === 'submit'
+                        className={`flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition text-left ${activeTab === 'community' && activeSubOption === 'submit'
                             ? 'bg-rose-50 text-rose-800 font-bold border-l-2 border-rose-500'
                             : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                        }`}
+                          }`}
                       >
                         <FileText className={`h-3.5 w-3.5 ${activeTab === 'community' && activeSubOption === 'submit' ? 'text-rose-600' : 'text-slate-400'}`} />
                         <span>Submit Complaint</span>
@@ -325,11 +316,10 @@ export const CitizenSidebar: React.FC<CitizenSidebarProps> = ({
                           onSelectTab('community', 'track');
                           onCloseMobile();
                         }}
-                        className={`flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition text-left ${
-                          activeTab === 'community' && activeSubOption === 'track'
+                        className={`flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition text-left ${activeTab === 'community' && activeSubOption === 'track'
                             ? 'bg-blue-50 text-blue-800 font-bold border-l-2 border-blue-500'
                             : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                        }`}
+                          }`}
                       >
                         <MessageSquare className={`h-3.5 w-3.5 ${activeTab === 'community' && activeSubOption === 'track' ? 'text-blue-600' : 'text-slate-400'}`} />
                         <span>Track Complaints</span>
@@ -342,11 +332,10 @@ export const CitizenSidebar: React.FC<CitizenSidebarProps> = ({
                           onSelectTab('community', 'feedback');
                           onCloseMobile();
                         }}
-                        className={`flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition text-left ${
-                          activeTab === 'community' && (activeSubOption === 'feedback' || !activeSubOption)
+                        className={`flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition text-left ${activeTab === 'community' && (activeSubOption === 'feedback' || !activeSubOption)
                             ? 'bg-emerald-50 text-emerald-800 font-bold border-l-2 border-emerald-600'
                             : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                        }`}
+                          }`}
                       >
                         <ThumbsUp className={`h-3.5 w-3.5 ${activeTab === 'community' && (activeSubOption === 'feedback' || !activeSubOption) ? 'text-emerald-600' : 'text-slate-400'}`} />
                         <span>Community Feedback</span>
@@ -373,31 +362,14 @@ export const CitizenSidebar: React.FC<CitizenSidebarProps> = ({
                     onCloseMobile();
                   }}
                   aria-current={isSelected('profile') ? 'page' : undefined}
-                  className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-bold transition focus-visible:ring-2 focus-visible:ring-emerald-600 ${
-                    isSelected('profile')
+                  className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-bold transition focus-visible:ring-2 focus-visible:ring-emerald-600 ${isSelected('profile')
                       ? 'bg-emerald-600 text-white shadow-xs'
                       : 'text-slate-700 hover:bg-slate-100'
-                  }`}
+                    }`}
                   title="Citizen Profile & ID"
                 >
                   <UserCheck className="h-4 w-4 shrink-0" aria-hidden="true" />
                   {!isDesktopCollapsed && <span>Citizen Profile & ID</span>}
-                </button>
-              </li>
-
-              {/* 8. Settings */}
-              <li>
-                <button
-                  type="button"
-                  onClick={() => {
-                    onSelectTab('profile');
-                    onCloseMobile();
-                  }}
-                  className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-100 focus-visible:ring-2 focus-visible:ring-emerald-600 transition"
-                  title="Settings"
-                >
-                  <Settings className="h-4 w-4 shrink-0 text-slate-500" aria-hidden="true" />
-                  {!isDesktopCollapsed && <span>Settings</span>}
                 </button>
               </li>
 

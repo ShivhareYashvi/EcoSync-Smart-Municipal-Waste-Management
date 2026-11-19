@@ -115,7 +115,7 @@ export function LandingPage() {
                     className="flex flex-col rounded-2xl border border-[#E4E7EC] dark:border-slate-800 bg-white dark:bg-slate-900 p-3.5 text-left transition-all duration-200 hover:border-[#009B70] hover:-translate-y-1 hover:shadow-md group"
                   >
                     <span className="text-xs font-black text-[#101828] dark:text-white group-hover:text-[#006B4F] dark:group-hover:text-emerald-400 transition flex items-center justify-between">
-                      Citizen Hub
+                      Login
                       <span className="h-2 w-2 rounded-full bg-[#009B70] group-hover:scale-125 transition-transform" aria-hidden="true" />
                     </span>
                     <span className="text-[11px] text-[#475467] dark:text-slate-400 mt-1">Pickups &amp; Green Points</span>

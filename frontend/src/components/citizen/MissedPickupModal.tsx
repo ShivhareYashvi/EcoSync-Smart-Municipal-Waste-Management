@@ -250,7 +250,7 @@ export const MissedPickupModal: React.FC<MissedPickupModalProps> = ({
               onClick={onClose}
               className="rounded-xl bg-slate-950 text-white font-bold text-xs px-6 py-3 hover:bg-slate-800 transition shadow-sm"
             >
-              Return to Citizen Hub
+              Return to Login
             </button>
           </div>
         ) : (
@@ -329,8 +329,8 @@ export const MissedPickupModal: React.FC<MissedPickupModalProps> = ({
                     type="button"
                     onClick={() => setWasteStream(ws.id)}
                     className={`p-2.5 rounded-xl border text-left transition flex flex-col ${wasteStream === ws.id
-                        ? 'border-emerald-600 bg-emerald-50/70 shadow-2xs'
-                        : 'border-slate-200 bg-white hover:bg-slate-50'
+                      ? 'border-emerald-600 bg-emerald-50/70 shadow-2xs'
+                      : 'border-slate-200 bg-white hover:bg-slate-50'
                       }`}
                   >
                     <span className="text-xs font-black text-slate-900">{ws.label}</span>
